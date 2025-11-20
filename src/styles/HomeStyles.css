@@ -1,0 +1,379 @@
+/* ======================================================= */
+/* HOME PAGE LAYOUT STYLES                                 */
+/* ======================================================= */
+
+.home-layout-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-dark-blue); /* Fondo principal */
+}
+
+.main-content-wrapper {
+    display: grid;
+    /* Define 3 columnas: 1. Navegación, 2. Contenido (Feed), 3. Sidebar */
+    grid-template-columns: 200px 1fr 300px;
+    gap: 30px; /* Espaciado entre columnas */
+    width: 100%;
+    max-width: 1400px; /* Limitar el ancho máximo para evitar que se estire demasiado */
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+/* 2a. Columna de Navegación (Sidebar Izquierda) */
+.nav-sidebar {
+    padding: 20px 0 20px 20px;
+    position: sticky; /* Fija la navegación mientras se hace scroll en el centro */
+    top: 0;
+    height: 100%;
+}
+
+.btn-create-post {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 20px;
+    background-color: var(--color-success); /* Usamos el verde para CTA (Call to Action) */
+    color: var(--color-dark-blue);
+    font-weight: 700;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+    .btn-create-post:hover {
+        background-color: #27945c;
+    }
+
+/* 2b. Columna Central (FEED) */
+.feed-center-column {
+    padding: 20px;
+}
+
+.feed-title {
+    color: var(--color-text-light);
+    font-size: 2em;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.feed-subtitle {
+    color: var(--color-text-secondary);
+    margin-bottom: 30px;
+    font-size: 1em;
+}
+
+.loading-feed-message {
+    text-align: center;
+    color: var(--color-accent-blue);
+    margin-top: 50px;
+}
+
+/* 2c. Columna Derecha (Sidebar de Comunidad) */
+/* El estilo del sidebar se definirá en el componente SidebarCommunity */
+
+/* ======================================================= */
+/* RESPONSIVIDAD (Ajuste para móviles y tabletas)         */
+/* ======================================================= */
+@media (max-width: 1024px) {
+    .main-content-wrapper {
+        /* En pantallas más pequeñas, ocultamos la navegación izquierda y ponemos el sidebar debajo */
+        grid-template-columns: 1fr 300px;
+    }
+
+    .nav-sidebar {
+        display: none; /* Ocultar sidebar izquierda en tabletas/móviles */
+    }
+}
+
+@media (max-width: 768px) {
+    .main-content-wrapper {
+        /* En móviles, todo se convierte en una sola columna */
+        grid-template-columns: 1fr;
+        padding: 10px;
+    }
+
+    .sidebar-community {
+        display: none; /* Ocultar sidebar de comunidad en móviles para priorizar el contenido */
+    }
+}
+
+/* src/styles/HomeStyles.css (Añadir o mejorar) */
+
+/* Layout: Asegurar la rejilla y el centrado */
+.main-content-wrapper {
+    /* ... (Mantener la configuración de grid-template-columns: 200px 1fr 300px;) */
+    padding: 30px 20px; /* Más padding para que respire */
+    min-height: calc(100vh - 80px); /* Asegurar que ocupe todo el espacio */
+}
+
+/* Header: Diseño Limpio */
+.app-header {
+    background-color: var(--color-medium-blue);
+    padding: 15px 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* Sidebar: Diseño Fijo y Limpio */
+.sidebar-card {
+    background-color: var(--color-medium-blue);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.no-content-message, .loading-feed-message {
+    padding: 30px;
+    text-align: center;
+    color: var(--color-text-secondary);
+    background-color: var(--color-input-bg);
+    border-radius: 8px;
+}
+
+    .no-content-message h2 {
+        color: var(--color-accent-blue);
+    }
+
+/* Botones CTA */
+.btn-create-post {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 1.05em;
+}
+
+/* Modal Overlay: Diseño profesional para el PostForm */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.75); /* Fondo semitransparente oscuro */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.post-form-card {
+    background-color: var(--color-medium-blue);
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    position: relative;
+    animation: scaleIn 0.3s ease-out;
+}
+
+/* Animación de entrada para el modal */
+@keyframes scaleIn {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+/* src/styles/HomeStyles.css (Añadir o mejorar) */
+
+/* === HEADER GENERAL === */
+.app-header {
+    background-color: var(--color-medium-blue);
+    padding: 10px 0; /* Padding vertical reducido para ser más compacto */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); /* Sombra más definida */
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-content-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* === LOGO Y NAVEGACIÓN IZQUIERDA === */
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 30px; /* Espacio entre el logo y los links */
+}
+
+.app-logo {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--color-accent-blue); /* Color brillante */
+    letter-spacing: 1px;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+.header-nav-links {
+    display: flex;
+    gap: 15px;
+}
+
+.nav-link-btn {
+    background: none;
+    border: none;
+    color: var(--color-text-secondary);
+    padding: 8px 10px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: color 0.2s, background-color 0.2s;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+    .nav-link-btn:hover {
+        color: var(--color-text-light);
+        background-color: #33425a; /* Fondo sutil al hacer hover */
+    }
+
+/* === BARRA DE BÚSQUEDA CENTRAL === */
+.search-bar {
+    display: flex;
+    align-items: center;
+    background-color: var(--color-input-bg);
+    border-radius: 8px;
+    flex-grow: 0.6; /* Permite que la barra crezca y sea el foco */
+    max-width: 450px;
+    border: 1px solid transparent;
+    transition: border-color 0.2s;
+}
+
+    .search-bar:focus-within {
+        border-color: var(--color-accent-blue);
+    }
+
+    .search-bar input {
+        flex-grow: 1;
+        padding: 10px 15px;
+        border: none;
+        background: none;
+        color: var(--color-text-light);
+        font-size: 1rem;
+        outline: none;
+    }
+
+.search-btn {
+    background-color: var(--color-accent-blue);
+    color: var(--color-dark-blue);
+    border: none;
+    padding: 10px 15px;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+    .search-btn:hover {
+        background-color: var(--color-accent-hover);
+    }
+
+/* === PERFIL Y DROPDOWN === */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    color: var(--color-text-secondary);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+    .icon-btn:hover {
+        color: var(--color-accent-blue);
+    }
+
+.user-menu-container {
+    position: relative;
+}
+
+.user-profile-btn {
+    background: none;
+    border: none;
+    color: var(--color-text-light);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 10px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+    .user-profile-btn:hover {
+        background-color: #33425a;
+    }
+
+.user-avatar-small {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-avatar-medium {
+    width: 48px;
+    height: 484px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-dropdown-menu {
+    position: absolute;
+    top: 45px;
+    right: 0;
+    background-color: var(--color-medium-blue);
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    min-width: 180px;
+    padding: 5px 0;
+    z-index: 2000;
+}
+
+    .user-dropdown-menu button {
+        width: 100%;
+        background: none;
+        border: none;
+        padding: 10px 15px;
+        text-align: left;
+        color: var(--color-text-light);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: background-color 0.2s;
+    }
+
+        .user-dropdown-menu button:hover {
+            background-color: var(--color-accent-hover);
+        }
+.player-avatar {
+    width: 46px;
+    height: 46px;
+    align-content: center;
+    border-radius: 50%; /* redondea la imagen */
+    object-fit: cover; /* asegura que se recorte bien sin deformarse */
+}

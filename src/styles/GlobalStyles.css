@@ -1,0 +1,19 @@
+:root {
+    /* === FONDOS Y ESTRUCTURA (Contraste Fuerte) === */
+    --color-background-primary: #0F141F; /* Fondo MÁS oscuro (Negro-Azulado) */
+    --color-background-secondary: #1C2738; /* Fondo de la Página (Ligeramente más claro) */
+    --color-card: #28374E; /* Fondo de Módulos/Cards (Mayor contraste) */
+    --color-input-bg: #141D2B; /* Fondo de Inputs/Contraste */
+    --color-border: #3D4A66; /* Borde y separadores */
+    /* === ACENTO Y FEEDBACK === */
+    --color-accent-blue: #00C6FF; /* Azul de Acento VIBRANTE (Eléctrico) */
+    --color-primary: var(--color-accent-blue); /* Alias */
+    --color-primary-rgb: 0, 198, 255; /* RGB para sombras y efectos glow */
+    /* === TEXTO === */
+    --color-text-light: #F0F6FF; /* Texto principal (Blanco puro, visible) */
+    --color-text-secondary: #A0B2D6; /* Texto gris, subtítulos */
+    /* === FEEDBACK VISUAL === */
+    --color-success: #38A169; /* Verde para éxito/CTA */
+    --color-danger: #E53E3E; /* Rojo para error/eliminar */
+    --color-secondary: #4A5C7F; /* Nuevo color secundario para tags/botones sutiles */
+}

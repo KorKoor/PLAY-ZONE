@@ -1,25 +1,50 @@
-import logo from './logo.svg';
-import './App.css';
+﻿// src/App.jsx
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import AuthPage from './pages/AuthPage';
+import HomePage from './pages/HomePage';
+// ⚠️ NUEVA IMPORTACIÓN ⚠️
+import ProfilePage from './pages/ProfilePage';
+import ProtectedRoute from './components/common/routes/ProtectedRoute';
+
+// Importar estilos
+import './styles/AuthStyles.css';
+import './styles/HomeStyles.css';
+// ⚠️ NUEVA IMPORTACIÓN DE ESTILOS ⚠️
+import './styles/ProfileStyles.css';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <AuthProvider>
+            <BrowserRouter>
+                <div className="App">
+                    <Routes>
+                        {/* 3. Rutas de Autenticación (Públicas) */}
+                        <Route path="/login" element={<AuthPage />} />
+                        <Route path="/register" element={<AuthPage />} />
+
+                        {/* 4. Rutas Protegidas (Requieren Login) */}
+                        <Route element={<ProtectedRoute />}>
+                            {/* Ruta Principal: Home / Feed (Requisito 4.3) */}
+                            <Route path="/home" element={<HomePage />} />
+
+                            {/* 🚀 RUTA DE PERFIL (Requisito 1.8) 🚀 */}
+                            <Route path="/profile/:userId" element={<ProfilePage />} />
+
+                            {/* Aquí irían las demás rutas protegidas: /guides, etc. */}
+                        </Route>
+
+                        {/* 5. Ruta Raíz */}
+                        <Route
+                            path="/"
+                            element={<Navigate to="/home" replace />}
+                        />
+                    </Routes>
+                </div>
+            </BrowserRouter>
+        </AuthProvider>
+    );
 }
 
 export default App;

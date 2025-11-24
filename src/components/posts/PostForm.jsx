@@ -1,9 +1,13 @@
-﻿// src/components/posts/PostForm.jsx
-import React, { useState } from 'react';
+﻿// src/components/posts/PostForm.jsx (FINAL Y MEJORADO)
+import React, { useState, useRef } from 'react';
+import '../../styles/Post.css';
 import postService from '../../services/postService';
-import { FaStar, FaTimes, FaImage } from 'react-icons/fa';
+import { FaStar, FaTimes, FaImage, FaSpinner, FaCheckCircle } from 'react-icons/fa'; // Iconos de feedback
 
 const PostForm = ({ onClose, onSuccess }) => {
+
+    const fileInputRef = useRef(null); // Para el input de archivo
+
     const [formData, setFormData] = useState({
         gameTitle: '',
         description: '',
@@ -24,7 +28,14 @@ const PostForm = ({ onClose, onSuccess }) => {
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
+            // Validacion basica del lado del cliente
+            if (file.size > 5 * 1024 * 1024) { // Limite de 5MB
+                setError("El archivo es demasiado grande (maximo 5MB).");
+                setImageFile(null);
+                return;
+            }
             setImageFile(file);
+            setError(null);
         }
     };
 
@@ -34,57 +45,64 @@ const PostForm = ({ onClose, onSuccess }) => {
         setIsLoading(true);
 
         if (!formData.gameTitle || formData.description.length < 10 || formData.rating === 0) {
-            setError("Debes completar el título, dar una opinión mínima (10 chars) y una calificación.");
+            setError("Debes completar el titulo, dar una opinion minima (10 chars) y una calificacion.");
             setIsLoading(false);
             return;
         }
 
         try {
+            // Usamos FormData para enviar el archivo binario (imageFile)
             const data = new FormData();
             data.append('gameTitle', formData.gameTitle);
             data.append('description', formData.description);
             data.append('rating', formData.rating);
+
+            // 'image' debe coincidir con el campo esperado por Multer/Express en el backend
             if (imageFile) {
                 data.append('image', imageFile);
             }
 
             const newPost = await postService.createPost(data);
-            onSuccess(newPost);
+            onSuccess(newPost); // Llamada para actualizar el feed y cerrar el modal
         } catch (err) {
-            setError(err.message || 'Error al publicar el post. Verifica que la imagen sea válida.');
+            setError(err.message || 'Error al publicar el post. Verifica que la imagen sea valida.');
         } finally {
             setIsLoading(false);
         }
     };
 
-    // Renderizado de estrellas con clases correctas
+    // Renderizado de estrellas
     const renderStarInput = () => (
         <div className="rating-input">
             {[1, 2, 3, 4, 5].map((star) => (
                 <FaStar
                     key={star}
-                    className={`star ${star <= formData.rating ? 'active' : ''}`}
+                    className={`star-icon ${star <= formData.rating ? 'active' : ''}`}
                     onClick={() => handleRatingChange(star)}
                 />
             ))}
         </div>
     );
 
+    // Helper para spinner
+    const Spinner = () => <FaSpinner className="spinner" />;
+
     return (
         <div className="post-form-card">
             <button onClick={onClose} className="btn-close-modal" aria-label="Cerrar formulario">
                 <FaTimes />
             </button>
-            <h2>✍️ Crear Nueva Publicación</h2>
-            <p>Comparte tu reseña, opinión y calificación de un juego.</p>
+            <h2>✍️ Crear Nueva Publicacion</h2>
+            <p className="form-subtitle">Comparte tu reseña, opinion y calificacion de un juego.</p>
 
             <form onSubmit={handleSubmit}>
                 {error && <p className="error-message">{error}</p>}
 
                 <div className="form-group">
-                    <label>Título del Videojuego</label>
+                    <label htmlFor="gameTitle">Titulo del Videojuego</label>
                     <input
                         type="text"
+                        id="gameTitle"
                         name="gameTitle"
                         value={formData.gameTitle}
                         onChange={handleChange}
@@ -92,38 +110,54 @@ const PostForm = ({ onClose, onSuccess }) => {
                     />
                 </div>
 
-                <div className="form-group">
-                    <label>Imagen/Portada</label>
-                    <label className="upload-image-btn">
-                        <FaImage /> Seleccionar Imagen
-                        <input
-                            type="file"
-                            accept="image/*"
-                            style={{ display: 'none' }}
-                            onChange={handleImageChange}
-                        />
-                    </label>
-                    {imageFile && <p className="selected-file">📂 {imageFile.name}</p>}
+                {/* === ZONA DE IMAGEN MEJORADA === */}
+                <div className="form-group upload-group">
+                    <label>Imagen/Portada (Opcional)</label>
+
+                    {/* Input de archivo real (oculto) */}
+                    <input
+                        type="file"
+                        accept="image/jpeg, image/png, image/webp"
+                        style={{ display: 'none' }}
+                        onChange={handleImageChange}
+                        ref={fileInputRef}
+                    />
+
+                    {/* Boton visual que activa el input de archivo */}
+                    <button type="button"
+                        onClick={() => fileInputRef.current.click()}
+                        className="btn btn-secondary btn-upload-file">
+                        <FaImage /> {imageFile ? 'Cambiar Imagen' : 'Seleccionar Imagen'}
+                    </button>
+
+                    {/* Feedback del archivo seleccionado */}
+                    {imageFile && (
+                        <p className="selected-file-name">
+                            <FaCheckCircle /> {imageFile.name}
+                        </p>
+                    )}
                 </div>
+                {/* === FIN ZONA DE IMAGEN === */}
 
                 <div className="form-group">
-                    <label>Tu Opinión/Descripción</label>
+                    <label htmlFor="description">Tu Opinion/Descripcion</label>
                     <textarea
+                        id="description"
                         name="description"
                         value={formData.description}
                         onChange={handleChange}
                         required
-                        rows="4"
+                        rows="5"
                     ></textarea>
                 </div>
 
-                <div className="form-group">
-                    <label>Calificación (1-5 Estrellas)</label>
+                <div className="form-group rating-group">
+                    <label>Calificacion (1-5 Estrellas)</label>
                     {renderStarInput()}
                 </div>
 
-                <button type="submit" disabled={isLoading} className="btn btn-primary">
-                    {isLoading ? 'Publicando...' : 'Publicar en PLAY-ZONE'}
+                <button type="submit" disabled={isLoading} className="btn btn-primary btn-publish">
+                    {isLoading ? <><Spinner /> Publicando...</> : 'Publicar en PLAY-ZONE'}
                 </button>
             </form>
         </div>

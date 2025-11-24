@@ -1,30 +1,41 @@
-// src/components/posts/PostCard.jsx
+﻿// src/components/posts/PostCard.jsx (CÓDIGO FINAL Y MEJORADO)
 import React from 'react';
-import { FaHeart, FaComment, FaStar, FaEllipsisV, FaTrash, FaEdit, FaImage } from 'react-icons/fa';
+import '../../styles/PostCard.css';
+import { FaHeart, FaComment, FaStar, FaEllipsisV, FaTrash, FaEdit, FaImage, FaCalendarAlt } from 'react-icons/fa';
 import { useAuthContext } from '../../context/AuthContext';
 
 const PostCard = ({ post, onLike, onDelete, onEdit, onFavorite, onUploadImage }) => {
+    // Es mejor usar solo el ID para la comparacion, ya que user.id viene del JWT (string)
     const { user } = useAuthContext();
-    const isAuthor = user && user.id === post.authorId?._id;
+    // ⚠️ Ajuste: Usar el ID del autor para comparacion segura (string vs string) ⚠️
+    const isAuthor = user && user.id === post.authorId;
 
-    // Renderizar estrellas de calificaci�n
+    const formatDate = (dateString) => {
+        if (!dateString) return 'Fecha Desconocida';
+        // Usamos es-ES para un formato de fecha amigable si los acentos estan resueltos
+        return new Date(dateString).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+    };
+
+    // Renderizar estrellas de calificación
     const renderRating = (rating) => (
         <div className="post-rating">
             {[...Array(5)].map((_, i) => (
                 <FaStar
                     key={i}
-                    className={`star ${i + 1 <= rating ? 'active' : ''}`}
+                    // ⚠️ Usamos clases 'active' y 'inactive' para el CSS ⚠️
+                    className={`star ${i + 1 <= rating ? 'active' : 'inactive'}`}
                 />
             ))}
         </div>
     );
 
-    // Manejar like
+    // Manejar like (Requisito 2.4)
     const handleLikeClick = () => {
-        onLike(post._id, post.isLiked);
+        // La API espera el ID del post y el estado actual
+        if (onLike) onLike(post._id, post.isLiked);
     };
 
-    // Manejar favorita
+    // Manejar favorita (Requisito 2.11)
     const handleFavoriteClick = () => {
         if (onFavorite) onFavorite(post._id, post.isFavorite);
     };
@@ -45,31 +56,25 @@ const PostCard = ({ post, onLike, onDelete, onEdit, onFavorite, onUploadImage })
                     src={post.authorId?.avatarUrl || '/default-avatar.png'}
                     alt={post.authorId?.alias || 'Usuario'}
                     className="author-avatar"
+                    // ⚠️ Navegar al perfil al hacer clic en el avatar (Buena UX) ⚠️
+                    onClick={() => console.log(`Navegar a /profile/${post.authorId?._id}`)}
                 />
                 <div className="author-info">
                     <span className="author-alias">{post.authorId?.alias}</span>
-                    <span className="post-date">{new Date(post.createdAt).toLocaleDateString()}</span>
+                    <span className="post-date"><FaCalendarAlt /> {formatDate(post.createdAt)}</span>
                 </div>
 
                 {/* Opciones solo si es autor */}
                 {isAuthor && (
                     <div className="post-options">
-                        <button onClick={() => onEdit(post._id)} aria-label="Editar post">
+                        <button onClick={() => onEdit(post)} aria-label="Editar post" className="btn-icon">
                             <FaEdit />
                         </button>
-                        <button onClick={() => onDelete(post._id)} aria-label="Eliminar post">
+                        <button onClick={() => onDelete(post._id)} aria-label="Eliminar post" className="btn-icon delete-btn">
                             <FaTrash />
                         </button>
-                        <label className="upload-image-btn" aria-label="Subir imagen">
-                            <FaImage />
-                            <input
-                                type="file"
-                                accept="image/*"
-                                style={{ display: 'none' }}
-                                onChange={handleUploadImage}
-                            />
-                        </label>
-                        <button className="btn-options-icon" aria-label="M�s opciones">
+                        {/* El botón de opciones desplegable iría aquí */}
+                        <button className="btn-options-icon" aria-label="Más opciones">
                             <FaEllipsisV />
                         </button>
                     </div>
@@ -85,12 +90,12 @@ const PostCard = ({ post, onLike, onDelete, onEdit, onFavorite, onUploadImage })
                 <p className="post-description">{post.description}</p>
             </div>
 
-            {/* Calificaci�n y estad�sticas */}
+            {/* Calificación y estadísticas */}
             <div className="post-stats">
                 {renderRating(post.rating)}
                 <div className="interaction-counts">
-                    <span className="count-item"><FaHeart /> {post.likesCount}</span>
-                    <span className="count-item"><FaComment /> {post.commentsCount}</span>
+                    <span className="count-item" title="Me gusta"><FaHeart className="icon-heart" /> {post.likesCount}</span>
+                    <span className="count-item" title="Comentarios"><FaComment /> {post.commentsCount}</span>
                 </div>
             </div>
 
@@ -98,18 +103,18 @@ const PostCard = ({ post, onLike, onDelete, onEdit, onFavorite, onUploadImage })
             <footer className="post-actions">
                 <button
                     onClick={handleLikeClick}
-                    className={`btn-action ${post.isLiked ? 'liked' : ''}`}
-                    aria-label="Dar like"
+                    className={`btn-action btn-like ${post.isLiked ? 'liked' : ''}`}
+                    aria-label={post.isLiked ? 'Quitar Me gusta' : 'Dar Me gusta'}
                 >
                     <FaHeart /> {post.isLiked ? 'Me Gusta' : 'Like'}
                 </button>
-                <button className="btn-action" aria-label="Comentar">
+                <button className="btn-action btn-comment" aria-label="Comentar">
                     <FaComment /> Comentar
                 </button>
                 <button
                     onClick={handleFavoriteClick}
-                    className={`btn-action ${post.isFavorite ? 'favorited' : ''}`}
-                    aria-label="Marcar como favorita"
+                    className={`btn-action btn-favorite ${post.isFavorite ? 'favorited' : ''}`}
+                    aria-label={post.isFavorite ? 'Quitar de favoritos' : 'Marcar Favorita'}
                 >
                     <FaStar /> {post.isFavorite ? 'Favorita' : 'Marcar Favorita'}
                 </button>

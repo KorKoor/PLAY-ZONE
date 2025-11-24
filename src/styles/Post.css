@@ -1,0 +1,157 @@
+/* src/styles/Post.css */
+
+/* === POST FORM CARD (MODAL) === */
+.post-form-card {
+    background-color: var(--color-input-bg); /* Fondo muy oscuro */
+    padding: 30px;
+    border-radius: 12px;
+    width: 95%;
+    max-width: 650px; /* Mas espacio */
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+    position: relative;
+    border: 2px solid var(--color-border);
+}
+
+    .post-form-card h2 {
+        color: var(--color-primary); /* Titulo con acento */
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+.form-subtitle {
+    color: var(--color-text-secondary);
+    margin-bottom: 30px;
+    font-size: 1rem;
+}
+
+.btn-close-modal {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    color: var(--color-text-secondary);
+    font-size: 1.8rem;
+    cursor: pointer;
+    transition: color 0.2s, transform 0.2s;
+}
+
+    .btn-close-modal:hover {
+        color: var(--color-danger);
+        transform: rotate(90deg);
+    }
+
+/* === Formulario General === */
+.post-form-card .form-group {
+    margin-bottom: 25px;
+}
+
+.post-form-card label {
+    display: block;
+    color: var(--color-text-light);
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.post-form-card input[type="text"],
+.post-form-card textarea {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--color-card); /* Inputs con buen contraste */
+    border: 1px solid var(--color-border);
+    color: var(--color-text-light);
+    border-radius: 8px;
+    resize: vertical;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+    .post-form-card input:focus,
+    .post-form-card textarea:focus {
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.3);
+        outline: none;
+    }
+
+/* === Boton de Subida de Archivo (Mejora visual) === */
+.btn-upload-file {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 15px;
+    background-color: var(--color-secondary);
+    color: var(--color-text-light);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: 0.95rem;
+}
+
+    .btn-upload-file:hover {
+        background-color: #5d7099;
+    }
+
+.selected-file-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    color: var(--color-success); /* Usamos verde para el status de "archivo listo" */
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* === Estrellas de Calificacion === */
+.rating-group {
+    margin-bottom: 30px;
+}
+
+.rating-input {
+    font-size: 2rem;
+    color: var(--color-text-secondary); /* Color base de estrellas apagadas */
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+.star-icon {
+    margin-right: 5px;
+    transition: color 0.2s, transform 0.1s;
+}
+
+    .star-icon.active {
+        color: #FFC300; /* Color brillante para estrellas activas (Dorado/Amarillo) */
+    }
+
+    .star-icon:hover {
+        transform: scale(1.1);
+    }
+
+/* === Boton de Publicar === */
+.btn-publish {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    border-radius: 10px;
+    background-color: var(--color-primary);
+    color: var(--color-background-primary);
+}
+
+    .btn-publish:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+/* Spinners (Asegurarse de que el icono rote) */
+.spinner {
+    animation: spin 1s linear infinite;
+    margin-right: 8px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

@@ -10,6 +10,8 @@ const useAuth = () => {
 
     const getStoredUser = useCallback(() => {
         const token = localStorage.getItem('authToken');
+        const storedUser = localStorage.getItem('authUser');
+
         if (token) {
             try {
                 const decoded = jwtDecode(token);
@@ -17,17 +19,15 @@ const useAuth = () => {
                 if (decoded.exp * 1000 < Date.now()) {
                     console.warn('Token expirado. Sesión cerrada automáticamente.');
                     localStorage.removeItem('authToken');
+                    localStorage.removeItem('authUser');
                     return null;
                 }
 
-                return {
-                    id: decoded.userId,
-                    alias: decoded.alias,
-                    email: decoded.email,
-                };
+                return storedUser ? JSON.parse(storedUser) : null;
             } catch (e) {
                 console.error('Error al decodificar el token:', e);
                 localStorage.removeItem('authToken');
+                localStorage.removeItem('authUser');
                 return null;
             }
         }
@@ -37,17 +37,12 @@ const useAuth = () => {
     const login = async (credentials) => {
         setIsLoading(true);
         try {
-            const { token } = await userService.loginUser(credentials);
+            const { token, user } = await userService.loginUser(credentials);
+
             localStorage.setItem('authToken', token);
+            localStorage.setItem('authUser', JSON.stringify(user));
 
-            const decoded = jwtDecode(token);
-            const userData = {
-                id: decoded.userId,
-                alias: decoded.alias,
-                email: decoded.email,
-            };
-
-            setUser(userData);
+            setUser(user);
             setIsLoggedIn(true);
             return { success: true };
         } catch (error) {
@@ -60,6 +55,7 @@ const useAuth = () => {
 
     const logout = useCallback(() => {
         localStorage.removeItem('authToken');
+        localStorage.removeItem('authUser');
         setUser(null);
         setIsLoggedIn(false);
     }, []);
@@ -75,7 +71,7 @@ const useAuth = () => {
 
     return {
         user,
-        setUser,        // 👈 ahora sí lo devolvemos
+        setUser,
         isLoggedIn,
         isLoading,
         login,

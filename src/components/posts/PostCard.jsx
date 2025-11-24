@@ -1,77 +1,117 @@
 // src/components/posts/PostCard.jsx
 import React from 'react';
-import { FaHeart, FaComment, FaStar, FaEllipsisV } from 'react-icons/fa'; 
+import { FaHeart, FaComment, FaStar, FaEllipsisV, FaTrash, FaEdit, FaImage } from 'react-icons/fa';
 import { useAuthContext } from '../../context/AuthContext';
-// Importa el hook usePosts para las interacciones (o las recibe por props)
 
-const PostCard = ({ post, onLike, onDelete, onEdit }) => {
-    const { user } = useAuthContext(); 
-    const isAuthor = user && user.id === post.authorId;
-    
-    // Función para renderizar la calificación de 1 a 5 estrellas (Requisito 2.2)
-    const renderRating = (rating) => {
-        const stars = [];
-        for (let i = 1; i <= 5; i++) {
-            stars.push(
-                <FaStar 
-                    key={i} 
-                    className={i <= rating ? 'star-filled' : 'star-empty'} 
+const PostCard = ({ post, onLike, onDelete, onEdit, onFavorite, onUploadImage }) => {
+    const { user } = useAuthContext();
+    const isAuthor = user && user.id === post.authorId?._id;
+
+    // Renderizar estrellas de calificación
+    const renderRating = (rating) => (
+        <div className="post-rating">
+            {[...Array(5)].map((_, i) => (
+                <FaStar
+                    key={i}
+                    className={`star ${i + 1 <= rating ? 'active' : ''}`}
                 />
-            );
-        }
-        return <div className="post-rating">{stars}</div>;
+            ))}
+        </div>
+    );
+
+    // Manejar like
+    const handleLikeClick = () => {
+        onLike(post._id, post.isLiked);
     };
 
-    // Maneja el like usando la función del hook/prop
-    const handleLikeClick = () => {
-        onLike(post.id, post.isLiked);
+    // Manejar favorita
+    const handleFavoriteClick = () => {
+        if (onFavorite) onFavorite(post._id, post.isFavorite);
+    };
+
+    // Manejar subida de imagen (solo autor)
+    const handleUploadImage = (e) => {
+        const file = e.target.files[0];
+        if (file && onUploadImage) {
+            onUploadImage(post._id, file);
+        }
     };
 
     return (
         <article className="post-card">
-            {/* Encabezado del Post: Autor e Información */}
+            {/* Encabezado */}
             <header className="post-header">
-                <img src={post.authorAvatar || '/default-avatar.png'} alt={post.authorAlias} className="author-avatar" />
+                <img
+                    src={post.authorId?.avatarUrl || '/default-avatar.png'}
+                    alt={post.authorId?.alias || 'Usuario'}
+                    className="author-avatar"
+                />
                 <div className="author-info">
-                    <span className="author-alias">{post.authorAlias}</span>
+                    <span className="author-alias">{post.authorId?.alias}</span>
                     <span className="post-date">{new Date(post.createdAt).toLocaleDateString()}</span>
                 </div>
-                {/* Opciones (Editar, Eliminar, Reportar) Requisito 2.7, 4.5 */}
-                <div className="post-options">
-                    <FaEllipsisV className="btn-options-icon" />
-                    {/* El menú desplegable iría aquí (no implementado por simplicidad) */}
-                </div>
+
+                {/* Opciones solo si es autor */}
+                {isAuthor && (
+                    <div className="post-options">
+                        <button onClick={() => onEdit(post._id)} aria-label="Editar post">
+                            <FaEdit />
+                        </button>
+                        <button onClick={() => onDelete(post._id)} aria-label="Eliminar post">
+                            <FaTrash />
+                        </button>
+                        <label className="upload-image-btn" aria-label="Subir imagen">
+                            <FaImage />
+                            <input
+                                type="file"
+                                accept="image/*"
+                                style={{ display: 'none' }}
+                                onChange={handleUploadImage}
+                            />
+                        </label>
+                        <button className="btn-options-icon" aria-label="Más opciones">
+                            <FaEllipsisV />
+                        </button>
+                    </div>
+                )}
             </header>
 
-            {/* Contenido principal de la publicación */}
+            {/* Contenido */}
             <div className="post-content">
-                <h3 className="game-title">{post.gameTitle}</h3> {/* Requisito 2.2 */}
-                <img src={post.imageUrl} alt={post.gameTitle} className="post-image" /> {/* Requisito 2.2 */}
-                <p className="post-description">{post.description}</p> {/* Requisito 2.2 */}
+                <h3 className="game-title">{post.gameTitle}</h3>
+                {post.imageUrl && (
+                    <img src={post.imageUrl} alt={post.gameTitle} className="post-image" />
+                )}
+                <p className="post-description">{post.description}</p>
             </div>
-            
-            {/* Calificación y Estadísticas */}
+
+            {/* Calificación y estadísticas */}
             <div className="post-stats">
-                {renderRating(post.rating)} {/* Requisito 2.2 */}
+                {renderRating(post.rating)}
                 <div className="interaction-counts">
-                    <span className="count-item"><FaHeart /> {post.likesCount}</span> {/* Requisito 2.6 */}
-                    <span className="count-item"><FaComment /> {post.commentsCount}</span> {/* Requisito 2.6 */}
+                    <span className="count-item"><FaHeart /> {post.likesCount}</span>
+                    <span className="count-item"><FaComment /> {post.commentsCount}</span>
                 </div>
             </div>
 
-            {/* Acciones (Interacción) */}
+            {/* Acciones */}
             <footer className="post-actions">
-                <button 
-                    onClick={handleLikeClick} 
+                <button
+                    onClick={handleLikeClick}
                     className={`btn-action ${post.isLiked ? 'liked' : ''}`}
+                    aria-label="Dar like"
                 >
                     <FaHeart /> {post.isLiked ? 'Me Gusta' : 'Like'}
                 </button>
-                <button className="btn-action">
+                <button className="btn-action" aria-label="Comentar">
                     <FaComment /> Comentar
                 </button>
-                <button className="btn-action">
-                    Marcar Favorita {/* Requisito 2.11 */}
+                <button
+                    onClick={handleFavoriteClick}
+                    className={`btn-action ${post.isFavorite ? 'favorited' : ''}`}
+                    aria-label="Marcar como favorita"
+                >
+                    <FaStar /> {post.isFavorite ? 'Favorita' : 'Marcar Favorita'}
                 </button>
             </footer>
         </article>

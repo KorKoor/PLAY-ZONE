@@ -1,64 +1,100 @@
-﻿// src/services/userService.js (VERSIÓN COMPLETA Y FUNCIONAL)
+﻿// src/services/userService.js
 import { post, put, del, get } from './httpService';
 
 const userService = {
-
     // === AUTENTICACIÓN ===
-
-    // Requisito 1.1 y 1.9: Registrar nuevo usuario y validar correo único
-    registerUser: (userData) => {
-        return post('/auth/register', userData);
+    registerUser: async (userData) => {
+        try {
+            return await post('/auth/register', userData);
+        } catch (error) {
+            console.error('Error en registerUser:', error);
+            throw error;
+        }
     },
 
-    // Requisito 1.2: Iniciar sesión
-    loginUser: (credentials) => {
-        return post('/auth/login', credentials);
+    loginUser: async (credentials) => {
+        try {
+            return await post('/auth/login', credentials);
+        } catch (error) {
+            console.error('Error en loginUser:', error);
+            throw error;
+        }
     },
 
-    // Para el registro mejorado, necesitamos un endpoint de verificación de correo
-    checkEmail: (email) => {
-        return post('/auth/check-email', { email });
+    checkEmail: async (email) => {
+        try {
+            return await post('/auth/check-email', { email });
+        } catch (error) {
+            console.error('Error en checkEmail:', error);
+            throw error;
+        }
     },
 
-
-    // === Rutas que manejan el recurso '/users' (Perfil, Seguidores, Lista) ===
-
-    // 🚀 AÑADIDO (Requisito 1.8): Función para obtener los datos del perfil 🚀
-    getUserProfile: (userId) => {
-        // Llama a GET /api/v1/users/:userId
-        return get(`/users/${userId}`);
+    // === USERS ===
+    getUserProfile: async (userId) => {
+        try {
+            return await get(`/users/${userId}`);
+        } catch (error) {
+            console.error('Error en getUserProfile:', error);
+            throw error;
+        }
     },
 
-    // Requisito 1.3: Editar perfil
-    updateProfile: (userId, profileData) => {
-        return put(`/users/${userId}`, profileData);
+    updateProfile: async (userId, profileData) => {
+        try {
+            return await put(`/users/${userId}`, profileData);
+        } catch (error) {
+            console.error('Error en updateProfile:', error);
+            throw error;
+        }
     },
 
-    // 🚀 AÑADIDO (Requisito 1.10): Función para cambiar contraseña 🚀
-    changePassword: (passwordData) => {
-        // Llama a PUT /api/v1/users/password
-        return put(`/users/password`, passwordData);
+    changePassword: async (passwordData) => {
+        try {
+            return await put('/users/password', passwordData);
+        } catch (error) {
+            console.error('Error en changePassword:', error);
+            throw error;
+        }
     },
 
-    // Requisito 1.4: Eliminar cuenta
-    deleteAccount: (userId) => {
-        return del(`/users/${userId}`);
+    deleteAccount: async (userId) => {
+        try {
+            return await del(`/users/${userId}`);
+        } catch (error) {
+            console.error('Error en deleteAccount:', error);
+            throw error;
+        }
     },
 
-    // Requisito 1.7: Seguir/Dejar de seguir
-    followUser: (targetUserId) => {
-        // Llama a POST /api/v1/users/:targetUserId/follow
-        return post(`/users/${targetUserId}/follow`);
+    followUser: async (targetUserId) => {
+        try {
+            return await post(`/users/${targetUserId}/follow`);
+        } catch (error) {
+            console.error('Error en followUser:', error);
+            throw error;
+        }
     },
 
-    // Requisito 1.5 y 1.6: Lista general y búsqueda de usuarios
-    getAllUsers: (query = '') => {
-        const endpoint = query ? `/users?search=${encodeURIComponent(query)}` : '/users';
-        return get(endpoint);
+    getAllUsers: async (query = '') => {
+        try {
+            const endpoint = query
+                ? `/users?search=${encodeURIComponent(query)}`
+                : '/users';
+            return await get(endpoint);
+        } catch (error) {
+            console.error('Error en getAllUsers:', error);
+            throw error;
+        }
     },
 
-    getActiveUsers: () => {
-        return get('/users/active');
+    getActiveUsers: async () => {
+        try {
+            return await get('/users/active');
+        } catch (error) {
+            console.error('Error en getActiveUsers:', error);
+            throw error;
+        }
     },
 };
 

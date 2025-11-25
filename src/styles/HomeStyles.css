@@ -372,3 +372,7 @@
     background-color: #708090;
     color: #000000;
 }
+
+[data-theme='light'] .app-logo {
+    color: #000000;
+}

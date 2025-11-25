@@ -1,5 +1,68 @@
 /* src/styles/SidebarCommunity.css */
 
+/* Contenedor principal de la Sidebar */
+.sidebar-community {
+    width: 300px; /* Ancho fijo para la sidebar */
+    padding: 20px;
+    background-color: var(--color-background-secondary); /* Un fondo ligeramente diferente */
+    border-left: 1px solid var(--color-border);
+    overflow-y: auto; /* Para scroll si el contenido es largo */
+    height: calc(100vh - var(--header-height)); /* Ajustar altura para que no se superponga con el header */
+    position: sticky; /* Hace que la sidebar se quede fija al hacer scroll */
+    top: var(--header-height); /* Se posiciona debajo del header */
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.05); /* Sutil sombra a la izquierda */
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Espacio entre las tarjetas de la sidebar */
+}
+
+/* Tarjetas dentro de la Sidebar */
+.sidebar-card {
+    background-color: var(--color-surface); /* Fondo de la tarjeta */
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: var(--shadow-small); /* Sombra para dar profundidad */
+    border: 1px solid var(--color-border);
+}
+
+.sidebar-card h3 {
+    font-size: 1.2em;
+    color: var(--color-text-primary);
+    margin-bottom: 5px;
+    border-bottom: 2px solid var(--color-primary); /* Subrayado temático */
+    padding-bottom: 8px;
+}
+
+.card-subtitle {
+    font-size: 0.85em;
+    color: var(--color-text-secondary);
+    margin-bottom: 15px;
+}
+
+/* Lista de Jugadores Activos */
+.active-players-list {
+    list-style: none; /* Quitar viñetas predeterminadas */
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espacio entre cada jugador */
+}
+
+/* Item individual del jugador */
+.player-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 5px;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.player-item:hover {
+    background-color: var(--color-hover); /* Resaltar al pasar el ratón */
+}
+
 .player-avatar {
     width: 40px;
     height: 40px;
@@ -7,4 +70,121 @@
     border: 2px solid var(--color-primary);
     object-fit: cover;
     cursor: pointer;
+    flex-shrink: 0; /* Evitar que el avatar se encoja */
 }
+
+.player-details {
+    flex-grow: 1; /* Permitir que los detalles tomen el espacio restante */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden; /* Ocultar texto que se desborda */
+}
+
+.player-alias {
+    font-weight: bold;
+    color: var(--color-text-primary);
+    cursor: pointer;
+    white-space: nowrap; /* Evitar que el alias se rompa en varias líneas */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Mostrar puntos suspensivos si el alias es muy largo */
+}
+
+.player-alias:hover {
+    text-decoration: underline;
+    color: var(--color-primary);
+}
+
+.player-score {
+    font-size: 0.8em;
+    color: var(--color-text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.player-score svg {
+    color: var(--color-accent); /* Color para el icono de gamepad */
+}
+
+/* Botones de Seguir/Dejar de Seguir */
+.btn-follow {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.85em;
+    font-weight: bold;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-shrink: 0; /* Evitar que el botón se encoja */
+}
+
+.follow-btn {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+.follow-btn:hover {
+    background-color: var(--color-primary-dark);
+}
+
+.unfollow-btn {
+    background-color: var(--color-button-secondary);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border);
+}
+
+.unfollow-btn:hover {
+    background-color: var(--color-hover);
+    color: var(--color-danger); /* Podría cambiar a rojo o similar para enfatizar */
+}
+
+/* Mensajes de estado (cargando, error, sin contenido) */
+.loading-state,
+.error-message,
+.no-content-message {
+    text-align: center;
+    padding: 15px;
+    color: var(--color-text-secondary);
+    font-size: 0.9em;
+}
+
+.loading-state .spinner {
+    animation: spin 1s linear infinite;
+    margin-right: 5px;
+    color: var(--color-primary);
+}
+
+.no-content-message svg {
+    display: block;
+    margin: 0 auto 10px;
+    color: var(--color-accent);
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Variables de CSS (asumiendo que existen en un GlobalStyles.css o similar) */
+/*
+:root {
+    --color-primary: #6200EE;
+    --color-primary-dark: #3700B3;
+    --color-accent: #03DAC6;
+    --color-background: #121212;
+    --color-background-secondary: #1E1E1E;
+    --color-surface: #2C2C2C;
+    --color-text-primary: #E0E0E0;
+    --color-text-secondary: #B0B0B0;
+    --color-border: #444444;
+    --color-hover: #3A3A3A;
+    --color-button-secondary: #535353;
+    --color-danger: #CF6679;
+    --shadow-small: 0 1px 3px rgba(0, 0, 0, 0.2);
+    --header-height: 60px; // Asumiendo una altura de header
+}
+*/

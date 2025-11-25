@@ -6,16 +6,20 @@ import PostCard from '../components/posts/PostCard';
 import Header from '../components/layout/Header';
 import SidebarCommunity from '../components/layout/SidebarCommunity';
 import PostForm from '../components/posts/PostForm';
-import { FaPlusCircle } from 'react-icons/fa';
+import { FaPlusCircle, FaBookOpen, FaUserCircle, FaHeart, FaHome as FaHomeIcon } from 'react-icons/fa'; // Importar iconos necesarios
+import { useNavigate } from 'react-router-dom'; // Importar para navegación
 
 const HomePage = () => {
     const { user } = useAuthContext();
+    const navigate = useNavigate(); // Inicializar hook de navegación
+
     const {
         posts,
         isLoading,
         error,
         fetchMorePosts,
         handleLike,
+        handleFavorite, // Asumimos que esta función existe en usePosts
         addNewPost // Función para insertar posts
     } = usePosts();
 
@@ -26,6 +30,17 @@ const HomePage = () => {
         addNewPost(newPost);
         setIsPostFormOpen(false);
     };
+
+    // Función para manejar el like (pasada a PostCard)
+    const handlePostLike = (postId, isLiked) => {
+        if (handleLike) handleLike(postId, isLiked);
+    };
+
+    // Función para manejar favoritos (pasada a PostCard)
+    const handlePostFavorite = (postId, isFavorite) => {
+        if (handleFavorite) handleFavorite(postId, isFavorite);
+    };
+
 
     return (
         <div className="home-layout-container">
@@ -41,11 +56,26 @@ const HomePage = () => {
                         <button
                             onClick={() => setIsPostFormOpen(true)}
                             className="btn btn-create-post"
+                            disabled={isLoading}
                         >
                             <FaPlusCircle /> Crear Publicación
                         </button>
-                        {/* Aquí se añadirán Links a /Guías, /Perfil, etc. */}
-                        <p className="nav-tip">Usa el menú para ir a Guías, Usuarios y Favoritos.</p>
+
+                        {/* 🚀 ENLACES DE NAVEGACIÓN PRINCIPALES (Requisitos 1.8, 2.11) 🚀 */}
+                        <div className="nav-links-group">
+                            <button className="nav-link-item" onClick={() => navigate('/home')}>
+                                <FaHomeIcon /> Feed Principal
+                            </button>
+                            <button className="nav-link-item" onClick={() => navigate('/guides')}>
+                                <FaBookOpen /> Ver Guías
+                            </button>
+                            <button className="nav-link-item" onClick={() => navigate(`/profile/${user.id}`)}>
+                                <FaUserCircle /> Mi Perfil
+                            </button>
+                            <button className="nav-link-item" onClick={() => navigate('/favorites')}>
+                                <FaHeart /> Mis Favoritos
+                            </button>
+                        </div>
                     </nav>
                 </aside>
 
@@ -70,15 +100,20 @@ const HomePage = () => {
                     <div className="posts-list">
                         {posts.map(post => (
                             <PostCard
-                                key={post.id}
+                                // ⚠️ FIX: Usar el _id de MongoDB como clave única ⚠️
+                                key={post._id}
                                 post={post}
-                                onLike={handleLike}
+                                onLike={handlePostLike}
+                                onFavorite={handlePostFavorite}
+                            // onEdit y onDelete se pasan aquí si se implementan modales
                             />
                         ))}
                     </div>
 
-                    {/* Botón para cargar más posts */}
-                    {!isLoading && posts.length > 0 && <button onClick={() => fetchMorePosts()} className="btn btn-load-more">Cargar Más</button>}
+                    {/* Botón para cargar más posts (Si hasMore es true) */}
+                    {!isLoading && posts.length > 0 && (
+                        <button onClick={() => fetchMorePosts()} className="btn btn-load-more">Cargar Más</button>
+                    )}
                 </section>
 
                 {/* 2c. Columna Derecha: Sidebar de Comunidad */}

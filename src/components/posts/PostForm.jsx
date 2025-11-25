@@ -1,12 +1,12 @@
-﻿// src/components/posts/PostForm.jsx (FINAL Y MEJORADO)
+﻿// src/components/posts/PostForm.jsx (CÓDIGO FINAL Y MEJORADO)
 import React, { useState, useRef } from 'react';
 import '../../styles/Post.css';
 import postService from '../../services/postService';
-import { FaStar, FaTimes, FaImage, FaSpinner, FaCheckCircle } from 'react-icons/fa'; // Iconos de feedback
+import { FaStar, FaTimes, FaImage, FaSpinner, FaCheckCircle } from 'react-icons/fa';
 
 const PostForm = ({ onClose, onSuccess }) => {
 
-    const fileInputRef = useRef(null); // Para el input de archivo
+    const fileInputRef = useRef(null);
 
     const [formData, setFormData] = useState({
         gameTitle: '',
@@ -22,15 +22,21 @@ const PostForm = ({ onClose, onSuccess }) => {
     };
 
     const handleRatingChange = (newRating) => {
-        setFormData({ ...formData, rating: newRating });
+        setFormData(prev => ({ ...prev, rating: newRating }));
     };
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            // Validacion basica del lado del cliente
-            if (file.size > 5 * 1024 * 1024) { // Limite de 5MB
+            // Validacion basica del lado del cliente (Limite 5MB)
+            if (file.size > 5 * 1024 * 1024) {
                 setError("El archivo es demasiado grande (maximo 5MB).");
+                setImageFile(null);
+                return;
+            }
+            // Verifica el tipo de archivo (aunque Multer lo hace, es mejor hacer la validacion aqui)
+            if (!file.type.startsWith('image/')) {
+                setError("Solo se permiten archivos de imagen.");
                 setImageFile(null);
                 return;
             }
@@ -44,6 +50,7 @@ const PostForm = ({ onClose, onSuccess }) => {
         setError(null);
         setIsLoading(true);
 
+        // Validacion de requisitos
         if (!formData.gameTitle || formData.description.length < 10 || formData.rating === 0) {
             setError("Debes completar el titulo, dar una opinion minima (10 chars) y una calificacion.");
             setIsLoading(false);
@@ -51,27 +58,30 @@ const PostForm = ({ onClose, onSuccess }) => {
         }
 
         try {
-            // Usamos FormData para enviar el archivo binario (imageFile)
+            // Usamos FormData para enviar los datos JSON y el archivo binario
             const data = new FormData();
             data.append('gameTitle', formData.gameTitle);
             data.append('description', formData.description);
             data.append('rating', formData.rating);
 
-            // 'image' debe coincidir con el campo esperado por Multer/Express en el backend
+            // 'image' debe coincidir con el campo esperado por Multer/Express
             if (imageFile) {
                 data.append('image', imageFile);
             }
 
+            // Llama a POST /api/v1/posts
             const newPost = await postService.createPost(data);
-            onSuccess(newPost); // Llamada para actualizar el feed y cerrar el modal
+
+            // Llama a la funcion prop que actualiza el feed en HomePage
+            onSuccess(newPost);
         } catch (err) {
-            setError(err.message || 'Error al publicar el post. Verifica que la imagen sea valida.');
+            setError(err.message || 'Error al publicar el post. Verifica la conexion con la API.');
         } finally {
             setIsLoading(false);
         }
     };
 
-    // Renderizado de estrellas
+    // Renderizado de estrellas (UX)
     const renderStarInput = () => (
         <div className="rating-input">
             {[1, 2, 3, 4, 5].map((star) => (
@@ -148,6 +158,7 @@ const PostForm = ({ onClose, onSuccess }) => {
                         onChange={handleChange}
                         required
                         rows="5"
+                        placeholder="Cuentanos que te parecio este juego, y porque lo calificaste asi."
                     ></textarea>
                 </div>
 

@@ -1,11 +1,13 @@
-﻿// src/components/users/ProfileDetails.jsx 
+﻿// src/components/users/ProfileDetails.jsx
 import React from 'react';
 // Importamos FaCalendarAlt y FaStar para mostrar más estadisticas
 import { FaUsers, FaUserPlus, FaGamepad, FaHeart, FaCalendarAlt, FaStar, FaHome } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+
 // Funcion utilitaria para formatear la fecha
 const formatDate = (dateString) => {
     if (!dateString) return 'Desconocida';
+    // Usamos 'en-US' (inglés) para evitar problemas de codificacion en el navegador
     return new Date(dateString).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 };
 
@@ -13,6 +15,10 @@ const ProfileDetails = ({ profile, children }) => {
     const navigate = useNavigate();
 
     const displayAlias = profile.alias ? `@${profile.alias}` : 'Jugador Desconocido';
+
+    // Verificacion de arrays para evitar errores de renderizado
+    const favoriteCount = profile.favoritePosts ? profile.favoritePosts.length : 0;
+
     return (
         <div className="profile-details-card">
             <header className="profile-header">
@@ -30,6 +36,7 @@ const ProfileDetails = ({ profile, children }) => {
                         <span title="Seguidores"><FaUsers /> {profile.followersCount || 0} Seguidores</span>
                         <span title="Siguiendo"><FaUserPlus /> {profile.followingCount || 0} Siguiendo</span>
                         <span title="Publicaciones"><FaGamepad /> {profile.postsCount || 0} Posts</span>
+                        {/* 🚀 Miembro Desde (Datos completados) 🚀 */}
                         <span title="Miembro Desde"><FaCalendarAlt /> Miembro desde: {formatDate(profile.createdAt)}</span>
                     </div>
                 </div>
@@ -55,6 +62,7 @@ const ProfileDetails = ({ profile, children }) => {
                 </div>
 
                 <div className="profile-prefs">
+                    {/* Consolas Favoritas */}
                     {profile.consoles && profile.consoles.length > 0 && (
                         <div className="pref-section">
                             <h4>Consolas Favoritas</h4>
@@ -63,6 +71,7 @@ const ProfileDetails = ({ profile, children }) => {
                             </div>
                         </div>
                     )}
+                    {/* Generos Favoritos */}
                     {profile.genres && profile.genres.length > 0 && (
                         <div className="pref-section">
                             <h4>Generos Favoritos</h4>
@@ -71,16 +80,18 @@ const ProfileDetails = ({ profile, children }) => {
                             </div>
                         </div>
                     )}
-                    {profile.favoritePosts && profile.favoritePosts.length > 0 && (
+                    {/* Interacciones (Posts Favoritos - Requisito 2.11) */}
+                    {favoriteCount > 0 && (
                         <div className="pref-section">
                             <h4>Interacciones</h4>
                             <div className="tag-list">
-                                <span className="tag tag-favorite"><FaHeart /> {profile.favoritePosts.length} Posts Favoritos</span>
+                                <span className="tag tag-favorite"><FaHeart /> {favoriteCount} Posts Favoritos</span>
                             </div>
                         </div>
                     )}
                 </div>
             </div>
+            {/* Nota: Las secciones de Posts y Guías se renderizan en ProfilePage.jsx */}
         </div>
     );
 };

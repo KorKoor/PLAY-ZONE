@@ -1,52 +1,85 @@
-﻿// src/components/posts/PostCard.jsx (CÓDIGO FINAL Y MEJORADO)
-import React from 'react';
-import '../../styles/PostCard.css';
-import { FaHeart, FaComment, FaStar, FaEllipsisV, FaTrash, FaEdit, FaImage, FaCalendarAlt } from 'react-icons/fa';
-import { useAuthContext } from '../../context/AuthContext';
+﻿// src/components/posts/PostCard.jsx
 
-const PostCard = ({ post, onLike, onDelete, onEdit, onFavorite, onUploadImage }) => {
-    // Es mejor usar solo el ID para la comparacion, ya que user.id viene del JWT (string)
+import React, { useState } from 'react';
+import '../../styles/PostCard.css';
+import { FaHeart, FaComment, FaStar, FaEllipsisV, FaTrash, FaEdit, FaCalendarAlt, FaUserMinus, FaUserPlus } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom'; // Para navegación de perfil
+import { useAuthContext } from '../../context/AuthContext';
+import postService from '../../services/postService'; // Servicio para obtener la lista de likes
+import CommentSection from './CommentSection';
+import LikeListDropdown from './LikeListDropdown'; // Componente para mostrar la lista
+
+// Funciones utilitarias (simuladas aquí, pero la lógica va en usePosts)
+const formatDate = (dateString) => {
+    if (!dateString) return 'Fecha Desconocida';
+    return new Date(dateString).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+};
+
+// Renderizar estrellas de calificación
+const renderRating = (rating) => (
+    <div className="post-rating">
+        {[...Array(5)].map((_, i) => (
+            <FaStar
+                key={i}
+                className={`star ${i + 1 <= rating ? 'active' : 'inactive'}`}
+            />
+        ))}
+    </div>
+);
+
+
+const PostCard = ({ post, onLike, onDelete, onEdit, onFavorite, addComment }) => {
+
+    // Hooks y Estados
+    const navigate = useNavigate();
     const { user } = useAuthContext();
-    // ⚠️ Ajuste: Usar el ID del autor para comparacion segura (string vs string) ⚠️
     const isAuthor = user && user.id === post.authorId;
 
-    const formatDate = (dateString) => {
-        if (!dateString) return 'Fecha Desconocida';
-        // Usamos es-ES para un formato de fecha amigable si los acentos estan resueltos
-        return new Date(dateString).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
-    };
+    const [isCommentsOpen, setIsCommentsOpen] = useState(false);
+    const [isLikeListOpen, setIsLikeListOpen] = useState(false);
 
-    // Renderizar estrellas de calificación
-    const renderRating = (rating) => (
-        <div className="post-rating">
-            {[...Array(5)].map((_, i) => (
-                <FaStar
-                    key={i}
-                    // ⚠️ Usamos clases 'active' y 'inactive' para el CSS ⚠️
-                    className={`star ${i + 1 <= rating ? 'active' : 'inactive'}`}
-                />
-            ))}
-        </div>
-    );
+    // ⚠️ ESTADOS PARA LA CARGA DE LIKES REALES ⚠️
+    const [likesData, setLikesData] = useState(null);
+    const [isLikesLoading, setIsLikesLoading] = useState(false);
 
-    // Manejar like (Requisito 2.4)
+
+    // Manejar like
     const handleLikeClick = () => {
-        // La API espera el ID del post y el estado actual
         if (onLike) onLike(post._id, post.isLiked);
+        // Cerrar el listado si se hace toggle de like
+        if (isLikeListOpen) setIsLikeListOpen(false);
     };
 
-    // Manejar favorita (Requisito 2.11)
     const handleFavoriteClick = () => {
         if (onFavorite) onFavorite(post._id, post.isFavorite);
     };
 
-    // Manejar subida de imagen (solo autor)
-    const handleUploadImage = (e) => {
-        const file = e.target.files[0];
-        if (file && onUploadImage) {
-            onUploadImage(post._id, file);
+    const handleCommentToggle = () => {
+        setIsCommentsOpen(prev => !prev);
+        if (isLikeListOpen) setIsLikeListOpen(false);
+    };
+
+    // 🚀 FUNCIÓN CLAVE: Cargar y mostrar la lista de likes (Real) 🚀
+    const handleLikeCountClick = async () => {
+        // 1. Alternar la visibilidad
+        setIsLikeListOpen(prev => !prev);
+
+        // 2. Si el dropdown se abre y los datos aún no se han cargado, hacer fetch
+        if (!isLikeListOpen && !likesData && post.likesCount > 0) {
+            setIsLikesLoading(true);
+            try {
+                // Llama al endpoint GET /api/v1/posts/:postId/likes
+                const data = await postService.getLikesList(post._id);
+                setLikesData(data.users); // Asumimos que la API devuelve { users: [...] }
+            } catch (error) {
+                console.error("Error cargando lista de likes:", error);
+                setLikesData([]);
+            } finally {
+                setIsLikesLoading(false);
+            }
         }
     };
+
 
     return (
         <article className="post-card">
@@ -56,8 +89,8 @@ const PostCard = ({ post, onLike, onDelete, onEdit, onFavorite, onUploadImage })
                     src={post.authorId?.avatarUrl || '/default-avatar.png'}
                     alt={post.authorId?.alias || 'Usuario'}
                     className="author-avatar"
-                    // ⚠️ Navegar al perfil al hacer clic en el avatar (Buena UX) ⚠️
-                    onClick={() => console.log(`Navegar a /profile/${post.authorId?._id}`)}
+                    // Navegación al perfil
+                    onClick={() => navigate(`/profile/${post.authorId?._id}`)}
                 />
                 <div className="author-info">
                     <span className="author-alias">{post.authorId?.alias}</span>
@@ -67,16 +100,9 @@ const PostCard = ({ post, onLike, onDelete, onEdit, onFavorite, onUploadImage })
                 {/* Opciones solo si es autor */}
                 {isAuthor && (
                     <div className="post-options">
-                        <button onClick={() => onEdit(post)} aria-label="Editar post" className="btn-icon">
-                            <FaEdit />
-                        </button>
-                        <button onClick={() => onDelete(post._id)} aria-label="Eliminar post" className="btn-icon delete-btn">
-                            <FaTrash />
-                        </button>
-                        {/* El botón de opciones desplegable iría aquí */}
-                        <button className="btn-options-icon" aria-label="Más opciones">
-                            <FaEllipsisV />
-                        </button>
+                        <button onClick={() => onEdit(post)} aria-label="Editar post" className="btn-icon"><FaEdit /></button>
+                        <button onClick={() => onDelete(post._id)} aria-label="Eliminar post" className="btn-icon delete-btn"><FaTrash /></button>
+                        <button className="btn-options-icon" aria-label="Más opciones"><FaEllipsisV /></button>
                     </div>
                 )}
             </header>
@@ -94,8 +120,21 @@ const PostCard = ({ post, onLike, onDelete, onEdit, onFavorite, onUploadImage })
             <div className="post-stats">
                 {renderRating(post.rating)}
                 <div className="interaction-counts">
-                    <span className="count-item" title="Me gusta"><FaHeart className="icon-heart" /> {post.likesCount}</span>
-                    <span className="count-item" title="Comentarios"><FaComment /> {post.commentsCount}</span>
+                    {/* ⚠️ BOTÓN DE CONTADOR DE LIKES (Real) ⚠️ */}
+                    <span
+                        className="count-item like-count-clickable"
+                        title="Ver usuarios que dieron like"
+                        onClick={handleLikeCountClick}
+                    >
+                        <FaHeart className="icon-heart" /> {post.likesCount}
+                    </span>
+                    <span
+                        className="count-item comments-count-link"
+                        title="Comentarios"
+                        onClick={handleCommentToggle}
+                    >
+                        <FaComment /> {post.commentsCount}
+                    </span>
                 </div>
             </div>
 
@@ -108,7 +147,11 @@ const PostCard = ({ post, onLike, onDelete, onEdit, onFavorite, onUploadImage })
                 >
                     <FaHeart /> {post.isLiked ? 'Me Gusta' : 'Like'}
                 </button>
-                <button className="btn-action btn-comment" aria-label="Comentar">
+                <button
+                    onClick={handleCommentToggle}
+                    className="btn-action btn-comment"
+                    aria-label="Comentar"
+                >
                     <FaComment /> Comentar
                 </button>
                 <button
@@ -119,6 +162,28 @@ const PostCard = ({ post, onLike, onDelete, onEdit, onFavorite, onUploadImage })
                     <FaStar /> {post.isFavorite ? 'Favorita' : 'Marcar Favorita'}
                 </button>
             </footer>
+
+            {/* ⚠️ DROPDOWN DE LIKES (Visibilidad y datos) ⚠️ */}
+            {isLikeListOpen && (
+                <div className="like-list-wrapper">
+                    <LikeListDropdown
+                        likesList={likesData}
+                        isLoading={isLikesLoading}
+                        onClose={() => setIsLikeListOpen(false)}
+                    />
+                </div>
+            )}
+
+            {/* SECCIÓN DE COMENTARIOS */}
+            {isCommentsOpen && (
+                <div className="comments-dropdown-wrapper">
+                    <CommentSection
+                        postId={post._id}
+                        postCommentsCount={post.commentsCount}
+                        addComment={addComment}
+                    />
+                </div>
+            )}
         </article>
     );
 };

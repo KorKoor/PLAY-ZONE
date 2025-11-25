@@ -1,3 +1,10 @@
+/*
+ * ==========================================================
+ * GLOBAL STYLES - PLAY-ZONE BASE LAYOUT
+ * Este archivo establece la paleta de colores y el estilo base del cuerpo.
+ * ==========================================================
+ */
+
 :root {
     /* === FONDOS Y ESTRUCTURA (Contraste Fuerte) === */
     --color-background-primary: #0F141F; /* Fondo MÁS oscuro (Negro-Azulado) */
@@ -7,13 +14,83 @@
     --color-border: #3D4A66; /* Borde y separadores */
     /* === ACENTO Y FEEDBACK === */
     --color-accent-blue: #00C6FF; /* Azul de Acento VIBRANTE (Eléctrico) */
-    --color-primary: var(--color-accent-blue); /* Alias */
+    --color-primary: var(--color-accent-blue); /* Alias principal */
     --color-primary-rgb: 0, 198, 255; /* RGB para sombras y efectos glow */
+    --color-accent-hover: #0099CC; /* Azul de hover sutil */
     /* === TEXTO === */
-    --color-text-light: #F0F6FF; /* Texto principal (Blanco puro, visible) */
-    --color-text-secondary: #A0B2D6; /* Texto gris, subtítulos */
+    --color-text-light: #E0E7FF; /* Texto principal (Blanco suave) */
+    --color-text-secondary: #9FAACF; /* Texto gris, subtítulos */
     /* === FEEDBACK VISUAL === */
     --color-success: #38A169; /* Verde para éxito/CTA */
     --color-danger: #E53E3E; /* Rojo para error/eliminar */
-    --color-secondary: #4A5C7F; /* Nuevo color secundario para tags/botones sutiles */
+    --color-secondary: #4A5C7F; /* Color secundario para botones/tags */
+}
+
+/* ----------------------------------------------------------
+ * BASE RESET Y TIPOGRAFÍA
+ * ---------------------------------------------------------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    /* Aplicar el fondo principal del tema oscuro */
+    background-color: var(--color-background-primary);
+    color: var(--color-text-light); /* Aplicar el texto claro a todo el cuerpo */
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden; /* Evitar scroll horizontal */
+}
+
+/* Estilo para el contenedor principal de React */
+.App {
+    background-color: var(--color-background-secondary);
+    min-height: 100vh;
+}
+
+/* ----------------------------------------------------------
+ * ESTILOS GENÉRICOS (Botones y Formularios)
+ * ---------------------------------------------------------- */
+.btn {
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-primary {
+    background-color: var(--color-primary);
+    color: var(--color-background-primary); /* Texto oscuro sobre el acento brillante */
+    box-shadow: 0 4px 15px rgba(var(--color-primary-rgb), 0.5);
+}
+
+    .btn-primary:hover:not(:disabled) {
+        background-color: var(--color-accent-hover);
+        transform: translateY(-2px);
+    }
+
+.btn-secondary {
+    background-color: var(--color-secondary);
+    color: var(--color-text-light);
+    border: 1px solid var(--color-border);
+}
+
+    .btn-secondary:hover:not(:disabled) {
+        background-color: #5d7099;
+        transform: translateY(-1px);
+    }
+
+.btn:disabled {
+    background-color: var(--color-border);
+    color: var(--color-text-secondary);
+    cursor: not-allowed;
+    box-shadow: none;
 }

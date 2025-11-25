@@ -1,40 +1,48 @@
-/* src/styles/PostCard.css */
+/* src/styles/PostCard.css (Adaptado al Diseño Final del Perfil) */
 
-/* Variables de contexto para Posts */
-/* Asumimos: --color-card, --color-border, --color-primary, --color-danger, --color-text-light, etc. */
+/* Variables de contexto para Posts (Asegurar coherencia con ProfileStyles.css) */
+    --color-card: #28374E;
+    --color-border: #3D4A66;
+    --color-primary: #00C6FF;
+    --color-primary-rgb: 0, 198, 255;
+    --color-danger: #E53E3E;
+    --color-secondary: #4A5C7F;
+    --color-input-bg: #141D2B;
+    --color-text-light: #E0E7FF;
+    --color-text-secondary: #9FAACF;
+
 
 .post-card {
     background-color: var(--color-card);
-    border-radius: 12px;
-    padding: 25px;
-    margin-bottom: 30px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-    border: 1px solid var(--color-border);
-    transition: transform 0.3s;
+    border-radius: 16px; /* Coherente con perfil (más suave) */
+    padding: 30px; /* Más padding para airear */
+    margin-bottom: 40px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+    border: 2px solid var(--color-border); /* Borde más definido */
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
     .post-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8), 0 0 10px rgba(var(--color-primary-rgb), 0.2); /* Sombra más dramática */
     }
 
 /* === Encabezado y Autor === */
 .post-header {
     display: flex;
     align-items: center;
-    gap: 15px;
-    margin-bottom: 20px;
-    position: relative;
+    gap: 20px; /* Más espacio */
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(var(--color-border), 0.5); /* Separador sutil */
 }
 
 .author-avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid var(--color-primary);
+    width: 55px; /* Ligeramente más grande */
+    height: 55px;
+    border: 4px solid var(--color-primary); /* Borde más grueso y vibrante */
+    box-shadow: 0 0 10px rgba(var(--color-primary-rgb), 0.5);
     cursor: pointer;
-    transition: border-color 0.3s;
 }
 
     .author-avatar:hover {
@@ -44,40 +52,31 @@
 .author-alias {
     font-weight: 700;
     color: var(--color-text-light);
-    font-size: 1.1rem;
+    font-size: 1.2rem;
+    letter-spacing: 0.5px;
     cursor: pointer;
 }
 
-    .author-alias:hover {
-        text-decoration: underline;
-    }
-
 .post-date {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     color: var(--color-text-secondary);
 }
 
-/* Opciones de Autor (Editar/Eliminar) */
+/* Opciones de Autor (Botones de ícono) */
 .post-options {
     margin-left: auto;
-    display: flex;
-    gap: 10px;
+    gap: 12px;
 }
 
 .btn-icon {
-    background: none;
-    border: none;
     color: var(--color-text-secondary);
-    font-size: 1rem;
-    cursor: pointer;
+    font-size: 1.1rem;
     transition: color 0.2s;
 }
 
     .btn-icon:hover {
         color: var(--color-primary);
+        transform: scale(1.1);
     }
 
 .delete-btn:hover {
@@ -86,64 +85,51 @@
 
 /* === Contenido === */
 .game-title {
-    font-size: 1.5rem;
+    font-size: 1.8rem; /* Título más grande */
     color: var(--color-text-light);
     margin-bottom: 15px;
-    font-weight: 700;
+    font-weight: 800; /* Coherente con el estilo de perfil */
 }
 
 .post-image {
     width: 100%;
-    max-height: 400px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    max-height: 450px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
 }
 
 .post-description {
     color: var(--color-text-secondary);
-    line-height: 1.6;
-    margin-bottom: 20px;
+    line-height: 1.7;
+    font-size: 1.05rem;
 }
 
 /* === Calificación y Estadísticas === */
 .post-stats {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 0;
-    border-top: 1px solid var(--color-border);
-    border-bottom: 1px solid var(--color-border);
-    margin-bottom: 20px;
+    padding: 20px 0;
+    border-top: 2px dashed var(--color-border); /* Más pronunciado */
+    border-bottom: 2px dashed var(--color-border);
 }
 
-/* Estrellas (Función requerida) */
+/* Estrellas */
 .post-rating {
-    font-size: 1.3rem;
-    color: var(--color-text-secondary);
+    font-size: 1.5rem; /* Estrellas más grandes */
 }
 
-.star {
-    margin-right: 2px;
+.star.active {
+    color: #FFC300; /* Dorado brillante */
+    text-shadow: 0 0 5px #FFC300; /* Glow para las estrellas */
 }
-    /* Estilo para las estrellas seleccionadas */
-    .star.active {
-        color: #FFC300; /* Color Dorado/Amarillo brillante */
-    }
 
 /* Contadores */
 .interaction-counts {
-    display: flex;
-    gap: 20px;
+    gap: 30px;
 }
 
 .count-item {
-    display: flex;
-    align-items: center;
-    gap: 5px;
+    font-size: 1rem;
     color: var(--color-text-secondary);
-    font-size: 0.95rem;
 }
 
 .icon-heart {
@@ -152,35 +138,55 @@
 
 /* === Acciones (Footer) === */
 .post-actions {
-    display: flex;
-    justify-content: space-around;
+    padding-top: 15px;
+    gap: 15px; /* Espacio entre botones */
 }
 
 .btn-action {
-    background: none;
-    border: none;
-    color: var(--color-text-secondary);
-    padding: 10px 15px;
-    font-weight: 600;
-    font-size: 1rem;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: color 0.2s, background-color 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    padding: 12px 18px; /* Botones más cómodos */
+    font-weight: 700;
+    font-size: 1.05rem;
+    border-radius: 10px;
+    transition: all 0.3s;
 }
 
     .btn-action:hover {
         color: var(--color-primary);
-        background-color: var(--color-input-bg);
+        background-color: var(--color-secondary); /* Fondo de hover más fuerte */
+        transform: translateY(-1px);
     }
 
 /* Estilos de estado de interaccion */
 .btn-like.liked {
-    color: var(--color-danger);
+    color: #FF66A3; /* Rosa Suave/Vibrante para LIKE */
+    text-shadow: 0 0 5px rgba(255, 102, 163, 0.8);
 }
 
 .btn-favorite.favorited {
     color: #FFC300;
+    text-shadow: 0 0 5px rgba(255, 195, 0, 0.8);
+}
+
+
+/* ----------------------------------------------------------
+ * LISTADO DE LIKES & COMENTARIOS (Dropdowns)
+ * ---------------------------------------------------------- */
+.like-list-dropdown {
+    background-color: var(--color-input-bg);
+    border: 2px solid var(--color-primary); /* Borde más fuerte */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.9);
+}
+
+    .like-list-dropdown li:hover {
+        background-color: rgba(var(--color-primary-rgb), 0.15); /* Fondo de hover más visible */
+        transform: none;
+    }
+
+.like-user-avatar {
+    border: 2px solid var(--color-primary); /* Borde de acento al avatar en el dropdown */
+}
+
+.comments-dropdown-wrapper {
+    margin-top: 30px;
+    /* Asegurar que el CommentSection se vea bien debajo */
 }

@@ -545,3 +545,79 @@
     .btn-home-top-right:hover {
         background: #0056b3;
     }
+
+/* src/styles/ProfileStyles.css (Fragmento de corrección/adición) */
+
+/* === Variables de Color === */
+:root {
+    /* ... (asegúrate de que estas variables de color existan para el efecto) ... */
+    --color-primary: #00C6FF;
+    --color-secondary: #4A5C7F;
+    --color-danger: #E53E3E;
+    --color-favorite-icon: #F06; /* Nuevo color vibrante para el corazon/favoritos */
+    --color-warning-yellow: #FFC300; /* Color para tags/advertencia */
+}
+
+/* ----------------------------------------------------------
+ * 1. ENCABEZADO Y ESTADÍSTICAS (ProfileDetails.jsx)
+ * ---------------------------------------------------------- */
+
+.profile-stats {
+    /* ... (otros estilos de gap/color/font) ... */
+}
+
+    /* Micro-ajuste: Asegurar que los iconos en las estadísticas sean de acento */
+    .profile-stats span svg {
+        color: var(--color-primary); /* Base de los iconos de estadísticas */
+        font-size: 1.1em;
+    }
+
+/* ----------------------------------------------------------
+ * 2. PREFERENCIAS E INTERACCIONES (Tags)
+ * ---------------------------------------------------------- */
+
+.profile-prefs {
+    /* ... (estilos de contenedor) ... */
+}
+
+.tag-list {
+    /* ... (estilos de contenedor) ... */
+}
+
+/* Tags Genericos */
+.tag {
+    /* ... (estilos de padding, border-radius) ... */
+    border: 1px solid var(--color-border);
+}
+
+/* Estilo para el Tag de Posts Favoritos (Interacciones) */
+.tag-favorite {
+    /* Usar un color vibrante para el corazón */
+    background-color: rgba(240, 0, 102, 0.15); /* Fondo semitransparente rosa/rojo */
+    color: var(--color-favorite-icon); /* El texto del tag es rosa vibrante */
+    border: 1px solid var(--color-favorite-icon);
+    transition: all 0.3s;
+}
+
+    .tag-favorite:hover {
+        box-shadow: 0 0 10px rgba(var(--color-favorite-icon-rgb), 0.8);
+        transform: translateY(-1px);
+    }
+
+    .tag-favorite svg {
+        color: var(--color-favorite-icon); /* Color del corazón dentro del tag */
+        margin-right: 5px;
+    }
+
+/* ----------------------------------------------------------
+ * 3. BOTÓN DE NAVEGACIÓN (btn-home-top-right)
+ * ---------------------------------------------------------- */
+.btn-home-top-right {
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    background-color: var(--color-input-bg);
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+    /* ... (otros estilos) ... */
+}

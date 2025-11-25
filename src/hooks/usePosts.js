@@ -1,8 +1,10 @@
-// src/hooks/usePosts.js
+ï»¿// src/hooks/usePosts.js
+
 import { useState, useEffect, useCallback } from 'react';
 import postService from '../services/postService';
+import userService from '../services/userService'; // Necesario para favoritos
 
-const POSTS_PER_PAGE = 10; // Definimos un límite de posts por página
+const POSTS_PER_PAGE = 10;
 
 const usePosts = () => {
     const [posts, setPosts] = useState([]);
@@ -11,9 +13,11 @@ const usePosts = () => {
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
 
-    // Función para cargar publicaciones (con paginación y manejo del feed de seguidos - Requisito 4.3)
+    // ==========================================================
+    // LÃ“GICA DE CARGA Y PAGINACIÃ“N
+    // ==========================================================
     const fetchPosts = useCallback(async (reset = false) => {
-        if (!hasMore && !reset) return; // Evitar llamadas si no hay más posts y no es un reset
+        if (!hasMore && !reset) return;
 
         setIsLoading(true);
         setError(null);
@@ -21,12 +25,12 @@ const usePosts = () => {
         const currentPage = reset ? 1 : page;
 
         try {
-            // Asumimos que getAllPosts ya filtra por seguidos del usuario logueado (Requisito 4.3)
+            // Llama a GET /api/v1/posts/feed
             const data = await postService.getAllPosts(currentPage, POSTS_PER_PAGE);
 
             setPosts(prevPosts => reset ? data.posts : [...prevPosts, ...data.posts]);
 
-            // Verificar si la respuesta fue menor que el límite, indicando el final
+            // Verifica si la respuesta fue menor que el limite
             setHasMore(data.posts.length === POSTS_PER_PAGE);
 
             if (!reset) {
@@ -37,20 +41,28 @@ const usePosts = () => {
         } finally {
             setIsLoading(false);
         }
-    }, [page, hasMore]); // Las dependencias controlan cuándo se recrea la función
+    }, [page, hasMore]);
 
     // Cargar posts iniciales al montar
     useEffect(() => {
-        // En un entorno con Router, esto se activaría al navegar a /home
         fetchPosts(true);
     }, [fetchPosts]);
 
-    // Requisito 2.4: Dar/Quitar "Me Gusta"
+    // Inserta el nuevo post creado por el PostForm al inicio del array
+    const addNewPost = (newPost) => {
+        setPosts(prevPosts => [newPost, ...prevPosts]);
+    };
+
+    // ==========================================================
+    // LÃ“GICA DE INTERACCIÃ“N SOCIAL (OPTIMISTIC UI)
+    // ==========================================================
+
+    // 1. MANEJAR LIKES (Requisito 2.4)
     const handleLike = async (postId, currentIsLiked) => {
-        // Optimistic UI Update: Cambiar el estado inmediatamente para mejor UX
+        // Optimistic UI: Actualizar el estado asumiendo Ã©xito
         setPosts(currentPosts =>
             currentPosts.map(post =>
-                post.id === postId ? {
+                post._id === postId ? {
                     ...post,
                     isLiked: !currentIsLiked,
                     likesCount: currentIsLiked ? post.likesCount - 1 : post.likesCount + 1
@@ -59,13 +71,14 @@ const usePosts = () => {
         );
 
         try {
-            await postService.toggleLike(postId); // Asumimos endpoint toggleLike
+            await postService.toggleLike(postId);
+
         } catch (err) {
-            // Revertir el cambio si la llamada a la API falla
-            setError("Error al registrar el like.");
+            setError("Error al registrar el like. Intenta de nuevo.");
+            // Revertir el estado si falla
             setPosts(currentPosts =>
                 currentPosts.map(post =>
-                    post.id === postId ? {
+                    post._id === postId ? {
                         ...post,
                         isLiked: currentIsLiked,
                         likesCount: currentIsLiked ? post.likesCount + 1 : post.likesCount - 1
@@ -75,19 +88,106 @@ const usePosts = () => {
         }
     };
 
-    // Función para insertar un nuevo post en la parte superior del feed
-    const addNewPost = (newPost) => {
-        setPosts(prevPosts => [newPost, ...prevPosts]);
+    // 2. MANEJAR FAVORITOS (Requisito 2.11)
+    const handleFavorite = async (postId, currentIsFavorite) => {
+        // Optimistic UI: Asumimos Ã©xito
+        setPosts(currentPosts =>
+            currentPosts.map(post =>
+                post._id === postId ? {
+                    ...post,
+                    isFavorite: !currentIsFavorite,
+                } : post
+            )
+        );
+
+        try {
+            await userService.toggleFavorite(postId);
+
+        } catch (err) {
+            setError("Error al marcar como favorito.");
+            // Revertir el estado si falla
+            setPosts(currentPosts =>
+                currentPosts.map(post =>
+                    post._id === postId ? {
+                        ...post,
+                        isFavorite: currentIsFavorite,
+                    } : post
+                )
+            );
+        }
     };
+
+    // 3. AÃ‘ADIR COMENTARIO (Requisito 2.5)
+    const addComment = async (postId, content) => {
+        try {
+            const result = await postService.addComment(postId, content);
+
+            // Incrementar el contador de comentarios en el estado local
+            setPosts(currentPosts =>
+                currentPosts.map(post =>
+                    post._id === postId ? {
+                        ...post,
+                        commentsCount: post.commentsCount + 1
+                    } : post
+                )
+            );
+            return result; // Devuelve el comentario para la UI
+        } catch (err) {
+            setError("Fallo al publicar el comentario.");
+            throw err;
+        }
+    };
+
+    // 4. ELIMINAR POST (Requisito 2.7, 2.13)
+    const handleDelete = async (postId) => {
+        const originalPosts = posts;
+
+        // Optimistic UI: Eliminar el post del estado inmediatamente
+        setPosts(currentPosts => currentPosts.filter(post => post._id !== postId));
+
+        try {
+            await postService.deletePost(postId);
+
+        } catch (err) {
+            setError("Error al eliminar la publicacion. El servidor no respondio.");
+            // Revertir el estado si falla
+            setPosts(originalPosts);
+        }
+    };
+
+    // 5. EDITAR POST (Requisito 2.7)
+    const handleEdit = async (postId, updates) => {
+        try {
+            const updatedPost = await postService.updatePost(postId, updates);
+
+            // ActualizaciÃ³n Optimista: Reemplazar el post viejo con el nuevo
+            setPosts(currentPosts =>
+                currentPosts.map(post =>
+                    post._id === postId ? updatedPost : post
+                )
+            );
+            return { success: true };
+
+        } catch (err) {
+            setError("Error al guardar la edicion.");
+            return { success: false, error: err.message };
+        }
+    };
+
 
     return {
         posts,
         isLoading,
         error,
         fetchMorePosts: () => fetchPosts(false),
+        addNewPost,
         handleLike,
-        addNewPost
-        // ... (Aquí se exportarían onDelete, onEdit, etc.)
+        handleFavorite,
+        addComment,
+
+        // ðŸš€ EXPORTACIONES DE ADMINISTRACIÃ“N COMPLETAS ðŸš€
+        handleDelete,
+        handleEdit,
     };
 };
 

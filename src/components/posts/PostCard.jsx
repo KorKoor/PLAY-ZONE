@@ -28,6 +28,12 @@ const renderRating = (rating) => (
 );
 
 
+const DefaultAvatar = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="55px" height="55px" style={{ color: '#cccccc' }}>
+      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+    </svg>
+);
+
 const PostCard = ({ post, onLike, onDelete, onEdit, onFavorite, addComment }) => {
 
     // Hooks y Estados
@@ -85,13 +91,18 @@ const PostCard = ({ post, onLike, onDelete, onEdit, onFavorite, addComment }) =>
         <article className="post-card">
             {/* Encabezado */}
             <header className="post-header">
-                <img
-                    src={post.authorId?.avatarUrl || '/default-avatar.png'}
-                    alt={post.authorId?.alias || 'Usuario'}
-                    className="author-avatar"
-                    // Navegación al perfil
-                    onClick={() => navigate(`/profile/${post.authorId?._id}`)}
-                />
+                {post.authorId?.avatarUrl ? (
+                    <img
+                        src={post.authorId.avatarUrl}
+                        alt={post.authorId.alias || 'Usuario'}
+                        className="author-avatar"
+                        onClick={() => navigate(`/profile/${post.authorId._id}`)}
+                    />
+                ) : (
+                    <div className="author-avatar" onClick={() => navigate(`/profile/${post.authorId?._id}`)}>
+                        <DefaultAvatar />
+                    </div>
+                )}
                 <div className="author-info">
                     <span className="author-alias">{post.authorId?.alias}</span>
                     <span className="post-date"><FaCalendarAlt /> {formatDate(post.createdAt)}</span>

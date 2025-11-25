@@ -1,0 +1,10 @@
+/* src/styles/SidebarCommunity.css */
+
+.player-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--color-primary);
+    object-fit: cover;
+    cursor: pointer;
+}

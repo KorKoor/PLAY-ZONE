@@ -35,6 +35,7 @@ const LoginForm = ({ onSwitchToRegister, onSwitchToForgot }) => {
 
     return (
         <form onSubmit={handleSubmit} className="auth-form">
+            <h1>Login</h1>
             <h2>🎮 Inicia Sesión</h2>
             {error && <p className="error-message">{error}</p>}
 

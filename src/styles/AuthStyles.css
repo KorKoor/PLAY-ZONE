@@ -17,12 +17,28 @@
  * ---------------------------------------------------------- */
 .auth-page-container {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     /* Usar el fondo principal global */
     background-color: var(--color-background-primary);
     min-height: 100vh;
     padding: 20px;
+}
+
+.playzone-title {
+    font-size: 4rem;
+    font-weight: 900;
+    color: var(--color-primary);
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.auth-form-container {
+    width: 100%;
+    max-width: 450px;
+    margin: 0 auto;
+    margin-top: 2rem;
 }
 
 /* ----------------------------------------------------------
@@ -32,19 +48,25 @@
     background-color: var(--color-card); /* Fondo coherente con otros cards */
     padding: 50px 40px;
     border-radius: 16px;
-    width: 100%;
-    max-width: 450px;
     /* Sombra profunda y borde acentuado */
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 10px rgba(var(--color-primary-rgb), 0.2);
     border: 2px solid var(--color-border); /* Borde más definido */
     animation: fadeIn 0.5s ease-out;
 }
 
-    .auth-form h2 {
+    .auth-form h1 {
         color: var(--color-primary); /* Título con color de acento */
-        margin-bottom: 35px;
+        margin-bottom: 10px;
         font-weight: 800; /* Más negrita */
-        font-size: 2rem;
+        font-size: 2.5rem;
+        text-align: center;
+    }
+
+    .auth-form h2 {
+        color: var(--color-text-secondary); /* Título con color de acento */
+        margin-bottom: 35px;
+        font-weight: 600; /* Más negrita */
+        font-size: 1.5rem;
         text-align: center;
     }
 

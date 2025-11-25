@@ -125,7 +125,7 @@ const HomePage = () => {
 
             {/* Modal/Formulario de Creación de Publicación */}
             {isPostFormOpen && (
-                <div className="modal-overlay">
+                <div className="post-modal-overlay">
                     <PostForm
                         onClose={() => setIsPostFormOpen(false)}
                         onSuccess={handlePostCreated}

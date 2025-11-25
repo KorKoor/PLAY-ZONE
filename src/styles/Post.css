@@ -1,13 +1,13 @@
-/* src/styles/Post.css (ADAPTACIÓN FINAL AL TEMA CYBER/PERFIL) */
+/* src/styles/Post.css (ADAPTACIï¿½N FINAL AL TEMA CYBER/PERFIL) */
 
 /* === POST FORM CARD (MODAL) === */
 .post-form-card {
-    /* Fondo del modal más oscuro para alto contraste */
+    /* Fondo del modal mï¿½s oscuro para alto contraste */
     background-color: var(--color-input-bg);
-    padding: 40px; /* Más padding para aire */
+    padding: 40px; /* Mï¿½s padding para aire */
     border-radius: 16px; /* Bordes suaves */
     width: 95%;
-    max-width: 700px; /* Modal ligeramente más grande */
+    max-width: 700px; /* Modal ligeramente mï¿½s grande */
     /* Sombra profunda y borde acentuado, coherente con el modal de edicion de perfil */
     box-shadow: 0 0 50px rgba(0, 0, 0, 0.9), 0 0 10px rgba(var(--color-primary-rgb), 0.3);
     position: relative;
@@ -124,7 +124,12 @@
     transition: all 0.3s;
 }
 
-    .btn-publish:hover:not(:disabled) {
+.btn-publish:hover:not(:disabled) {
         transform: translateY(-3px); /* Coherente con botones de perfil */
         box-shadow: 0 8px 25px rgba(var(--color-primary-rgb), 0.8);
     }
+
+[data-theme='light'] .btn-upload-file {
+    background-color: #708090;
+    color: #FFFFFF;
+}

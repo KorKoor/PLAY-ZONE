@@ -11,6 +11,8 @@ const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 };
 
+
+
 const ProfileDetails = ({ profile, children }) => {
     const navigate = useNavigate();
 
@@ -23,9 +25,15 @@ const ProfileDetails = ({ profile, children }) => {
         <div className="profile-details-card">
             <header className="profile-header">
                 <img
-                    src={profile.avatarUrl || '/default-avatar.png'}
+                    src={profile.avatarUrl || '/default-avatar.svg'}
                     alt={`Avatar de ${profile.alias}`}
                     className="profile-avatar"
+                    onError={(e) => {
+                        if (e.target.src !== '/default-avatar.svg') {
+                            e.target.onerror = null;
+                            e.target.src = '/default-avatar.svg';
+                        }
+                    }}
                 />
                 <div className="header-info">
                     <h2 className="profile-alias">{displayAlias}</h2>

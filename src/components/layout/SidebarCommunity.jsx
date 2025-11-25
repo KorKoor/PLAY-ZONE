@@ -6,7 +6,9 @@ import { FaUserPlus, FaUserCircle, FaSpinner, FaUserMinus, FaGamepad } from 'rea
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../context/AuthContext'; // Para obtener el user logueado y su following list
 // ⚠️ NECESARIO: Importar los estilos CSS específicos de la sidebar si los tienes ⚠️
-// import '../../styles/SidebarCommunity.css'; 
+import '../../styles/SidebarCommunity.css'; 
+
+
 
 const SidebarCommunity = () => {
     // Asumimos que activeUsers incluye el array 'following' en el currentUser
@@ -71,10 +73,16 @@ const SidebarCommunity = () => {
 
                                 {/* NAVEGACION: Avatar clickeable */}
                                 <img
-                                    src={player.avatarUrl || '/default-avatar.png'}
+                                    src={player.avatarUrl || '/default-avatar.svg'}
                                     alt={player.alias}
                                     className="player-avatar"
                                     onClick={() => handleNavigateToProfile(player._id || player.id)}
+                                    onError={(e) => {
+                                        if (e.target.src !== '/default-avatar.svg') {
+                                            e.target.onerror = null;
+                                            e.target.src = '/default-avatar.svg';
+                                        }
+                                    }}
                                 />
                                 <div className="player-details">
                                     {/* NAVEGACION: Alias clickeable */}

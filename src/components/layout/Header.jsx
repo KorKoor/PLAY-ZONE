@@ -2,15 +2,18 @@
 
 import React, { useState } from 'react';
 // ⚠️ CORRECCIÓN: Añadir FaHeart a la importación ⚠️
-import { FaSearch, FaBell, FaUserCircle, FaSignOutAlt, FaTachometerAlt, FaBookOpen, FaHeart } from 'react-icons/fa';
+import { FaSearch, FaBell, FaUserCircle, FaSignOutAlt, FaTachometerAlt, FaBookOpen, FaHeart, FaSun, FaMoon } from 'react-icons/fa';
 import { useAuthContext } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { ThemeContext } from '../../context/ThemeContext';
 
 const Header = () => {
     const { user, logout } = useAuthContext();
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState('');
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const { theme, toggleTheme } = useContext(ThemeContext);
 
     const handleSearchSubmit = (e) => {
         e.preventDefault();
@@ -65,6 +68,10 @@ const Header = () => {
 
                     <button className="icon-btn" title="Notificaciones"><FaBell /></button>
 
+                    <button onClick={toggleTheme} className="icon-btn theme-toggle-btn" title="Cambiar tema">
+                        {theme === 'light' ? <FaMoon /> : <FaSun />}
+                    </button>
+
                     {/* Contenedor del Menú de Usuario (con Dropdown) */}
                     <div className="user-menu-container">
                         <button
@@ -73,7 +80,7 @@ const Header = () => {
                             title={`Menú de ${user.alias}`}
                         >
                             <img
-                                src={user.avatarUrl || '/default-avatar.png'}
+                                src={user.avatarUrl || '/default-avatar.svg'}
                                 alt={user.alias}
                                 className="user-avatar-small"
                             />

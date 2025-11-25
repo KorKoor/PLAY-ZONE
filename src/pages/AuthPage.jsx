@@ -5,7 +5,7 @@ import RegisterForm from '../components/common/forms/RegisterForm';
 import ForgotPasswordForm from '../components/common/forms/ForgotPasswordForm';
 
 const AuthPage = () => {
-    // Usamos el estado interno para manejar el modo de la página, ya que /login y /register 
+    // Usamos el estado interno para manejar el modo de la pï¿½gina, ya que /login y /register 
     // comparten la misma vista, pero el modo 'forgot' es un estado temporal.
     const location = useLocation();
     const navigate = useNavigate();
@@ -41,8 +41,8 @@ const AuthPage = () => {
             default:
                 return (
                     <LoginForm
-                        onSwitchToRegister={switchToRegister} // Lógica para ir a /register
-                        onSwitchToForgot={switchToForgot}     // Lógica para ir a la vista ForgotPassword
+                        onSwitchToRegister={switchToRegister} // Lï¿½gica para ir a /register
+                        onSwitchToForgot={switchToForgot}     // Lï¿½gica para ir a la vista ForgotPassword
                     />
                 );
         }
@@ -50,7 +50,10 @@ const AuthPage = () => {
 
     return (
         <div className="auth-page-container">
-            {renderForm()}
+            <div className="playzone-title">PLAYZONE</div>
+            <div className="auth-form-container">
+                {renderForm()}
+            </div>
         </div>
     );
 };

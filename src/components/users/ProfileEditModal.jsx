@@ -145,7 +145,7 @@ const ProfileEditModal = ({ user, onClose, onSuccess }) => {
                     <form onSubmit={handleSaveInfo} className="edit-form info-tab">
                         <div className="avatar-preview-container">
                             <img
-                                src={previewAvatar || '/default-avatar.png'}
+                                src={previewAvatar || '/default-avatar.svg'}
                                 alt="Previsualización de Avatar"
                                 className="avatar-preview"
                             />

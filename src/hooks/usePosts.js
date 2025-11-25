@@ -181,6 +181,7 @@ const usePosts = () => {
         error,
         fetchMorePosts: () => fetchPosts(false),
         addNewPost,
+        addComment,
         handleLike,
         handleFavorite,
         addComment,

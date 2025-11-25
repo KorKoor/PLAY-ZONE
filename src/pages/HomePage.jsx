@@ -19,6 +19,7 @@ const HomePage = () => {
         error,
         fetchMorePosts,
         handleLike,
+        addComment,
         handleFavorite, // Asumimos que esta función existe en usePosts
         addNewPost // Función para insertar posts
     } = usePosts();
@@ -105,6 +106,7 @@ const HomePage = () => {
                                 post={post}
                                 onLike={handlePostLike}
                                 onFavorite={handlePostFavorite}
+                                addComment={addComment}
                             // onEdit y onDelete se pasan aquí si se implementan modales
                             />
                         ))}

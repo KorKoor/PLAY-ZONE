@@ -1,195 +1,227 @@
-﻿/* src/styles/HomeStyles.css (ADAPTADO AL DISEÑO CYBER/FINAL) */
+﻿/* ======================================================= */
+/* 🚀 PALETA DE COLORES PLAY-ZONE (GAMER DARK MODE 2.0) */
+/* ======================================================= */
+:root {
+    /* Fondos */
+    --color-dark-blue: #0A111F; /* **Más oscuro (casi negro) para más contraste** */
+    --color-medium-blue: #1A2436; /* Fondo de contenedores/cards: Contraste suave */
+    --color-input-bg: #111A29; /* Fondo de Input: Ligeramente más oscuro que el card */
+    --color-border-subtle: #2B3A50; /* **Nuevo: Borde sutil y más legible** */
+    /* Acentos y Feedback */
+    --color-accent-blue: #00CCFF; /* **Cian eléctrico: Más vibrante y cyberpunk** */
+    --color-accent-hover: #0099CC; /* Azul de hover */
+    --color-accent-shadow: rgba(0, 204, 255, 0.4); /* **Nuevo: Sombra para efecto glow** */
+    /* Texto */
+    --color-text-light: #E8F0FF; /* Texto principal: Blanco azulado suave */
+    --color-text-secondary: #90A0C9; /* Texto secundario/Placeholder **Ligeramente más claro** */
+    /* Feedback */
+    --color-error: #FF4D6C; /* **Rojo más magenta y agresivo** */
+    --color-success: #3DED97; /* **Verde neón más brillante** */
+}
 
---color-background-primary: #0F141F;
---color-background-secondary: #1C2738;
---color-card: #28374E;
---color-input-bg: #141D2B;
---color-border: #3D4A66;
---color-primary: #00C6FF;
---color-primary-rgb: 0, 198, 255;
---color-text-light: #E0E7FF;
---color-text-secondary: #9FAACF;
---color-success: #38A169;
---color-secondary: #4A5C7F;
-/* src/styles/AuthStyles.css (ADAPTADO Y COHERENTE CON EL TEMA FINAL) */
-/* ----------------------------------------------------------
- * BASE DE LA PÁGINA DE AUTENTICACIÓN
- * ---------------------------------------------------------- */
+/* ======================================================= */
+/* 🌎 ESTILOS BASE Y TIPOGRAFÍA */
+/* ======================================================= */
+body {
+    background-color: var(--color-dark-blue);
+    color: var(--color-text-light);
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    /* **Animación de fondo sutil para sensación de profundidad** */
+    /* background-image: radial-gradient(circle at 50% 10%, var(--color-medium-blue) 0%, transparent 80%); */
+    /* Puedes usar esta línea si deseas un efecto de gradiente radial sutil */
+}
+
+/* ======================================================= */
+/* 1. CONTENEDOR DE AUTENTICACIÓN */
+/* ======================================================= */
 .auth-page-container {
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    /* Usar el fondo principal global */
-    background-color: var(--color-background-primary);
     min-height: 100vh;
     padding: 20px;
 }
 
-.playzone-title {
-    font-size: 4rem;
-    font-weight: 900;
-    color: var(--color-primary);
-    margin-bottom: 2rem;
-    text-align: center;
-}
-
-.auth-form-container {
-    width: 100%;
-    max-width: 450px;
-    margin: 0 auto;
-    margin-top: 2rem;
-}
-
-/* ----------------------------------------------------------
- * CARD DEL FORMULARIO DE AUTENTICACIÓN
- * ---------------------------------------------------------- */
+/* ======================================================= */
+/* 2. FORMULARIO BASE (CARD) */
+/* ======================================================= */
 .auth-form {
-    background-color: var(--color-card); /* Fondo coherente con otros cards */
+    background-color: var(--color-medium-blue);
     padding: 50px 40px;
-    border-radius: 16px;
-    /* Sombra profunda y borde acentuado */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 10px rgba(var(--color-primary-rgb), 0.2);
-    border: 2px solid var(--color-border); /* Borde más definido */
-    animation: fadeIn 0.5s ease-out;
+    border-radius: 20px; /* **Más redondeado** */
+    width: 100%;
+    max-width: 480px; /* **Ancho aún mayor para mejor UX en inputs** */
+    /* **Sombra más profunda y resplandor más intenso con el nuevo color de acento** */
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 25px var(--color-accent-shadow);
+    border: 2px solid var(--color-border-subtle); /* **Borde más definido pero sutil** */
+    /* **Ligero efecto de perspectiva para pop-out** */
+    transform: perspective(1000px) rotateX(0deg);
+    animation: fadeIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* **Curva de animación más suave** */
 }
-
-    .auth-form h1 {
-        color: var(--color-primary); /* Título con color de acento */
-        margin-bottom: 10px;
-        font-weight: 800; /* Más negrita */
-        font-size: 2.5rem;
-        text-align: center;
-    }
 
     .auth-form h2 {
-        color: var(--color-text-secondary); /* Título con color de acento */
+        color: var(--color-text-light);
         margin-bottom: 35px;
-        font-weight: 600; /* Más negrita */
-        font-size: 1.5rem;
+        font-weight: 800; /* **Aún más negrita** */
+        letter-spacing: 1px; /* **Mayor espaciado** */
         text-align: center;
+        text-transform: uppercase; /* **Toque agresivo/gamer** */
+        /* **Sombra de texto sutil para un ligero glow** */
+        text-shadow: 0 0 5px rgba(0, 204, 255, 0.2);
     }
 
-/* ----------------------------------------------------------
- * INPUTS Y GRUPOS DE FORMULARIO
- * ---------------------------------------------------------- */
+/* ======================================================= */
+/* 3. INPUTS Y GRUPOS DE FORMULARIO */
+/* ======================================================= */
 .form-group {
-    margin-bottom: 25px;
+    margin-bottom: 30px; /* **Más espacio entre grupos** */
 }
 
     .form-group label {
         display: block;
-        margin-bottom: 8px;
-        font-size: 0.95rem;
+        margin-bottom: 10px; /* **Más espacio entre etiqueta e input** */
+        font-size: 0.9rem;
         color: var(--color-text-secondary);
-        font-weight: 600;
+        font-weight: 600; /* **Etiqueta más negrita para mejor legibilidad** */
+        text-transform: uppercase;
     }
 
 .auth-form input {
     width: 100%;
-    padding: 15px 15px;
+    padding: 16px 15px; /* **Mayor altura y padding horizontal** */
     background-color: var(--color-input-bg);
-    border: 2px solid var(--color-border); /* Borde más grueso */
-    border-radius: 12px; /* Bordes más suaves */
+    border: 2px solid var(--color-border-subtle); /* **Borde más grueso** */
+    border-radius: 12px; /* Bordes suaves en inputs */
     color: var(--color-text-light);
-    font-size: 1rem;
-    transition: border-color 0.3s, box-shadow 0.3s;
+    font-size: 1.05rem; /* **Texto un poco más grande** */
+    transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
 }
 
+    /* **El efecto focus es ahora un "glow" prominente** */
     .auth-form input:focus {
-        border-color: var(--color-primary);
+        border-color: var(--color-accent-blue);
         outline: none;
-        /* Efecto glow de foco coherente */
-        box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb), 0.3);
+        box-shadow: 0 0 10px 2px var(--color-accent-shadow); /* **Glow más grande y marcado** */
+        background-color: #141f30; /* **Ligeramente más oscuro en focus para más pop** */
     }
 
-/* ----------------------------------------------------------
- * BOTONES PRINCIPALES (ACCIÓN)
- * ---------------------------------------------------------- */
+    /* Estilo para placeholder */
+    .auth-form input::placeholder {
+        color: var(--color-text-secondary);
+        opacity: 0.6;
+    }
+
+/* ======================================================= */
+/* 4. BOTONES PRINCIPALES (ACCIÓN) */
+/* ======================================================= */
 .btn-primary {
     width: 100%;
-    padding: 16px;
-    background-color: var(--color-primary);
-    color: var(--color-background-primary);
+    padding: 16px; /* **Mayor altura del botón** */
+    background-color: var(--color-accent-blue);
+    color: var(--color-dark-blue); /* Texto oscuro sobre botón brillante */
+    border: none;
     border-radius: 12px;
-    font-weight: 800;
-    margin-top: 15px;
-    transition: all 0.3s;
-    box-shadow: 0 4px 15px rgba(var(--color-primary-rgb), 0.5);
+    font-weight: 800; /* **Más negrita** */
+    cursor: pointer;
+    margin-top: 25px; /* **Más espacio antes del botón** */
+    letter-spacing: 1.5px; /* **Mayor espaciado para impacto** */
+    text-transform: uppercase;
+    transition: background-color 0.2s, transform 0.1s, box-shadow 0.3s;
+    /* **Añadir el glow por defecto** */
+    box-shadow: 0 0 10px 0 var(--color-accent-shadow);
 }
 
     .btn-primary:hover:not(:disabled) {
         background-color: var(--color-accent-hover);
-        transform: translateY(-3px); /* Lift más pronunciado */
-        box-shadow: 0 8px 20px rgba(var(--color-primary-rgb), 0.6);
+        transform: translateY(-3px); /* **Un lift más agresivo** */
+        /* **Sombra/Glow al hacer hover más intenso** */
+        box-shadow: 0 8px 20px var(--color-accent-shadow), 0 0 30px var(--color-accent-shadow);
     }
 
-/* ----------------------------------------------------------
- * FEEDBACK Y LINKS SECUNDARIOS
- * ---------------------------------------------------------- */
+    .btn-primary:active:not(:disabled) {
+        transform: translateY(-1px); /* **Efecto de "clic" o pulsación** */
+        box-shadow: 0 3px 10px var(--color-accent-shadow);
+    }
+
+    .btn-primary:disabled {
+        background-color: #445068;
+        color: var(--color-text-secondary);
+        opacity: 0.8;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
+
+/* ======================================================= */
+/* 5. FEEDBACK Y LINKS SECUNDARIOS */
+/* ======================================================= */
 .error-message, .success-message {
-    padding: 12px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    font-weight: 500;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    font-weight: 600;
     font-size: 0.95rem;
-    border-left: 4px solid;
+    animation: slideIn 0.3s ease-out; /* **Animación de entrada** */
 }
 
 .error-message {
-    background-color: rgba(229, 62, 62, 0.15);
-    color: var(--color-danger);
-    border-left-color: var(--color-danger);
+    background-color: rgba(255, 77, 108, 0.15);
+    color: var(--color-error);
+    border: 1px solid var(--color-error);
+    border-left: 6px solid var(--color-error); /* **Borde más grueso** */
 }
 
 .success-message {
-    background-color: rgba(56, 161, 105, 0.15);
+    background-color: rgba(61, 237, 151, 0.15);
     color: var(--color-success);
-    border-left-color: var(--color-success);
+    border: 1px solid var(--color-success);
+    border-left: 6px solid var(--color-success); /* **Borde más grueso** */
+}
+
+.form-links {
+    display: flex;
+    flex-direction: column;
+    margin-top: 35px;
+    text-align: center;
 }
 
 .btn-link {
+    background: none;
+    border: none;
     color: var(--color-text-secondary);
+    cursor: pointer;
     font-size: 0.95rem;
     margin-top: 15px;
+    transition: color 0.3s, text-shadow 0.3s; /* **Transición de text-shadow** */
+    text-decoration: none; /* **Quitar underline por defecto** */
 }
 
     .btn-link:hover {
-        color: var(--color-primary);
-        text-decoration: underline;
+        color: var(--color-accent-blue);
+        text-decoration: none;
+        text-shadow: 0 0 8px var(--color-accent-shadow); /* **Pequeño glow al hacer hover** */
     }
 
-/* ----------------------------------------------------------
- * AJUSTE DE TAMAÑO DE AVATARES (FIX DE LA NAV BAR)
- * ---------------------------------------------------------- */
-.user-avatar-small {
-    width: 40px; /* Tamaño optimizado para el Header */
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--color-primary); /* Borde de acento */
+/* **Nueva animación para los mensajes de feedback** */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
-.user-avatar-medium {
-    width: 60px;
-    height: 60px; /* ¡CORRECCIÓN CRÍTICA DE 484px A 60px! */
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid var(--color-primary);
-}
-
-.player-avatar {
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--color-primary);
-}
-
+/* Animación de entrada (mejorada) */
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(30px);
     }
 
     to {

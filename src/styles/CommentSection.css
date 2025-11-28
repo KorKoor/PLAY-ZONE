@@ -1,18 +1,17 @@
-/* src/styles/CommentSection.css (ADAPTACI�N FINAL AL TEMA CYBER/PLAY-ZONE) */
+/* src/styles/CommentSection.css (ADAPTACIÓN FINAL AL TEMA CYBER/PLAY-ZONE) */
 
-    --color-primary, --color-primary-rgb
-    --color-card, --color-input-bg
-    --color-border, --color-text-light, --color-text-secondary, --color-secondary
-
+--color-primary, --color-primary-rgb
+--color-card, --color-input-bg
+--color-border, --color-text-light, --color-text-secondary, --color-secondary
 /* ----------------------------------------------------------
  * 1. CONTENEDOR PRINCIPAL (COMENTARIOS)
  * ---------------------------------------------------------- */
 .comments-section-container {
-    margin-top: 25px; /* M�s margen */
-    padding: 25px; /* M�s padding */
+    margin-top: 25px; /* Más margen */
+    padding: 25px; /* Más padding */
     background-color: var(--color-input-bg); /* Fondo muy oscuro */
     border-radius: 15px; /* Bordes suaves */
-    border: 2px solid var(--color-border); /* Borde m�s definido */
+    border: 2px solid var(--color-border); /* Borde más definido */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
     transition: all 0.3s ease;
 }
@@ -21,9 +20,10 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    font-size: 1.35rem; /* T�tulo m�s prominente */
-    color: black; /* Cambiado a negro por solicitud del usuario. Notar que esto puede afectar la legibilidad en un tema oscuro. */
-    border-bottom: 3px solid var(--color-secondary); /* Separador m�s grueso */
+    font-size: 1.35rem; /* Título más prominente */
+    font-weight: 800;
+    color: var(--color-text-light);
+    border-bottom: 3px solid var(--color-secondary); /* Separador más grueso */
     padding-bottom: 12px;
     margin-bottom: 25px;
 }
@@ -50,10 +50,10 @@
 
     .comment-form textarea {
         flex-grow: 1;
-        min-height: 60px; /* M�s alto */
+        min-height: 60px; /* Más alto */
         padding: 15px;
         background-color: var(--color-card); /* Coherente con otros inputs */
-        border: 2px solid var(--color-border); /* Borde m�s fuerte */
+        border: 2px solid var(--color-border); /* Borde más fuerte */
         border-radius: 10px;
         color: var(--color-text-light);
         font-size: 1rem;
@@ -71,7 +71,7 @@
         background-color: var(--color-primary);
         color: var(--color-background-primary);
         border-radius: 10px;
-        font-size: 1.2rem; /* Icono m�s grande */
+        font-size: 1.2rem; /* Icono más grande */
         font-weight: 700;
         transition: all 0.2s;
         box-shadow: 0 4px 10px rgba(var(--color-primary-rgb), 0.5);
@@ -93,12 +93,12 @@
 .comments-list {
     display: flex;
     flex-direction: column;
-    gap: 20px; /* M�s espacio entre comentarios */
+    gap: 20px; /* Más espacio entre comentarios */
 }
 
 .comment-item {
     display: flex;
-    gap: 15px; /* M�s espacio */
+    gap: 15px; /* Más espacio */
     align-items: flex-start;
     padding: 15px;
     border-radius: 10px;
@@ -111,8 +111,8 @@
     }
 
 .comment-author-avatar {
-    width: 40px; /* Avatar m�s grande */
-    height: 40px;
+    width: 32px; /* Avatar más grande */
+    height: 32px;
     border-radius: 50%;
     border: 2px solid var(--color-primary); /* Borde primario para el autor */
 }
@@ -120,25 +120,24 @@
 .comment-body {
     flex-grow: 1;
     font-size: 1rem;
-    color: var(--color-text-light);
 }
 
 .comment-author-alias {
     font-weight: 700;
-    color: black; /* Cambiado a negro por solicitud del usuario para unificar el color del texto. Notar que esto puede afectar la legibilidad en un tema oscuro. */
+    color: var(--color-primary); /* Alias del autor resaltado */
     margin-right: 10px;
     font-size: 1.05rem;
 }
 
 .comment-content {
-    color: black; /* Se cambió a negro por solicitud del usuario. Notar que esto puede afectar la legibilidad en un tema oscuro. */
+    color: var(--color-text-light);
     margin: 8px 0;
     line-height: 1.5;
 }
 
 .comment-date {
     font-size: 0.8rem;
-    color: black; /* Cambiado a negro por solicitud del usuario. Notar que esto puede afectar la legibilidad en un tema oscuro. */
+    color: var(--color-text-secondary);
 }
 
 .no-comments-message {

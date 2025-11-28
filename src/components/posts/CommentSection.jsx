@@ -5,6 +5,7 @@ import postService from '../../services/postService';
 import CommentForm from './CommentForm';
 import CommentItem from './CommentItem';
 import { FaSpinner, FaComments } from 'react-icons/fa';
+import '../../styles/CommentSection.css'; 
 
 // Recibe postId y la funcion addComment del hook usePosts
 const CommentSection = ({ postId, postCommentsCount, addComment }) => {

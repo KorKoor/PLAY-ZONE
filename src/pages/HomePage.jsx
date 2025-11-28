@@ -1,4 +1,5 @@
 ﻿// src/pages/HomePage.jsx
+
 import React, { useState } from 'react';
 import { useAuthContext } from '../context/AuthContext';
 import usePosts from '../hooks/usePosts';
@@ -6,12 +7,12 @@ import PostCard from '../components/posts/PostCard';
 import Header from '../components/layout/Header';
 import SidebarCommunity from '../components/layout/SidebarCommunity';
 import PostForm from '../components/posts/PostForm';
-import { FaPlusCircle, FaBookOpen, FaUserCircle, FaHeart, FaHome as FaHomeIcon } from 'react-icons/fa'; // Importar iconos necesarios
-import { useNavigate } from 'react-router-dom'; // Importar para navegación
+import { FaPlusCircle, FaBookOpen, FaUserCircle, FaHeart, FaHome as FaHomeIcon } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const HomePage = () => {
     const { user } = useAuthContext();
-    const navigate = useNavigate(); // Inicializar hook de navegación
+    const navigate = useNavigate();
 
     const {
         posts,
@@ -20,24 +21,21 @@ const HomePage = () => {
         fetchMorePosts,
         handleLike,
         addComment,
-        handleFavorite, // Asumimos que esta función existe en usePosts
-        addNewPost // Función para insertar posts
+        handleFavorite,
+        addNewPost
     } = usePosts();
 
     const [isPostFormOpen, setIsPostFormOpen] = useState(false);
 
-    // Llama al hook que maneja la inserción de nuevos posts
     const handlePostCreated = (newPost) => {
         addNewPost(newPost);
         setIsPostFormOpen(false);
     };
 
-    // Función para manejar el like (pasada a PostCard)
     const handlePostLike = (postId, isLiked) => {
         if (handleLike) handleLike(postId, isLiked);
     };
 
-    // Función para manejar favoritos (pasada a PostCard)
     const handlePostFavorite = (postId, isFavorite) => {
         if (handleFavorite) handleFavorite(postId, isFavorite);
     };
@@ -62,11 +60,12 @@ const HomePage = () => {
                             <FaPlusCircle /> Crear Publicación
                         </button>
 
-                        {/* 🚀 ENLACES DE NAVEGACIÓN PRINCIPALES (Requisitos 1.8, 2.11) 🚀 */}
+                        {/* 🚀 ENLACES DE NAVEGACIÓN PRINCIPALES 🚀 */}
                         <div className="nav-links-group">
                             <button className="nav-link-item" onClick={() => navigate('/home')}>
                                 <FaHomeIcon /> Feed Principal
                             </button>
+                            {/* ⚠️ CORRECCIÓN AQUÍ: Ruta de navegación a /guides ⚠️ */}
                             <button className="nav-link-item" onClick={() => navigate('/guides')}>
                                 <FaBookOpen /> Ver Guías
                             </button>
@@ -101,13 +100,11 @@ const HomePage = () => {
                     <div className="posts-list">
                         {posts.map(post => (
                             <PostCard
-                                // ⚠️ FIX: Usar el _id de MongoDB como clave única ⚠️
                                 key={post._id}
                                 post={post}
                                 onLike={handlePostLike}
                                 onFavorite={handlePostFavorite}
                                 addComment={addComment}
-                            // onEdit y onDelete se pasan aquí si se implementan modales
                             />
                         ))}
                     </div>

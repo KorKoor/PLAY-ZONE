@@ -1,10 +1,9 @@
-/*
+﻿ /*
  * ==========================================================
  * PROFILE STYLES - PLAY-ZONE DARK THEME (FINAL BUILD)
  * Arquitectura: Modulos y Detalle Extremo
  * ==========================================================
  */
-
 /* ----------------------------------------------------------
  * 1. LAYOUT PRINCIPAL Y CONTENEDOR
  * ---------------------------------------------------------- */
@@ -523,6 +522,7 @@
         transform: rotate(360deg);
     }
 }
+
 .profile-header {
     position: relative;
 }

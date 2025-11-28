@@ -1,98 +1,97 @@
-﻿// src/components/layout/SidebarCommunity.jsx
-import React from 'react';
-import useActiveUsers from '../../hooks/useActiveUsers'; // Hook para obtener los usuarios activos
-import userService from '../../services/userService'; // Servicio para la acción de follow
-import { FaUserPlus, FaUserCircle, FaSpinner, FaUserMinus, FaGamepad } from 'react-icons/fa';
+﻿// src/components/layout/SidebarCommunity.jsx - MEJORADO
+
+import React, { useState } from 'react';
+import useActiveUsers from '../../hooks/useActiveUsers';
+import userService from '../../services/userService';
+import { FaUserPlus, FaUserCircle, FaSpinner, FaUserMinus, FaGamepad, FaBookOpen } from 'react-icons/fa'; // Importado FaBookOpen
 import { useNavigate } from 'react-router-dom';
-import { useAuthContext } from '../../context/AuthContext'; // Para obtener el user logueado y su following list
-// ⚠️ NECESARIO: Importar los estilos CSS específicos de la sidebar si los tienes ⚠️
-import '../../styles/SidebarCommunity.css'; 
-
-
+import { useAuthContext } from '../../context/AuthContext';
+import '../../styles/SidebarCommunity.css';
 
 const SidebarCommunity = () => {
-    // Asumimos que activeUsers incluye el array 'following' en el currentUser
     const { activeUsers, isLoading, error, fetchActiveUsers } = useActiveUsers();
     const navigate = useNavigate();
+    // ⚠️ Asumimos que currentUser tiene el array `following` (array de IDs) ⚠️
     const { user: currentUser } = useAuthContext();
+    // Estado local para manejar el loading de seguimiento de un usuario específico
+    const [followLoadingId, setFollowLoadingId] = useState(null);
 
     // Función para manejar el seguimiento (Requisito 1.7)
     const handleFollow = async (player) => {
-        const targetId = player._id || player.id; // ID del jugador objetivo
+        const targetId = player._id || player.id;
+        setFollowLoadingId(targetId); // 1. Inicia el loading en este jugador
 
         try {
-            // 1. Optimistic UI Update (Actualizar el estado del botón inmediatamente)
-            // Ya que el hook useActiveUsers no maneja el estado de following globalmente, 
-            // la mejor practica aqui es actualizar la API y luego forzar el refresco de la lista.
             await userService.followUser(targetId);
 
-            // 2. Forzar el refresco para actualizar el estado del botón Seguir/Dejar de Seguir
+            // 2. Forzamos el refresco de la lista y el AuthContext (idealmente)
             fetchActiveUsers();
 
         } catch (error) {
             console.error('Error al procesar el seguimiento:', error);
-            // Opcional: Mostrar un error temporal en la UI
+            // TODO: Añadir manejo de errores visibles al usuario (e.g., toast)
+        } finally {
+            setFollowLoadingId(null); // 3. Detiene el loading
         }
     };
 
     // Función de navegación para el perfil
     const handleNavigateToProfile = (playerId) => {
-        // Redirigir a la ruta dinámica del perfil
         navigate(`/profile/${playerId}`);
     };
 
     return (
         <aside className="sidebar-community">
             <div className="sidebar-card">
-                <h3>🔥 Jugadores Mas Activos</h3>
-                <p className="card-subtitle">Sigue a los que mas contenido comparten (Req. 4.4).</p>
+                <h3>🔥 Jugadores Más Activos</h3>
+                <p className="card-subtitle">Sigue a los que más contenido comparten (Req. 4.4).</p>
 
                 {/* Feedback de Carga y Error */}
                 {isLoading && <div className="loading-state"><FaSpinner className="spinner" /> Cargando jugadores...</div>}
                 {error && <p className="error-message">{error}</p>}
 
                 {/* Mensaje si no hay jugadores activos */}
-                {!isLoading && activeUsers.length === 0 && (
+                {!isLoading && activeUsers.length === 0 && !error && (
                     <div className="no-content-message">
                         <FaUserCircle size={30} />
-                        <p>Se el primer jugador activo en publicar guias o posts.</p>
+                        <p>Sé el primer jugador activo en publicar guías o posts.</p>
                     </div>
                 )}
 
                 {/* Lista de Jugadores Activos */}
                 <ul className="active-players-list">
                     {activeUsers.map(player => {
-                        // El hook useActiveUsers debe adjuntar el estado de 'isFollowing' 
-                        // o lo calculamos localmente si el currentUser.following esta disponible
-                        const isFollowing = player.isFollowing || false;
-                        const isSelf = currentUser && (currentUser._id === player._id || currentUser.id === player._id);
+                        const playerId = player._id || player.id;
+
+                        // 🚀 MEJORA: Cálculo más robusto de isFollowing
+                        const isFollowing = currentUser?.following?.includes(playerId) || player.isFollowing || false;
+
+                        const isSelf = currentUser && (currentUser._id === playerId || currentUser.id === playerId);
+                        const isPlayerLoading = followLoadingId === playerId;
 
                         return (
-                            // ⚠️ CORRECCIÓN DE SINTAXIS Y KEY: Usar el _id de MongoDB ⚠️
-                            <li key={player._id || player.id} className="player-item">
+                            <li key={playerId} className="player-item">
 
-                                {/* NAVEGACION: Avatar clickeable */}
+                                {/* Avatar clickeable con manejo de error de imagen */}
                                 <img
                                     src={player.avatarUrl || '/default-avatar.svg'}
                                     alt={player.alias}
                                     className="player-avatar"
-                                    onClick={() => handleNavigateToProfile(player._id || player.id)}
+                                    onClick={() => handleNavigateToProfile(playerId)}
                                     onError={(e) => {
-                                        if (e.target.src !== '/default-avatar.svg') {
-                                            e.target.onerror = null;
-                                            e.target.src = '/default-avatar.svg';
-                                        }
+                                        e.target.onerror = null;
+                                        e.target.src = '/default-avatar.svg';
                                     }}
                                 />
-                                <div className="player-details">
-                                    {/* NAVEGACION: Alias clickeable */}
-                                    <span
-                                        className="player-alias clickable-alias"
-                                        onClick={() => handleNavigateToProfile(player._id || player.id)}
-                                    >
+                                {/* Detalles del Jugador (Clickeable) */}
+                                <div
+                                    className="player-details"
+                                    onClick={() => handleNavigateToProfile(playerId)}
+                                >
+                                    <span className="player-alias clickable-alias">
                                         {player.alias}
                                     </span>
-                                    {/* Mostrar postsCount y followersCount si la API los envia */}
+                                    {/* Posts Count */}
                                     <span className="player-score"><FaGamepad size={12} /> Posts: {player.postsCount || 0}</span>
                                 </div>
 
@@ -101,12 +100,15 @@ const SidebarCommunity = () => {
                                     <button
                                         onClick={() => handleFollow(player)}
                                         className={`btn-follow ${isFollowing ? 'unfollow-btn' : 'follow-btn'}`}
+                                        disabled={isPlayerLoading} // Deshabilitar durante la llamada API
                                     >
-                                        {/* ⚠️ CORRECCIÓN DE SINTAXIS JSX (el error anterior) ⚠️ */}
-                                        {isFollowing ?
-                                            (<><FaUserMinus /> Dejar de Seguir</>) :
-                                            (<><FaUserPlus /> Seguir</>)
-                                        }
+                                        {isPlayerLoading ? (
+                                            <FaSpinner className="spinner-small" />
+                                        ) : isFollowing ? (
+                                            <><FaUserMinus /> Dejar de Seguir</>
+                                        ) : (
+                                            <><FaUserPlus /> Seguir</>
+                                        )}
                                     </button>
                                 )}
                             </li>
@@ -115,9 +117,16 @@ const SidebarCommunity = () => {
                 </ul>
             </div>
 
-            <div className="sidebar-card">
-                <h3>⭐ Guias Destacadas</h3>
-                <p className="card-subtitle">Encuentra las guias mas votadas de la semana.</p>
+            {/* SECCION DE GUIAS DESTACADAS (Módulo 3) - Ahora con botón de navegación */}
+            <div className="sidebar-card guides-highlight-card">
+                <h3>⭐ Guías Destacadas</h3>
+                <p className="card-subtitle">Encuentra las guías más votadas de la semana.</p>
+                <button
+                    onClick={() => navigate('/guides')}
+                    className="btn btn-primary btn-full-width"
+                >
+                    <FaBookOpen /> Explorar Guías
+                </button>
             </div>
         </aside>
     );

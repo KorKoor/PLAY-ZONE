@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { FaTimes, FaHeart, FaUserCircle } from 'react-icons/fa';
+import '../../styles/PostCard.css'; 
 
 // Asumimos que 'likesList' es un array de objetos con { alias, avatarUrl, _id }
 const LikeListDropdown = ({ likesList, onClose }) => {

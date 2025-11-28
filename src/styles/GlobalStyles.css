@@ -1,4 +1,4 @@
-/*
+﻿/*
  * ==========================================================
  * GLOBAL STYLES - PLAY-ZONE BASE LAYOUT
  * Este archivo establece la paleta de colores y el estilo base del cuerpo.
@@ -7,27 +7,27 @@
 
 :root {
     /* === FONDOS Y ESTRUCTURA (Contraste Fuerte) === */
-    --color-background-primary: #0F141F; /* Fondo MS oscuro (Negro-Azulado) */
-    --color-background-secondary: #1C2738; /* Fondo de la Pgina (Ligeramente ms claro) */
-    --color-card: #28374E; /* Fondo de Mdulos/Cards (Mayor contraste) */
+    --color-background-primary: #0F141F; /* Fondo MÁS oscuro (Negro-Azulado) */
+    --color-background-secondary: #1C2738; /* Fondo de la Página (Ligeramente más claro) */
+    --color-card: #28374E; /* Fondo de Módulos/Cards (Mayor contraste) */
     --color-input-bg: #141D2B; /* Fondo de Inputs/Contraste */
     --color-border: #3D4A66; /* Borde y separadores */
     /* === ACENTO Y FEEDBACK === */
-    --color-accent-blue: #00C6FF; /* Azul de Acento VIBRANTE (Elctrico) */
+    --color-accent-blue: #00C6FF; /* Azul de Acento VIBRANTE (Eléctrico) */
     --color-primary: var(--color-accent-blue); /* Alias principal */
     --color-primary-rgb: 0, 198, 255; /* RGB para sombras y efectos glow */
     --color-accent-hover: #0099CC; /* Azul de hover sutil */
     /* === TEXTO === */
     --color-text-light: #E0E7FF; /* Texto principal (Blanco suave) */
-    --color-text-secondary: #9FAACF; /* Texto gris, subttulos */
+    --color-text-secondary: #9FAACF; /* Texto gris, subtítulos */
     /* === FEEDBACK VISUAL === */
-    --color-success: #38A169; /* Verde para xito/CTA */
+    --color-success: #38A169; /* Verde para éxito/CTA */
     --color-danger: #E53E3E; /* Rojo para error/eliminar */
     --color-secondary: #4A5C7F; /* Color secundario para botones/tags */
 }
 
 /* ----------------------------------------------------------
- * BASE RESET Y TIPOGRAFA
+ * BASE RESET Y TIPOGRAFÍA
  * ---------------------------------------------------------- */
 * {
     margin: 0;
@@ -51,7 +51,7 @@ body {
 }
 
 /* ----------------------------------------------------------
- * ESTILOS GENRICOS (Botones y Formularios)
+ * ESTILOS GENÉRICOS (Botones y Formularios)
  * ---------------------------------------------------------- */
 .btn {
     padding: 10px 18px;
@@ -93,21 +93,4 @@ body {
     color: var(--color-text-secondary);
     cursor: not-allowed;
     box-shadow: none;
-}
-
-[data-theme='light'] {
-    --color-background-primary: #FFFAF0;
-    --color-background-secondary: #FFFAF0;
-    --color-card: #FFFAF0;
-    --color-input-bg: #F0F2F5;
-    --color-border: #D9DDE3;
-    --color-accent-blue: #FFA07A;
-    --color-primary: var(--color-accent-blue);
-    --color-primary-rgb: 255, 160, 122;
-    --color-accent-hover: #E9967A;
-    --color-text-light: #000000;
-    --color-text-secondary: #333333;
-    --color-success: #20B2AA;
-    --color-danger: #DC3545;
-    --color-secondary: #000080;
 }

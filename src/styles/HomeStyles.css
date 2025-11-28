@@ -1,378 +1,380 @@
-/* src/styles/HomeStyles.css (ADAPTACIÓN FINAL AL DISEÑO DE PLAY-ZONE) */
+/* ======================================================= */
+/* HOME PAGE LAYOUT STYLES                                 */
+/* ======================================================= */
 
-    --color-background-primary: #0F141F; 
-    --color-background-secondary: #1C2738;
-    --color-card: #28374E;
-    --color-input-bg: #141D2B;
-    --color-border: #3D4A66;
-    --color-primary: #00C6FF; 
-    --color-primary-rgb: 0, 198, 255; 
-    --color-text-light: #E0E7FF;
-    --color-text-secondary: #9FAACF;
-    --color-success: #38A169;
-
-/* ----------------------------------------------------------
- * 1. LAYOUT PRINCIPAL Y HEADER
- * ---------------------------------------------------------- */
 .home-layout-container {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background-color: var(--color-background-secondary);
+    background-color: var(--color-dark-blue); /* Fondo principal */
 }
 
-/* Contenedor de 3 Columnas */
 .main-content-wrapper {
     display: grid;
-    /* Columna: Navegación (220px), Feed (1fr), Sidebar Comunidad (320px) */
-    grid-template-columns: 220px 1fr 320px;
-    gap: 40px; /* Espaciado generoso */
+    /* Define 3 columnas: 1. Navegación, 2. Contenido (Feed), 3. Sidebar */
+    grid-template-columns: 200px 1fr 300px;
+    gap: 30px; /* Espaciado entre columnas */
     width: 100%;
-    max-width: 1450px;
+    max-width: 1400px; /* Limitar el ancho máximo para evitar que se estire demasiado */
     margin: 0 auto;
-    padding: 30px 0;
+    padding: 20px 0;
 }
 
-/* Header (Asegura que el Header se vea coherente con los otros estilos) */
-.app-header {
-    background-color: var(--color-card); /* Coherente con los cards */
-    padding: 15px 0;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-/* ----------------------------------------------------------
- * 2. BARRA DE NAVEGACIÓN IZQUIERDA (nav-sidebar)
- * ---------------------------------------------------------- */
+/* 2a. Columna de Navegación (Sidebar Izquierda) */
 .nav-sidebar {
-    padding: 10px 0 20px 0;
-    position: sticky;
-    top: 80px; /* Debajo del Header fijo */
-    height: calc(100vh - 80px); /* Altura restante de la pantalla */
+    padding: 20px 0 20px 20px;
+    position: sticky; /* Fija la navegación mientras se hace scroll en el centro */
+    top: 0;
+    height: 100%;
 }
 
-/* Grupo de Enlaces (Botones Home, Guías, Perfil) */
-.main-nav {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    padding-right: 20px;
-}
-
-.nav-links-group {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    padding: 10px 0;
-    border-top: 1px solid var(--color-border);
-    border-bottom: 1px solid var(--color-border);
-}
-
-.nav-link-item {
-    background-color: transparent;
-    border: none;
-    padding: 12px 15px;
-    text-align: left;
-    font-size: 1.05rem;
-    color: var(--color-text-light);
-    font-weight: 600;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    transition: background-color 0.2s, color 0.2s;
-    cursor: pointer;
-}
-
-    .nav-link-item:hover {
-        background-color: var(--color-input-bg); /* Sutil fondo oscuro al hacer hover */
-        color: var(--color-primary);
-    }
-
-/* Botón de Crear Publicación (CTA) */
 .btn-create-post {
     width: 100%;
-    padding: 16px; /* Botón alto */
+    padding: 14px;
     margin-bottom: 20px;
-    background-color: var(--color-success);
-    color: var(--color-background-primary); /* Texto muy oscuro */
-    font-weight: 800;
-    border-radius: 12px;
-    transition: all 0.3s;
-    box-shadow: 0 4px 10px rgba(56, 161, 105, 0.5);
+    background-color: var(--color-success); /* Usamos el verde para CTA (Call to Action) */
+    color: var(--color-dark-blue);
+    font-weight: 700;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
     .btn-create-post:hover {
         background-color: #27945c;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(56, 161, 105, 0.7);
     }
 
-.nav-tip {
-    font-size: 0.85rem;
-    color: var(--color-text-secondary);
-    padding: 0 15px;
-}
-
-/* ----------------------------------------------------------
- * 3. COLUMNA CENTRAL (FEED)
- * ---------------------------------------------------------- */
+/* 2b. Columna Central (FEED) */
 .feed-center-column {
-    padding: 0; /* Limpiamos el padding ya que el wrapper lo maneja */
+    padding: 20px;
 }
 
 .feed-title {
-    color: var(--color-primary); /* Titulo principal con acento */
-    font-size: 2.5rem;
-    font-weight: 800;
+    color: var(--color-text-light);
+    font-size: 2em;
+    font-weight: 700;
     margin-bottom: 5px;
-    letter-spacing: 1px;
 }
 
 .feed-subtitle {
     color: var(--color-text-secondary);
-    margin-bottom: 35px;
-    font-size: 1.1rem;
-}
-
-/* Mensajes de feedback (Carga/Vacío) */
-.no-content-message, .loading-feed-message {
-    padding: 40px;
-    text-align: center;
-    color: var(--color-text-secondary);
-    background-color: var(--color-card); /* Coherente con los cards */
-    border-radius: 12px;
-    border: 1px dashed var(--color-border);
-}
-
-    .no-content-message h2 {
-        color: var(--color-primary);
-        margin-top: 0;
-    }
-
-.btn-load-more {
-    display: block;
-    width: 50%;
-    margin: 30px auto;
-    padding: 12px;
-    background-color: var(--color-secondary);
-    color: var(--color-text-light);
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    transition: background-color 0.2s, transform 0.2s;
-}
-
-    .btn-load-more:hover {
-        background-color: #5d7099;
-        transform: translateY(-1px);
-    }
-
-/* ----------------------------------------------------------
- * 4. SIDEBAR DERECHA (SidebarCommunity)
- * ---------------------------------------------------------- */
-.sidebar-community {
-    padding: 0;
-}
-
-.sidebar-card {
-    background-color: var(--color-card);
-    border-radius: 16px; /* Coherente con el card principal */
-    padding: 25px;
     margin-bottom: 30px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    font-size: 1em;
 }
 
-/* Estilos de lista de jugadores (para SidebarCommunity.jsx) */
-.active-players-list {
-    list-style: none;
-    padding: 0;
-    margin-top: 15px;
+.loading-feed-message {
+    text-align: center;
+    color: var(--color-accent-blue);
+    margin-top: 50px;
 }
 
-.player-item {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--color-border);
-}
+/* 2c. Columna Derecha (Sidebar de Comunidad) */
+/* El estilo del sidebar se definirá en el componente SidebarCommunity */
 
-/* ----------------------------------------------------------
- * 5. MODAL OVERLAY
- * ---------------------------------------------------------- */
-.post-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    /* Asegurar que el post-form-card use los estilos del Post.css */
-}
-
-/* ----------------------------------------------------------
- * 6. RESPONSIVIDAD
- * ---------------------------------------------------------- */
-@media (max-width: 1200px) {
-    .main-content-wrapper {
-        gap: 20px;
-        grid-template-columns: 200px 1fr 280px;
-        max-width: 100%;
-        padding: 20px;
-    }
-}
-
+/* ======================================================= */
+/* RESPONSIVIDAD (Ajuste para móviles y tabletas)         */
+/* ======================================================= */
 @media (max-width: 1024px) {
     .main-content-wrapper {
-        grid-template-columns: 1fr 300px; /* Eliminar columna izquierda */
+        /* En pantallas más pequeñas, ocultamos la navegación izquierda y ponemos el sidebar debajo */
+        grid-template-columns: 1fr 300px;
     }
 
     .nav-sidebar {
-        display: none;
+        display: none; /* Ocultar sidebar izquierda en tabletas/móviles */
     }
 }
 
 @media (max-width: 768px) {
     .main-content-wrapper {
+        /* En móviles, todo se convierte en una sola columna */
         grid-template-columns: 1fr;
         padding: 10px;
     }
 
     .sidebar-community {
-        display: none;
+        display: none; /* Ocultar sidebar de comunidad en móviles para priorizar el contenido */
     }
 }
-/* src/styles/HomeStyles.css (Fragmento de Header para corregir el layout) */
 
-/* === HEADER GENERAL === */
+/* src/styles/HomeStyles.css (Añadir o mejorar) */
+
+/* Layout: Asegurar la rejilla y el centrado */
+.main-content-wrapper {
+    /* ... (Mantener la configuración de grid-template-columns: 200px 1fr 300px;) */
+    padding: 30px 20px; /* Más padding para que respire */
+    min-height: calc(100vh - 80px); /* Asegurar que ocupe todo el espacio */
+}
+
+/* Header: Diseño Limpio */
 .app-header {
-    background-color: var(--color-card);
-    padding: 15px 0;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    background-color: var(--color-medium-blue);
+    padding: 15px 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     position: sticky;
     top: 0;
     z-index: 1000;
 }
 
-/* 🚀 FIX CLAVE: Contenedor principal alineado vertical y espaciado 🚀 */
+/* Sidebar: Diseño Fijo y Limpio */
+.sidebar-card {
+    background-color: var(--color-medium-blue);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.no-content-message, .loading-feed-message {
+    padding: 30px;
+    text-align: center;
+    color: var(--color-text-secondary);
+    background-color: var(--color-input-bg);
+    border-radius: 8px;
+}
+
+    .no-content-message h2 {
+        color: var(--color-accent-blue);
+    }
+
+/* Botones CTA */
+.btn-create-post {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 1.05em;
+}
+
+/* Modal Overlay: Diseño profesional para el PostForm */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.75); /* Fondo semitransparente oscuro */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.post-form-card {
+    background-color: var(--color-medium-blue);
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    position: relative;
+    animation: scaleIn 0.3s ease-out;
+}
+
+/* Animación de entrada para el modal */
+@keyframes scaleIn {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+/* src/styles/HomeStyles.css (Añadir o mejorar) */
+
+/* === HEADER GENERAL === */
+.app-header {
+    background-color: var(--color-medium-blue);
+    padding: 10px 0; /* Padding vertical reducido para ser más compacto */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); /* Sombra más definida */
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
 .header-content-wrapper {
     display: flex;
-    align-items: center; /* Centra todo verticalmente (Logo, Búsqueda, Perfil) */
-    justify-content: space-between; /* Distribuye espacio entre las 3 secciones */
+    align-items: center;
+    justify-content: space-between;
     width: 100%;
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 30px; /* Más padding para que no se pegue a los lados */
+    padding: 0 20px;
 }
 
 /* === LOGO Y NAVEGACIÓN IZQUIERDA === */
 .header-left {
     display: flex;
     align-items: center;
-    gap: 40px; /* Más espacio entre el logo y los links de navegación */
-    min-width: 250px; /* Asegurar que el logo y los links tengan un espacio mínimo */
+    gap: 30px; /* Espacio entre el logo y los links */
 }
 
-/* === BARRA DE BÚSQUEDA CENTRAL (Search Bar) === */
+.app-logo {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--color-accent-blue); /* Color brillante */
+    letter-spacing: 1px;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+.header-nav-links {
+    display: flex;
+    gap: 15px;
+}
+
+.nav-link-btn {
+    background: none;
+    border: none;
+    color: var(--color-text-secondary);
+    padding: 8px 10px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: color 0.2s, background-color 0.2s;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+    .nav-link-btn:hover {
+        color: var(--color-text-light);
+        background-color: #33425a; /* Fondo sutil al hacer hover */
+    }
+
+/* === BARRA DE BÚSQUEDA CENTRAL === */
 .search-bar {
     display: flex;
     align-items: center;
     background-color: var(--color-input-bg);
-    border-radius: 10px; /* Coherente con los inputs del perfil */
-    flex-grow: 1; /* Ocupa el espacio central restante */
-    max-width: 500px; /* Limitar para que no sea demasiado ancha */
-    border: 2px solid var(--color-border);
-    transition: border-color 0.2s, box-shadow 0.2s;
+    border-radius: 8px;
+    flex-grow: 0.6; /* Permite que la barra crezca y sea el foco */
+    max-width: 450px;
+    border: 1px solid transparent;
+    transition: border-color 0.2s;
 }
 
+    .search-bar:focus-within {
+        border-color: var(--color-accent-blue);
+    }
+
     .search-bar input {
-        padding: 12px 15px; /* Más padding para mejor alineación */
+        flex-grow: 1;
+        padding: 10px 15px;
+        border: none;
+        background: none;
+        color: var(--color-text-light);
+        font-size: 1rem;
+        outline: none;
     }
 
 .search-btn {
-    /* Ajuste para que el botón de buscar se alinee */
-    padding: 12px 18px;
+    background-color: var(--color-accent-blue);
+    color: var(--color-dark-blue);
+    border: none;
+    padding: 10px 15px;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
-/* === PERFIL Y DROPDOWN (Derecha) === */
+    .search-btn:hover {
+        background-color: var(--color-accent-hover);
+    }
+
+/* === PERFIL Y DROPDOWN === */
 .header-right {
     display: flex;
     align-items: center;
-    gap: 25px; /* Espacio entre notificaciones y perfil */
-}
-
-.user-profile-btn {
-    /* Asegurar que el avatar y el alias estén centrados */
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 12px;
+    gap: 20px;
 }
 
 .icon-btn {
-    background: transparent;
+    background: none;
     border: none;
     color: var(--color-text-secondary);
-    font-size: 1.4rem;
-    padding: 8px;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.icon-btn:hover {
-    color: var(--color-primary);
-    background-color: var(--color-input-bg);
-}
-
-.theme-toggle-btn {
     font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.2s;
 }
 
-.theme-toggle-btn svg {
-    transition: transform 0.3s ease-in-out;
+    .icon-btn:hover {
+        color: var(--color-accent-blue);
+    }
+
+.user-menu-container {
+    position: relative;
 }
 
-.theme-toggle-btn:hover svg {
-    transform: rotate(15deg);
+.user-profile-btn {
+    background: none;
+    border: none;
+    color: var(--color-text-light);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 10px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
 }
 
-[data-theme='light'] .feed-title {
-    color: #CD5C5C;
+    .user-profile-btn:hover {
+        background-color: #33425a;
+    }
+
+.user-avatar-small {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
-[data-theme='light'] .btn-create-post {
-    background-color: #FFEBCD;
-    color: #333;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+.user-avatar-medium {
+    width: 32px;
+    height: 324px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
-[data-theme='light'] .btn-create-post:hover {
-    background-color: #DEB887;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+.user-dropdown-menu {
+    position: absolute;
+    top: 45px;
+    right: 0;
+    background-color: var(--color-medium-blue);
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    min-width: 180px;
+    padding: 5px 0;
+    z-index: 2000;
 }
 
-[data-theme='light'] .sidebar-card h3,
-[data-theme='light'] .card-subtitle,
-[data-theme='light'] .player-alias,
-[data-theme='light'] .player-score,
-[data-theme='light'] .btn-follow {
-    color: #000000;
-}
+    .user-dropdown-menu button {
+        width: 100%;
+        background: none;
+        border: none;
+        padding: 10px 15px;
+        text-align: left;
+        color: var(--color-text-light);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: background-color 0.2s;
+    }
 
-[data-theme='light'] .btn-load-more {
-    background-color: #708090;
-    color: #000000;
-}
+        .user-dropdown-menu button:hover {
+            background-color: var(--color-accent-hover);
+        }
 
-[data-theme='light'] .app-logo {
-    color: #000000;
+.player-avatar {
+    width: 22px;
+    height: 32px;
+    align-content: center;
+    border-radius: 50%; /* redondea la imagen */
+    object-fit: cover; /* asegura que se recorte bien sin deformarse */
 }

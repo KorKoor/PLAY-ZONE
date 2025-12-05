@@ -1,16 +1,5 @@
 /* src/styles/PostCard.css (Adaptado al Diseño Final del Perfil) */
 
-/* Variables de contexto para Posts (Asegurar coherencia con ProfileStyles.css) */
-    --color-card: #28374E;
-    --color-border: #3D4A66;
-    --color-primary: #00C6FF;
-    --color-primary-rgb: 0, 198, 255;
-    --color-danger: #E53E3E;
-    --color-secondary: #4A5C7F;
-    --color-input-bg: #141D2B;
-    --color-text-light: #E0E7FF;
-    --color-text-secondary: #9FAACF;
-
 
 .post-card {
     background-color: var(--color-card);
@@ -158,8 +147,8 @@
 
 /* Estilos de estado de interaccion */
 .btn-like.liked {
-    color: #FF66A3; /* Rosa Suave/Vibrante para LIKE */
-    text-shadow: 0 0 5px rgba(255, 102, 163, 0.8);
+    color: var(--color-danger); /* Rosa Suave/Vibrante para LIKE */
+    text-shadow: 0 0 5px rgba(var(--color-danger-rgb), 0.8);
 }
 
 .btn-favorite.favorited {

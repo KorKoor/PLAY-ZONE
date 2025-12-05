@@ -5,6 +5,7 @@ import useGuides from '../hooks/useGuides'; // Hook para la lógica de guias
 import GuideForm from '../components/guides/GuideForm'; // Formulario modal
 import GuideCard from '../components/guides/GuideCard'; // Componente de tarjeta
 import Header from '../components/layout/Header'; // Header ya existente
+import '../styles/guideStyles.css';
 import { FaBookOpen, FaFilter, FaPlusCircle, FaSpinner, FaSearch } from 'react-icons/fa'; // Iconos
 
 const GuidesPage = () => {

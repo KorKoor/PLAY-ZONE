@@ -6,25 +6,22 @@
  */
 
 :root {
-    /* === FONDOS Y ESTRUCTURA (Contraste Fuerte) === */
-    --color-background-primary: #0F141F; /* Fondo MÁS oscuro (Negro-Azulado) */
-    --color-background-secondary: #1C2738; /* Fondo de la Página (Ligeramente más claro) */
-    --color-card: #28374E; /* Fondo de Módulos/Cards (Mayor contraste) */
-    --color-input-bg: #141D2B; /* Fondo de Inputs/Contraste */
-    --color-border: #3D4A66; /* Borde y separadores */
-    /* === ACENTO Y FEEDBACK === */
-    --color-accent-blue: #00C6FF; /* Azul de Acento VIBRANTE (Eléctrico) */
-    --color-primary: var(--color-accent-blue); /* Alias principal */
-    --color-primary-rgb: 0, 198, 255; /* RGB para sombras y efectos glow */
-    --color-accent-hover: #0099CC; /* Azul de hover sutil */
-    /* === TEXTO === */
-    --color-text-light: #E0E7FF; /* Texto principal (Blanco suave) */
-    --color-text-secondary: #9FAACF; /* Texto gris, subtítulos */
-    /* === FEEDBACK VISUAL === */
-    --color-success: #38A169; /* Verde para éxito/CTA */
-    --color-danger: #E53E3E; /* Rojo para error/eliminar */
-    --color-secondary: #4A5C7F; /* Color secundario para botones/tags */
+  --color-background-primary: #0F141F;
+  --color-background-secondary: #1C2738;
+  --color-card: #28374E;
+  --color-input-bg: #141D2B;
+  --color-border: #3D4A66;
+  --color-accent-blue: #00C6FF;
+  --color-primary: var(--color-accent-blue);
+  --color-primary-rgb: 0, 198, 255;
+  --color-accent-hover: #0099CC;
+  --color-text-light: #E0E7FF;
+  --color-text-secondary: #9FAACF;
+  --color-success: #38A169;
+  --color-danger: #E53E3E;
+  --color-secondary: #4A5C7F;
 }
+
 
 /* ----------------------------------------------------------
  * BASE RESET Y TIPOGRAFÍA

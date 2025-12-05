@@ -18,10 +18,8 @@ import './styles/HomeStyles.css';
 import './styles/ProfileStyles.css';
 
 function AppContent() {
-    // Nota: El tema no es necesario para el router, pero se mantiene por estructura
-    const { theme } = useContext(ThemeContext);
     return (
-        <div className="App" data-theme={theme}>
+        <div className="App">
             <Routes>
                 {/* 1. Rutas de Autenticación (Públicas) */}
                 <Route path="/login" element={<AuthPage />} />

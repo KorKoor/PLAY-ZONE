@@ -96,6 +96,16 @@ const userService = {
             throw error;
         }
     },
+
+    getUsers: async () => {
+        try {
+            // Este endpoint se combinará con la URL base para llamar a /api/v1/users
+            return await get('/users');
+        } catch (error) {
+            console.error('Error en getUsers:', error);
+            throw error;
+        }
+    },
 };
 
 export default userService;

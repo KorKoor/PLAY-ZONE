@@ -9,7 +9,9 @@ import HomePage from './pages/HomePage';
 import ProfilePage from './pages/ProfilePage';
 // 🚀 NUEVA IMPORTACIÓN NECESARIA 🚀
 import GuidesPage from './pages/GuidesPage';
+import AdminDashboard from './pages/AdminDashboard';
 import ProtectedRoute from './components/common/routes/ProtectedRoute';
+import AdminRoute from './components/common/routes/AdminRoute';
 
 // Importar estilos
 import './styles/GlobalStyles.css';
@@ -24,6 +26,11 @@ function AppContent() {
                 {/* 1. Rutas de Autenticación (Públicas) */}
                 <Route path="/login" element={<AuthPage />} />
                 <Route path="/register" element={<AuthPage />} />
+
+                {/* Ruta Protegida de Admin */}
+                <Route element={<AdminRoute />}>
+                    <Route path="/admin" element={<AdminDashboard />} />
+                </Route>
 
                 {/* 2. Rutas Protegidas (Requieren Login) */}
                 <Route element={<ProtectedRoute />}>

@@ -9,10 +9,19 @@ const useAuth = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     const logout = useCallback(() => {
+        // Primero limpiar localStorage
         localStorage.removeItem('authToken');
         localStorage.removeItem('authUser');
-        setUser(null);
-        setIsLoggedIn(false);
+        
+        // Luego actualizar estado de forma segura
+        setIsLoading(true); // Prevenir renders durante la transición
+        
+        // Usar un batch update para evitar problemas de concurrencia
+        setTimeout(() => {
+            setUser(null);
+            setIsLoggedIn(false);
+            setIsLoading(false);
+        }, 0); // Ejecutar en el siguiente tick
     }, []);
 
     const getStoredUser = useCallback(() => {
@@ -97,6 +106,7 @@ const useAuth = () => {
 
             setUser(user);
             setIsLoggedIn(true);
+            
             return { success: true };
         } catch (error) {
             console.error('Login failed:', error.message);
@@ -117,16 +127,21 @@ const useAuth = () => {
 
     // Verificar estado del usuario cada 5 minutos cuando esté logueado
     useEffect(() => {
-        if (!isLoggedIn || !user) return;
-
-        // Verificar inmediatamente
-        checkUserStatus();
+        if (!isLoggedIn || !user || isLoading) return;
+        
+        // Verificar inmediatamente con un pequeño delay
+        const timeoutId = setTimeout(() => {
+            checkUserStatus();
+        }, 1000);
 
         // Configurar verificación periódica
         const interval = setInterval(checkUserStatus, 5 * 60 * 1000); // 5 minutos
 
-        return () => clearInterval(interval);
-    }, [isLoggedIn, user, checkUserStatus]);
+        return () => {
+            clearTimeout(timeoutId);
+            clearInterval(interval);
+        };
+    }, [isLoggedIn, user?.id, isLoading]); // Solo depender del ID del usuario, no del objeto completo
 
     return {
         user,

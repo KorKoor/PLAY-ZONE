@@ -3,14 +3,14 @@
 ﻿import React, { useState } from 'react';
 ﻿// ⚠️ CORRECCIÓN: Añadir FaHeart y FaUserShield a la importación ⚠️
 ﻿import { FaSearch, FaBell, FaUserCircle, FaSignOutAlt, FaTachometerAlt, FaBookOpen, FaHeart, FaSun, FaMoon, FaUserShield } from 'react-icons/fa';
-﻿import { useAuthContext } from '../../context/AuthContext';
+import useAuth from '../../hooks/useAuth';
 ﻿import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { ThemeContext } from '../../context/ThemeContext';
 import useAdmin from '../../hooks/useAdmin';
 
 const Header = () => {
-    const { user, logout } = useAuthContext();
+    const { user, logout } = useAuth();
     const { isAdmin } = useAdmin();
     
     // Extraer el usuario real del objeto envuelto

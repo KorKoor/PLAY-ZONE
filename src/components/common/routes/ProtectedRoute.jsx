@@ -1,26 +1,23 @@
 // src/components/common/routes/ProtectedRoute.jsx
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuthContext } from '../../../context/AuthContext'; // Importamos nuestro contexto
+import useAuth from '../../../hooks/useAuth'; // Import default, no destructuring
 
 const ProtectedRoute = () => {
-    // 1. Obtener el estado de la sesiÛn
-    const { isLoggedIn, isLoading } = useAuthContext();
+    // 1. Obtener el estado de la sesi√≥n
+    const { isLoggedIn, isLoading } = useAuth();
 
-    // 2. Si a˙n estamos cargando (ej. verificando el token), mostramos un loader
+    // 2. Si a√∫n estamos cargando (ej. verificando el token), mostramos un loader
     if (isLoading) {
-        return <div className="loading-screen">Verificando sesiÛn...</div>;
+        return <div className="loading-screen">Verificando sesi√≥n...</div>;
     }
 
-    // 3. Si el usuario NO est· logueado, lo redirigimos a la p·gina de login.
+    // 3. Si el usuario NO est√° logueado, lo redirigimos a la p√°gina de login.
     if (!isLoggedIn) {
-        // Usamos Navigate de React Router para redirigir
-        // replace: true evita que el usuario regrese a esta p·gina protegida con el botÛn 'atr·s'
-        return <Navigate to="/login" replace />;
+        return <Navigate to="/auth" replace />;
     }
 
-    // 4. Si el usuario SÕ est· logueado, renderizamos el contenido de la ruta hija
-    // Outlet se usa para renderizar los elementos anidados de la ruta protegida (ej. Home, Profile)
+    // 4. Si el usuario S√ç est√° logueado, renderizamos el contenido de la ruta hija
     return <Outlet />;
 };
 

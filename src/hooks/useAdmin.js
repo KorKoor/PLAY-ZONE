@@ -1,5 +1,5 @@
 // src/hooks/useAdmin.js
-import { useAuthContext } from '../context/AuthContext';
+import useAuth from './useAuth';
 import { isUserAdmin, requireAdmin } from '../config/adminConfig';
 
 /**
@@ -7,7 +7,7 @@ import { isUserAdmin, requireAdmin } from '../config/adminConfig';
  * @returns {Object} - Funciones y estado relacionado con admin
  */
 const useAdmin = () => {
-    const { user } = useAuthContext();
+    const { user } = useAuth();
 
     return {
         // Estado

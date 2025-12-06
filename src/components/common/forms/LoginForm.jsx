@@ -16,24 +16,24 @@ const LoginForm = ({ onSwitchToRegister, onSwitchToForgot }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        // Prevenir múltiples submissions
+        if (isLoading) {
+            return;
+        }
+        
         setError(null);
         setIsLoading(true);
 
         try {
-            console.log('Iniciando login...', formData.email);
             const result = await login(formData);
-            console.log('Login exitoso:', result);
 
             // 🚀 REDIRECCIÓN CON DELAY PARA PERMITIR ACTUALIZACIÓN DEL CONTEXTO 🚀
-            console.log('Esperando actualización del contexto...');
             setTimeout(() => {
-                console.log('Navegando a /home...');
                 navigate('/home', { replace: true });
-            }, 100); // 100ms delay
+            }, 500);
 
         } catch (err) {
-            console.error('Error en login:', err);
-            // El error debe ser el mensaje devuelto por la API (ej: Credenciales inválidas)
             setError(err.message || 'Fallo al iniciar sesión. Verifica tus credenciales.');
         } finally {
             setIsLoading(false);
@@ -41,49 +41,105 @@ const LoginForm = ({ onSwitchToRegister, onSwitchToForgot }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="auth-form">
-            <h1>Login</h1>
-            <h2>🎮 Inicia Sesión</h2>
-            {error && <p className="error-message">{error}</p>}
+        <div className="modern-auth-container">
+            <div className="auth-card">
+                <div className="auth-header">
+                    <div className="logo-section">
+                        <div className="logo-icon">🎮</div>
+                        <h1 className="brand-title">PLAY-ZONE</h1>
+                    </div>
+                    <h2 className="welcome-text">Bienvenido de vuelta</h2>
+                    <p className="subtitle">Inicia sesión para continuar tu aventura</p>
+                </div>
 
-            <div className="form-group">
-                <label htmlFor="email">Correo Electrónico</label>
-                <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                />
+                <form onSubmit={handleSubmit} className="modern-auth-form">
+                    {error && (
+                        <div className="error-alert">
+                            <span className="error-icon">⚠️</span>
+                            <span className="error-text">{error}</span>
+                        </div>
+                    )}
+
+                    <div className="input-group">
+                        <div className="input-wrapper">
+                            <span className="input-icon">📧</span>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleChange}
+                                required
+                                placeholder="tu@email.com"
+                                className="modern-input"
+                            />
+                            <label htmlFor="email" className="floating-label">Correo Electrónico</label>
+                        </div>
+                    </div>
+
+                    <div className="input-group">
+                        <div className="input-wrapper">
+                            <span className="input-icon">🔒</span>
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                value={formData.password}
+                                onChange={handleChange}
+                                required
+                                placeholder="Tu contraseña"
+                                className="modern-input"
+                            />
+                            <label htmlFor="password" className="floating-label">Contraseña</label>
+                        </div>
+                    </div>
+
+                    <button 
+                        type="submit" 
+                        disabled={isLoading} 
+                        className={`modern-submit-btn ${isLoading ? 'loading' : ''}`}
+                    >
+                        <span className="btn-content">
+                            {isLoading ? (
+                                <>
+                                    <span className="spinner"></span>
+                                    Iniciando sesión...
+                                </>
+                            ) : (
+                                <>
+                                    <span className="btn-icon">🚀</span>
+                                    Entrar a PLAY-ZONE
+                                </>
+                            )}
+                        </span>
+                    </button>
+
+                    <div className="auth-divider">
+                        <span>o</span>
+                    </div>
+
+                    <div className="auth-links">
+                        <button 
+                            type="button" 
+                            onClick={onSwitchToRegister} 
+                            className="link-btn primary-link"
+                        >
+                            <span className="link-icon">✨</span>
+                            ¿No tienes cuenta? ¡Regístrate!
+                        </button>
+                        
+                        <button 
+                            type="button" 
+                            onClick={onSwitchToForgot} 
+                            className="link-btn secondary-link"
+                        >
+                            <span className="link-icon">🔑</span>
+                            ¿Olvidaste tu contraseña?
+                        </button>
+                    </div>
+                </form>
             </div>
-
-            <div className="form-group">
-                <label htmlFor="password">Contraseña</label>
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                />
-            </div>
-
-            <button type="submit" disabled={isLoading} className="btn btn-primary">
-                {isLoading ? 'Cargando...' : 'Entrar a PLAY-ZONE'}
-            </button>
-
-            <div className="form-links">
-                {/* Estos botones ahora llaman a las funciones que cambian el modo/ruta en AuthPage */}
-                <button type="button" onClick={onSwitchToRegister} className="btn-link">
-                    ¿No tienes cuenta? ¡Regístrate!
-                </button>
-                <button type="button" onClick={onSwitchToForgot} className="btn-link forgot-link">
-                    ¿Olvidaste tu Contraseña?
-                </button>
-            </div>
-        </form>
+        </div>
     );
 };
 

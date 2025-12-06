@@ -1,7 +1,7 @@
 ﻿// src/pages/HomePage.jsx
 
 import React, { useState } from 'react';
-import { useAuthContext } from '../context/AuthContext';
+import useAuth from '../hooks/useAuth';
 import usePosts from '../hooks/usePosts';
 import PostCard from '../components/posts/PostCard';
 import Header from '../components/layout/Header';
@@ -11,7 +11,7 @@ import { FaPlusCircle, FaBookOpen, FaUserCircle, FaHeart, FaHome as FaHomeIcon }
 import { useNavigate } from 'react-router-dom';
 
 const HomePage = () => {
-    const { user } = useAuthContext();
+    const { user, isLoading: authLoading } = useAuth();
     const navigate = useNavigate();
 
     const {
@@ -26,6 +26,11 @@ const HomePage = () => {
     } = usePosts();
 
     const [isPostFormOpen, setIsPostFormOpen] = useState(false);
+
+    // Si no hay usuario o está cargando, mostrar loading
+    if (authLoading || !user) {
+        return <div className="loading-screen">Cargando...</div>;
+    }
 
     const handlePostCreated = (newPost) => {
         addNewPost(newPost);
@@ -81,7 +86,7 @@ const HomePage = () => {
 
                 {/* 2b. Columna Central: Muro de Publicaciones (FEED) */}
                 <section className="feed-center-column">
-                    <h1 className="feed-title">Bienvenido, {user.alias}</h1>
+                    <h1 className="feed-title">Bienvenido, {user?.alias || user?.email || 'Usuario'}</h1>
                     <p className="feed-subtitle">Feed de tus jugadores seguidos (Requisito 4.3).</p>
 
                     {error && <p className="error-message">Error cargando el feed: {error}</p>}

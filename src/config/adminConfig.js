@@ -1,7 +1,8 @@
 // src/config/adminConfig.js
 // Lista de emails que tienen permisos de administrador
 export const ADMIN_EMAILS = [
-    'leonardoposada7777@gmail.com',
+    'leonardoposada7777@gmail.com',  // Con 4 sietes
+    'leonardoposada777@gmail.com',   // Con 3 sietes
     // Agregar más emails admin aquí según sea necesario
     // 'otro-admin@ejemplo.com',
 ];
@@ -18,7 +19,11 @@ export const isUserAdmin = (user) => {
     if (!actualUser || !actualUser.email) {
         return false;
     }
-    return ADMIN_EMAILS.includes(actualUser.email.toLowerCase());
+    
+    const userEmail = actualUser.email.toLowerCase();
+    const isAdmin = ADMIN_EMAILS.includes(userEmail);
+    
+    return isAdmin;
 };
 
 /**

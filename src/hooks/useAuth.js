@@ -62,7 +62,7 @@ const useAuth = () => {
 
     // Función para verificar estado actualizado del usuario
     const checkUserStatus = useCallback(async () => {
-        if (!user?.id && !user?._id) return;
+        if (!user?.id && !user?._id) return false;
 
         try {
             const userId = user.id || user._id;
@@ -71,11 +71,18 @@ const useAuth = () => {
 
             if (updatedUser.isBanned) {
                 const banMessage = updatedUser.banReason 
-                    ? `Tu cuenta ha sido suspendida. Motivo: ${updatedUser.banReason}`
-                    : 'Tu cuenta ha sido suspendida.';
+                    ? `🚫 CUENTA SUSPENDIDA\n\nTu cuenta ha sido suspendida.\n\nMotivo: ${updatedUser.banReason}\n\nSerás redirigido al login.`
+                    : '🚫 CUENTA SUSPENDIDA\n\nTu cuenta ha sido suspendida.\n\nSerás redirigido al login.';
+                
+                // Mostrar mensaje inmediatamente
                 alert(banMessage);
-                logout();
-                return;
+                
+                // Limpiar sesión después del mensaje
+                setTimeout(() => {
+                    logout();
+                }, 1000);
+                
+                return true; // Retorna true si el usuario fue baneado
             }
 
             // Actualizar usuario si hay cambios
@@ -83,8 +90,25 @@ const useAuth = () => {
                 setUser(updatedUser);
                 localStorage.setItem('authUser', JSON.stringify(updatedUser));
             }
+            
+            return false; // Retorna false si no está baneado
         } catch (error) {
             console.error('Error verificando estado del usuario:', error);
+            // Si hay error 403, podría ser que el usuario fue baneado
+            if (error.message && error.message.includes('403')) {
+                console.warn('Error 403 al verificar usuario, posible ban. Cerrando sesión.');
+                
+                // Mostrar mensaje de ban detectado
+                alert('🚫 ACCESO DENEGADO\n\nSe detectó que tu cuenta puede estar suspendida.\n\nSerás desconectado automáticamente.');
+                
+                // Limpiar sesión después del mensaje
+                setTimeout(() => {
+                    logout();
+                }, 1000);
+                
+                return true;
+            }
+            return false;
         }
     }, [user, logout]);
 
@@ -125,7 +149,7 @@ const useAuth = () => {
         setIsLoading(false);
     }, [getStoredUser]);
 
-    // Verificar estado del usuario cada 5 minutos cuando esté logueado
+    // Verificar estado del usuario cada 30 segundos cuando esté logueado
     useEffect(() => {
         if (!isLoggedIn || !user || isLoading) return;
         
@@ -134,14 +158,14 @@ const useAuth = () => {
             checkUserStatus();
         }, 1000);
 
-        // Configurar verificación periódica
-        const interval = setInterval(checkUserStatus, 5 * 60 * 1000); // 5 minutos
+        // Configurar verificación periódica más frecuente para detectar bans rápidamente
+        const interval = setInterval(checkUserStatus, 30 * 1000); // 30 segundos
 
         return () => {
             clearTimeout(timeoutId);
             clearInterval(interval);
         };
-    }, [isLoggedIn, user?.id, isLoading]); // Solo depender del ID del usuario, no del objeto completo
+    }, [isLoggedIn, user?.id, isLoading, checkUserStatus]); // Incluir checkUserStatus como dependencia
 
     return {
         user,

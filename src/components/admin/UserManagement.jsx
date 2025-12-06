@@ -107,16 +107,26 @@ const UserManagement = () => {
             const currentUserId = currentUser?.id || currentUser?._id;
             if (userId === currentUserId) {
                 alert('Te has baneado a ti mismo. Serás desconectado.');
-                // Esperar un momento para que el usuario vea el mensaje
                 setTimeout(() => {
-                    checkUserStatus(); // Esto detectará el ban y cerrará la sesión
+                    checkUserStatus();
                 }, 2000);
             } else {
                 alert('Usuario baneado exitosamente');
             }
         } catch (err) {
             console.error('Error banning user:', err);
-            alert('Error al banear usuario');
+            
+            // Mensaje más descriptivo basado en el tipo de error
+            let errorMessage = 'Error al banear usuario';
+            if (err.message.includes('403')) {
+                errorMessage = 'No se puede banear: El usuario puede ser un administrador o no tienes permisos suficientes';
+            } else if (err.message.includes('404')) {
+                errorMessage = 'Usuario no encontrado';
+            } else if (err.message.includes('400')) {
+                errorMessage = 'Datos de ban inválidos';
+            }
+            
+            alert(errorMessage);
         }
     };
 
@@ -135,7 +145,16 @@ const UserManagement = () => {
             alert('Usuario desbaneado exitosamente');
         } catch (err) {
             console.error('Error unbanning user:', err);
-            alert('Error al desbanear usuario');
+            
+            // Mensaje más descriptivo basado en el tipo de error
+            let errorMessage = 'Error al desbanear usuario';
+            if (err.message.includes('403')) {
+                errorMessage = 'No se puede desbanear: Permisos insuficientes';
+            } else if (err.message.includes('404')) {
+                errorMessage = 'Usuario no encontrado';
+            }
+            
+            alert(errorMessage);
         }
     };
 

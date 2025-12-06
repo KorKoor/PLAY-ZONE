@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 // Nota: Asumimos que ThemeProvider y ThemeContext existen
 import { ThemeProvider, ThemeContext } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
+import { BanNotificationProvider } from './context/BanNotificationContext';
 import AuthPage from './pages/AuthPage';
 import HomePage from './pages/HomePage';
 import ProfilePage from './pages/ProfilePage';
@@ -18,14 +19,19 @@ import './styles/GlobalStyles.css';
 import './styles/AuthStyles.css';
 import './styles/HomeStyles.css';
 import './styles/ProfileStyles.css';
+import useBanNotificationSetup from './hooks/useBanNotificationSetup';
 
 function AppContent() {
+    // Configurar el sistema de notificación de ban
+    useBanNotificationSetup();
+
     return (
         <div className="App">
             <Routes>
                 {/* 1. Rutas de Autenticación (Públicas) */}
                 <Route path="/login" element={<AuthPage />} />
                 <Route path="/register" element={<AuthPage />} />
+                <Route path="/auth" element={<Navigate to="/login" replace />} />
 
                 {/* Ruta Protegida de Admin */}
                 <Route element={<AdminRoute />}>
@@ -66,11 +72,13 @@ function AppContent() {
 function App() {
     return (
         <AuthProvider>
-            <ThemeProvider>
-                <BrowserRouter>
-                    <AppContent />
-                </BrowserRouter>
-            </ThemeProvider>
+            <BanNotificationProvider>
+                <ThemeProvider>
+                    <BrowserRouter>
+                        <AppContent />
+                    </BrowserRouter>
+                </ThemeProvider>
+            </BanNotificationProvider>
         </AuthProvider>
     );
 }

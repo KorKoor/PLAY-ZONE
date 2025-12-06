@@ -1,6 +1,76 @@
 ﻿// src/services/httpService.js
 import { API_BASE_URL } from '../config/apiConfig';
 
+// Flag para evitar verificaciones múltiples de ban
+let isCheckingBan = false;
+let banNotificationHandler = null;
+
+// Función para registrar el handler de notificación de ban
+export const setBanNotificationHandler = (handler) => {
+    banNotificationHandler = handler;
+};
+
+// Función para manejar verificación de ban de usuario
+const checkUserBanStatus = async () => {
+    // Evitar verificaciones múltiples simultáneas
+    if (isCheckingBan) return false;
+    
+    const storedUser = localStorage.getItem('authUser');
+    if (!storedUser) return false;
+
+    isCheckingBan = true;
+
+    try {
+        const user = JSON.parse(storedUser);
+        const userId = user.id || user._id;
+        
+        if (!userId) return false;
+
+        // Hacer una llamada directa al backend para verificar el estado actual
+        const token = localStorage.getItem('authToken');
+        const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (response.ok) {
+            const userData = await response.json();
+            const actualUser = userData.data || userData;
+            
+            if (actualUser.isBanned) {
+                // Usuario está baneado, mostrar mensaje inmediatamente
+                const banMessage = actualUser.banReason 
+                    ? `🚫 CUENTA SUSPENDIDA\n\nTu cuenta ha sido suspendida.\n\nMotivo: ${actualUser.banReason}\n\nPor favor contacta al administrador si crees que esto es un error.`
+                    : '🚫 CUENTA SUSPENDIDA\n\nTu cuenta ha sido suspendida.\n\nPor favor contacta al administrador si crees que esto es un error.';
+                
+                // Mostrar alert inmediatamente (siempre visible)
+                alert(banMessage);
+                
+                // Limpiar sesión
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('authUser');
+                
+                // Esperar un momento antes de recargar para que el usuario vea el mensaje
+                setTimeout(() => {
+                    window.location.href = '/login';
+                }, 2000);
+                
+                return true;
+            }
+        }
+        
+        return false;
+    } catch (error) {
+        console.error('Error verificando estado de ban:', error);
+        return false;
+    } finally {
+        isCheckingBan = false;
+    }
+};
+
 const httpService = async (endpoint, options = {}) => {
     const url = `${API_BASE_URL}${endpoint}`;
     const token = localStorage.getItem('authToken');
@@ -29,6 +99,15 @@ const httpService = async (endpoint, options = {}) => {
         const response = await fetch(url, config);
 
         if (!response.ok) {
+            // Si es un error 403 y tenemos un token, verificar si el usuario fue baneado
+            if (response.status === 403 && token) {
+                const wasBanned = await checkUserBanStatus();
+                if (wasBanned) {
+                    // El usuario fue baneado, no continuar con el error
+                    return;
+                }
+            }
+
             let errorData;
             try {
                 errorData = await response.json();

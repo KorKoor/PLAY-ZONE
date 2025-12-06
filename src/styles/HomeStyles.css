@@ -108,14 +108,6 @@
 }
 
 /* Header: Diseño Limpio */
-.app-header {
-    background-color: var(--color-background-secondary);
-    padding: 15px 30px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
 
 /* Sidebar: Diseño Fijo y Limpio */
 .sidebar-card {
@@ -187,150 +179,259 @@
 /* src/styles/HomeStyles.css (Añadir o mejorar) */
 
 /* === HEADER GENERAL === */
+/* CONTENEDOR PRINCIPAL DEL HEADER (LA BARRA SUPERIOR COMPLETA) */
 .app-header {
+    /* Color de fondo del header - color secundario del tema oscuro */
     background-color: var(--color-background-secondary);
-    padding: 10px 0; /* Padding vertical reducido para ser más compacto */
+    /* IMPORTANTE: Controla la ALTURA del header - arriba y abajo - SI AUMENTAS ESTO, LA BARRA SE AGRANDA */
+    padding: 2px 10px; /* Padding vertical ARRIBA: 2px, ABAJO: 2px - Mínimo absoluto */
+    /* Sombra debajo del header - hace que se vea elevado */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); /* Sombra más definida */
+    /* Mantiene el header fijo arriba mientras scrolleas */
     position: sticky;
+    /* Distancia desde el top = 0px, es decir, pegado arriba */
     top: 0;
+    /* Nivel de profundidad - 1000 es muy alto, está sobre todo */
     z-index: 1000;
+    /* ALTURA FIJA Y COMPACTA - Solo para que los elementos se vean alineados */
+    display: flex;
+    align-items: center;
+    min-height: 40px; /* Altura mínima = 40px para que sea compacta */
 }
 
 .header-content-wrapper {
+    /* Layout horizontal - todos los elementos en fila */
     display: flex;
+    /* Alineación vertical - todo centrado en el medio verticalmente */
     align-items: center;
+    /* Distribuye los elementos: izquierda, centro, derecha con espacio máximo */
     justify-content: space-between;
+    /* Ancho = 100% del contenedor padre */
     width: 100%;
+    /* Ancho máximo = 1400px - si la pantalla es más grande, el header se queda en 1400px */
     max-width: 1400px;
+    /* Centra el contenedor horizontalmente */
     margin: 0 auto;
+    /* Espacio interno horizontal LEFT: 20px, RIGHT: 20px (vertical no tiene porque está en .app-header) */
     padding: 0 20px;
 }
 
 /* === LOGO Y NAVEGACIÓN IZQUIERDA === */
+/* CONTENEDOR DEL LADO IZQUIERDO - LOGO + BOTONES DE NAVEGACIÓN */
 .header-left {
+    /* Layout horizontal - logo y botones en fila */
     display: flex;
+    /* Alinea verticalmente al centro */
     align-items: center;
+    /* Espacio entre el logo y los botones de navegación = 30px */
     gap: 30px; /* Espacio entre el logo y los links */
 }
 
+/* EL LOGO "PLAY-ZONE" */
 .app-logo {
+    /* Tamaño de la fuente del logo - 1.5rem = 24px aproximadamente */
     font-size: 1.5rem;
+    /* Grosor de la fuente - 900 es ultra negrita */
     font-weight: 900;
+    /* Color azul brillante del logo - variable del CSS */
     color: var(--color-accent-blue); /* Color brillante */
+    /* Espacio entre letras - 1px */
     letter-spacing: 1px;
+    /* Cambiar cursor a pointer cuando pasas sobre el logo */
     cursor: pointer;
+    /* Convierte el texto a MAYÚSCULAS */
     text-transform: uppercase;
 }
 
+/* CONTENEDOR DE LOS BOTONES DE NAVEGACIÓN (GUÍAS, COMUNIDAD, ETC) */
 .header-nav-links {
+    /* Layout horizontal - botones en fila */
     display: flex;
+    /* Espacio entre botones = 15px */
     gap: 15px;
 }
 
+/* LOS BOTONES INDIVIDUALES (GUÍAS, COMUNIDAD, ETC) */
 .nav-link-btn {
+    /* Sin fondo (transparent) */
     background: none;
+    /* Sin borde */
     border: none;
+    /* Color gris secundario del texto */
     color: var(--color-text-secondary);
+    /* Espacio interno - ARRIBA/ABAJO: 8px, IZQUIERDA/DERECHA: 10px */
     padding: 8px 10px;
+    /* Tamaño de fuente = 0.95rem = 15px aprox */
     font-size: 0.95rem;
+    /* Cursor tipo "mano" al pasar sobre */
     cursor: pointer;
+    /* Transición suave para cambios de color en 0.2 segundos */
     transition: color 0.2s, background-color 0.2s;
+    /* Bordes redondeados = 6px */
     border-radius: 6px;
+    /* Layout horizontal para icono + texto */
     display: flex;
+    /* Alinea verticalmente al centro */
     align-items: center;
+    /* Espacio entre icono y texto = 6px */
     gap: 6px;
 }
 
+    /* CUANDO PASAS EL MOUSE SOBRE UN BOTÓN DE NAVEGACIÓN */
     .nav-link-btn:hover {
+        /* Cambia el color a gris claro */
         color: var(--color-text-light);
+        /* Fondo sutil azul/transparente (10% de opacidad del color primario) */
         background-color: rgba(var(--color-primary-rgb), 0.1); /* Fondo sutil al hacer hover */
     }
 
 /* === BARRA DE BÚSQUEDA CENTRAL === */
+/* CONTENEDOR DE LA BARRA DE BÚSQUEDA */
 .search-bar {
+    /* Layout horizontal - input y botón de búsqueda en fila */
     display: flex;
+    /* Alinea verticalmente al centro */
     align-items: center;
+    /* Color de fondo oscuro para el input */
     background-color: var(--color-input-bg);
+    /* Bordes redondeados = 8px */
     border-radius: 8px;
+    /* La barra crece y toma espacio disponible (60% del máximo) */
     flex-grow: 0.6; /* Permite que la barra crezca y sea el foco */
+    /* Ancho máximo de la barra = 450px */
     max-width: 450px;
+    /* Borde inicial transparente (cambia al hacer foco) */
     border: 1px solid transparent;
+    /* Transición suave del borde cuando se enfoca */
     transition: border-color 0.2s;
 }
 
+    /* CUANDO HACES CLIC O ESCRIBES EN LA BARRA DE BÚSQUEDA */
     .search-bar:focus-within {
+        /* El borde se vuelve azul brillante */
         border-color: var(--color-accent-blue);
     }
 
+    /* EL INPUT DE TEXTO (DONDE ESCRIBES) */
     .search-bar input {
+        /* El input crece para llenar el espacio disponible */
         flex-grow: 1;
+        /* Espacio interno - ARRIBA/ABAJO: 10px, IZQUIERDA/DERECHA: 15px */
         padding: 10px 15px;
+        /* Sin borde porque el borde está en el contenedor .search-bar */
         border: none;
+        /* Fondo transparente - usa el del contenedor padre */
         background: none;
+        /* Color del texto = gris claro */
         color: var(--color-text-light);
+        /* Tamaño de fuente = 1rem = 16px */
         font-size: 1rem;
+        /* Sin outline azul por defecto */
         outline: none;
     }
 
+/* BOTÓN DE BÚSQUEDA (LA LUPA) */
 .search-btn {
+    /* Color de fondo = azul brillante */
     background-color: var(--color-accent-blue);
+    /* Color del ícono = fondo oscuro */
     color: var(--color-background-primary);
+    /* Sin borde */
     border: none;
+    /* Espacio interno - ARRIBA/ABAJO: 10px, IZQUIERDA/DERECHA: 15px */
     padding: 10px 15px;
+    /* Bordes redondeados SOLO en la derecha (porque está pegado al input) */
     border-radius: 0 8px 8px 0;
+    /* Cursor tipo "mano" */
     cursor: pointer;
+    /* Transición suave del fondo en 0.2 segundos */
     transition: background-color 0.2s;
 }
 
+    /* CUANDO PASAS EL MOUSE SOBRE EL BOTÓN DE BÚSQUEDA */
     .search-btn:hover {
+        /* El fondo se vuelve azul más oscuro */
         background-color: var(--color-accent-hover);
     }
 
 /* === PERFIL Y DROPDOWN === */
+/* CONTENEDOR DEL LADO DERECHO - NOTIFICACIONES, TEMA, PERFIL */
 .header-right {
+    /* Layout horizontal - todos los elementos en fila */
     display: flex;
+    /* Alinea verticalmente al centro */
     align-items: center;
+    /* Espacio entre icono de notificación, tema y perfil = 20px */
     gap: 20px;
 }
 
+/* BOTONES DE ICONO (NOTIFICACIONES, TEMA OSCURO/CLARO) */
 .icon-btn {
+    /* Sin fondo */
     background: none;
+    /* Sin borde */
     border: none;
+    /* Color gris secundario */
     color: var(--color-text-secondary);
+    /* Tamaño del ícono = 1.2rem = 19px */
     font-size: 1.2rem;
+    /* Cursor tipo "mano" */
     cursor: pointer;
+    /* Transición suave del color en 0.2 segundos */
     transition: color 0.2s;
 }
 
+    /* CUANDO PASAS EL MOUSE SOBRE LOS BOTONES DE ICONO */
     .icon-btn:hover {
+        /* Cambia a azul brillante */
         color: var(--color-accent-blue);
     }
 
+/* CONTENEDOR DEL MENÚ DE USUARIO (DONDE ESTÁ EL DROPDOWN) */
 .user-menu-container {
+    /* Posición relativa para que el dropdown se posicione respecto a esto */
     position: relative;
 }
 
+/* BOTÓN DEL PERFIL (AVATAR + ALIAS DEL USUARIO) */
 .user-profile-btn {
+    /* Sin fondo */
     background: none;
+    /* Sin borde */
     border: none;
+    /* Color gris claro */
     color: var(--color-text-light);
+    /* Cursor tipo "mano" */
     cursor: pointer;
+    /* Layout horizontal - avatar y alias en fila */
     display: flex;
+    /* Alinea verticalmente al centro */
     align-items: center;
+    /* Espacio entre avatar y alias = 10px */
     gap: 10px;
+    /* Espacio interno - ARRIBA/ABAJO: 5px, IZQUIERDA/DERECHA: 10px */
     padding: 5px 10px;
+    /* Bordes redondeados = 8px */
     border-radius: 8px;
+    /* Transición suave del fondo en 0.2 segundos */
     transition: background-color 0.2s;
 }
 
+    /* CUANDO PASAS EL MOUSE SOBRE EL BOTÓN DEL PERFIL */
     .user-profile-btn:hover {
+        /* Fondo sutil azul/transparente */
         background-color: rgba(var(--color-primary-rgb), 0.1);
     }
 
+/* LA IMAGEN DEL AVATAR (FOTO DE PERFIL) */
 .user-avatar-small {
+    /* Ancho = 28px */
     width: 28px;
+    /* Alto = 28px (hace que sea cuadrado) */
     height: 28px;
-    border-radius: 50%;
+    /* Bordes completamente redondeados = 50% = círculo */
+    border-radius: 100%;
+    /* Asegura que la imagen no se deforme y se recorte bien */
     object-fit: cover;
 }
 
@@ -341,38 +442,62 @@
     object-fit: cover;
 }
 
+/* EL MENÚ DROPDOWN (QUE APARECE AL HACER CLIC EN EL PERFIL) */
 .user-dropdown-menu {
+    /* Posición absoluta respecto al .user-menu-container */
     position: absolute;
+    /* Posición ARRIBA del botón = 45px debajo del botón (porque está en absolute) */
     top: 45px;
+    /* Posición DERECHA = alineado a la derecha del botón */
     right: 0;
+    /* Color de fondo = gris oscuro de tarjeta */
     background-color: var(--color-card);
+    /* Bordes redondeados = 8px */
     border-radius: 8px;
+    /* Sombra debajo del menu = más profundidad */
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    /* Ancho mínimo = 180px */
     min-width: 180px;
+    /* Espacio interno = 5px arriba y abajo, 0px izquierda y derecha (el padding está en los botones) */
     padding: 5px 0;
+    /* Nivel de profundidad = 2000 (está sobre todo, muy alto) */
     z-index: 2000;
 }
 
+    /* LOS BOTONES DENTRO DEL DROPDOWN (MI PERFIL, FAVORITOS, ETC) */
     .user-dropdown-menu button {
+        /* Ancho = 100% del dropdown */
         width: 100%;
+        /* Sin fondo */
         background: none;
+        /* Sin borde */
         border: none;
+        /* Espacio interno - ARRIBA/ABAJO: 10px, IZQUIERDA/DERECHA: 15px */
         padding: 10px 15px;
+        /* Alineación del texto a la izquierda */
         text-align: left;
+        /* Color del texto = gris claro */
         color: var(--color-text-light);
+        /* Cursor tipo "mano" */
         cursor: pointer;
+        /* Layout horizontal - icono y texto en fila */
         display: flex;
+        /* Alinea verticalmente al centro */
         align-items: center;
+        /* Espacio entre icono y texto = 10px */
         gap: 10px;
+        /* Transición suave del fondo en 0.2 segundos */
         transition: background-color 0.2s;
     }
 
+        /* CUANDO PASAS EL MOUSE SOBRE UN BOTÓN DEL DROPDOWN */
         .user-dropdown-menu button:hover {
+            /* Fondo azul oscuro */
             background-color: var(--color-accent-hover);
         }
 
 .player-avatar {
-    width: 22px;
+    width: 32px;
     height: 32px;
     align-content: center;
     border-radius: 50%; /* redondea la imagen */

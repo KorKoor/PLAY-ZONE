@@ -20,12 +20,19 @@ const LoginForm = ({ onSwitchToRegister, onSwitchToForgot }) => {
         setIsLoading(true);
 
         try {
-            await login(formData);
+            console.log('Iniciando login...', formData.email);
+            const result = await login(formData);
+            console.log('Login exitoso:', result);
 
-            // 🚀 REDIRECCIÓN EXITOSA 🚀
-            navigate('/home', { replace: true });
+            // 🚀 REDIRECCIÓN CON DELAY PARA PERMITIR ACTUALIZACIÓN DEL CONTEXTO 🚀
+            console.log('Esperando actualización del contexto...');
+            setTimeout(() => {
+                console.log('Navegando a /home...');
+                navigate('/home', { replace: true });
+            }, 100); // 100ms delay
 
         } catch (err) {
+            console.error('Error en login:', err);
             // El error debe ser el mensaje devuelto por la API (ej: Credenciales inválidas)
             setError(err.message || 'Fallo al iniciar sesión. Verifica tus credenciales.');
         } finally {

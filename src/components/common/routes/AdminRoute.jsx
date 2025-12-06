@@ -1,24 +1,45 @@
 // src/components/routes/AdminRoute.jsx
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import useAuth from '../../../hooks/useAuth'; // Verifica que esta ruta apunte a tu hook
+import { useAuthContext } from '../../../context/AuthContext';
+import { isUserAdmin } from '../../../config/adminConfig';
 
 const AdminRoute = () => {
-  // 1. Obtenemos el usuario y el estado de carga desde el hook
-  const { user, isLoading } = useAuth();
+  // 1. Obtenemos el usuario y el estado de carga desde el contexto
+  const { user, isLoading } = useAuthContext();
 
   // 2. Si está cargando, mostramos un mensaje y esperamos
   if (isLoading) {
-    return <div>Verificando acceso de administrador...</div>;
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '50vh',
+        fontSize: '1.1rem',
+        color: '#6b7280'
+      }}>
+        Verificando acceso de administrador...
+      </div>
+    );
   }
 
-  // 3. LA REGLA DE ORO (una vez que no está cargando):
-  // Si existe el usuario Y su rol es "admin", le dejamos pasar.
-  if (user && user.role === 'admin') {
-    return <Outlet />; // <--- ¡Pase usted, jefe!
+  // 3. Verificar que el usuario existe
+  if (!user) {
+    return <Navigate to="/auth" replace />;
   }
 
-  // 5. Si no cumple, lo mandamos fuera
+  // 4. Verificar que no esté baneado
+  if (user.isBanned) {
+    return <Navigate to="/" replace />;
+  }
+
+  // 5. Verificar si el usuario tiene permisos de administrador
+  if (isUserAdmin(user)) {
+    return <Outlet />; // ✅ Usuario autorizado como admin
+  }
+
+  // 6. Si no es admin, redirigir al home
   return <Navigate to="/" replace />;
 };
 

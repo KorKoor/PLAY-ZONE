@@ -5,12 +5,15 @@
 ﻿import { FaSearch, FaBell, FaUserCircle, FaSignOutAlt, FaTachometerAlt, FaBookOpen, FaHeart, FaSun, FaMoon, FaUserShield } from 'react-icons/fa';
 ﻿import { useAuthContext } from '../../context/AuthContext';
 ﻿import { useNavigate } from 'react-router-dom';
-﻿import { useContext } from 'react';
-﻿import { ThemeContext } from '../../context/ThemeContext';
-﻿
-﻿const Header = () => {
-﻿    const { user, logout } = useAuthContext();
-﻿    const navigate = useNavigate();
+import { useContext } from 'react';
+import { ThemeContext } from '../../context/ThemeContext';
+import useAdmin from '../../hooks/useAdmin';
+
+const Header = () => {
+    const { user, logout } = useAuthContext();
+    const { isAdmin } = useAdmin();
+    
+    const navigate = useNavigate();
 ﻿    const [searchTerm, setSearchTerm] = useState('');
 ﻿    const [isMenuOpen, setIsMenuOpen] = useState(false);
 ﻿    const { theme, toggleTheme } = useContext(ThemeContext);
@@ -92,13 +95,11 @@
 ﻿                                {/* Al hacer clic en Perfil, navegamos a la ruta dinámica */}
 ﻿                                <button onClick={() => navigate(`/profile/${user.id}`)}><FaUserCircle /> Mi Perfil</button>
 ﻿                                <button onClick={() => navigate('/favorites')}><FaHeart /> Favoritos</button>
-﻿
+
 ﻿                                {/* ENLACE DE ADMIN CONDICIONAL */}
-﻿                                {user && user.role === 'admin' && (
+﻿                                {isAdmin && (
 ﻿                                    <button onClick={() => { navigate('/admin'); setIsMenuOpen(false); }}><FaUserShield /> Panel Admin</button>
-﻿                                )}
-﻿
-﻿                                <button onClick={handleLogout} className="logout-btn"><FaSignOutAlt /> Cerrar Sesión</button>
+﻿                                )}﻿                                <button onClick={handleLogout} className="logout-btn"><FaSignOutAlt /> Cerrar Sesión</button>
 ﻿                            </div>
 ﻿                        )}
 ﻿                    </div>

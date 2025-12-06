@@ -8,6 +8,13 @@ const useAuth = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
+    const logout = useCallback(() => {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('authUser');
+        setUser(null);
+        setIsLoggedIn(false);
+    }, []);
+
     const getStoredUser = useCallback(() => {
         const token = localStorage.getItem('authToken');
         const storedUser = localStorage.getItem('authUser');
@@ -23,7 +30,17 @@ const useAuth = () => {
                     return null;
                 }
 
-                return storedUser ? JSON.parse(storedUser) : null;
+                const userData = storedUser ? JSON.parse(storedUser) : null;
+                
+                // Verificar si el usuario está baneado
+                if (userData && userData.isBanned) {
+                    console.warn('Usuario baneado. Cerrando sesión.');
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('authUser');
+                    return null;
+                }
+
+                return userData;
             } catch (e) {
                 console.error('Error al decodificar el token:', e);
                 localStorage.removeItem('authToken');
@@ -34,10 +51,46 @@ const useAuth = () => {
         return null;
     }, []);
 
+    // Función para verificar estado actualizado del usuario
+    const checkUserStatus = useCallback(async () => {
+        if (!user?.id && !user?._id) return;
+
+        try {
+            const userId = user.id || user._id;
+            const response = await userService.getUserProfile(userId);
+            const updatedUser = response.data || response;
+
+            if (updatedUser.isBanned) {
+                const banMessage = updatedUser.banReason 
+                    ? `Tu cuenta ha sido suspendida. Motivo: ${updatedUser.banReason}`
+                    : 'Tu cuenta ha sido suspendida.';
+                alert(banMessage);
+                logout();
+                return;
+            }
+
+            // Actualizar usuario si hay cambios
+            if (JSON.stringify(updatedUser) !== JSON.stringify(user)) {
+                setUser(updatedUser);
+                localStorage.setItem('authUser', JSON.stringify(updatedUser));
+            }
+        } catch (error) {
+            console.error('Error verificando estado del usuario:', error);
+        }
+    }, [user, logout]);
+
     const login = async (credentials) => {
         setIsLoading(true);
         try {
             const { token, user } = await userService.loginUser(credentials);
+
+            // Verificar si el usuario está baneado
+            if (user.isBanned) {
+                const banMessage = user.banReason 
+                    ? `Tu cuenta ha sido suspendida. Motivo: ${user.banReason}`
+                    : 'Tu cuenta ha sido suspendida.';
+                throw new Error(banMessage);
+            }
 
             localStorage.setItem('authToken', token);
             localStorage.setItem('authUser', JSON.stringify(user));
@@ -53,13 +106,6 @@ const useAuth = () => {
         }
     };
 
-    const logout = useCallback(() => {
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('authUser');
-        setUser(null);
-        setIsLoggedIn(false);
-    }, []);
-
     useEffect(() => {
         const storedUser = getStoredUser();
         if (storedUser) {
@@ -69,6 +115,19 @@ const useAuth = () => {
         setIsLoading(false);
     }, [getStoredUser]);
 
+    // Verificar estado del usuario cada 5 minutos cuando esté logueado
+    useEffect(() => {
+        if (!isLoggedIn || !user) return;
+
+        // Verificar inmediatamente
+        checkUserStatus();
+
+        // Configurar verificación periódica
+        const interval = setInterval(checkUserStatus, 5 * 60 * 1000); // 5 minutos
+
+        return () => clearInterval(interval);
+    }, [isLoggedIn, user, checkUserStatus]);
+
     return {
         user,
         setUser,
@@ -76,6 +135,7 @@ const useAuth = () => {
         isLoading,
         login,
         logout,
+        checkUserStatus, // Exponemos la función para uso manual
     };
 };
 

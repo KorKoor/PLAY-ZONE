@@ -12,10 +12,34 @@ import { FaEdit, FaSpinner, FaUserPlus, FaUserMinus } from 'react-icons/fa';
 const ProfilePage = () => {
     const { userId } = useParams();
     const { user: currentUser } = useAuthContext();
-    const { profile, isLoading, error, fetchProfile, updateProfile } = useProfile(userId);
+    
+    // El usuario puede estar envuelto en {user: {...}}
+    const actualUser = currentUser?.user || currentUser;
+    const effectiveUserId = userId || actualUser?._id || actualUser?.id;
+    
+    const { profile, isLoading, error, fetchProfile, updateProfile } = useProfile(effectiveUserId);
     const [isEditing, setIsEditing] = useState(false);
 
-    const isCurrentUserProfile = currentUser && currentUser.id === userId;
+    // Verificar si es el perfil del usuario actual
+    const isCurrentUserProfile = actualUser && 
+        (actualUser._id === effectiveUserId || actualUser.id === effectiveUserId);
+
+    // Si no hay userId efectivo, mostrar error
+    if (!effectiveUserId) {
+        return (
+            <div style={{ 
+                padding: '2rem', 
+                textAlign: 'center', 
+                color: '#ef4444',
+                background: '#fef2f2',
+                borderRadius: '8px',
+                margin: '2rem'
+            }}>
+                <h2>❌ Error</h2>
+                <p>No se pudo determinar el ID del usuario para mostrar el perfil.</p>
+            </div>
+        );
+    }
 
     if (isLoading) {
         return (

@@ -13,6 +13,9 @@ const Header = () => {
     const { user, logout } = useAuthContext();
     const { isAdmin } = useAdmin();
     
+    // Extraer el usuario real del objeto envuelto
+    const actualUser = user?.user || user;
+    
     const navigate = useNavigate();
 ﻿    const [searchTerm, setSearchTerm] = useState('');
 ﻿    const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -77,23 +80,29 @@ const Header = () => {
 ﻿
 ﻿                    {/* Contenedor del Menú de Usuario (con Dropdown) */}
 ﻿                    <div className="user-menu-container">
-﻿                        <button
-﻿                            className="user-profile-btn"
-﻿                            onClick={() => setIsMenuOpen(!isMenuOpen)}
-﻿                            title={`Menú de ${user.alias}`}
-﻿                        >
-﻿                            <img
-﻿                                src={user.avatarUrl || '/default-avatar.svg'}
-﻿                                alt={user.alias}
-﻿                                className="user-avatar-small"
-﻿                            />
-﻿                            <span className="user-alias-header">{user.alias}</span>
+                        <button
+                            className="user-profile-btn"
+                            onClick={() => setIsMenuOpen(!isMenuOpen)}
+                            title={`Menú de ${actualUser?.alias || 'Usuario'}`}
+                        >
+                            <img
+                                src={actualUser?.avatarUrl || '/default-avatar.svg'}
+                                alt={actualUser?.alias || 'Usuario'}
+                                className="user-avatar-small"
+                            />
+                            <span className="user-alias-header">{actualUser?.alias}</span>
 ﻿                        </button>
 ﻿
 ﻿                        {isMenuOpen && (
 ﻿                            <div className="user-dropdown-menu">
-﻿                                {/* Al hacer clic en Perfil, navegamos a la ruta dinámica */}
-﻿                                <button onClick={() => navigate(`/profile/${user.id}`)}><FaUserCircle /> Mi Perfil</button>
+                                {/* Al hacer clic en Perfil, navegamos a la ruta dinámica */}
+                                <button onClick={() => {
+                                    const userId = actualUser?._id || actualUser?.id;
+                                    
+                                    if (userId) {
+                                        navigate(`/profile/${userId}`);
+                                    }
+                                }}><FaUserCircle /> Mi Perfil</button>
 ﻿                                <button onClick={() => navigate('/favorites')}><FaHeart /> Favoritos</button>
 
 ﻿                                {/* ENLACE DE ADMIN CONDICIONAL */}

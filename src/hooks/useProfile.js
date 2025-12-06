@@ -16,6 +16,13 @@ const useProfile = (userId) => {
             return;
         }
 
+        // Validar que el userId no sea undefined o null como string
+        if (userId === 'undefined' || userId === 'null' || userId === undefined || userId === null) {
+            setError("ID de usuario invÃ¡lido.");
+            setIsLoading(false);
+            return;
+        }
+
         setIsLoading(true);
         setError(null);
         try {
@@ -24,9 +31,11 @@ const useProfile = (userId) => {
             setProfile(data.user); // Asumimos que la API devuelve { user: {...}, recentPosts: [...] }
         } catch (err) {
             if (err.message.includes('401')) {
-                // Si el token es inválido o expiró, forzar el cierre de sesión
+                // Si el token es invÃ¡lido o expirÃ³, forzar el cierre de sesiÃ³n
                 logout();
-                setError("Tu sesión ha expirado.");
+                setError("Tu sesiÃ³n ha expirado.");
+            } else if (err.message.includes('404')) {
+                setError("Usuario no encontrado.");
             } else {
                 setError(err.message || "No se pudo cargar el perfil del usuario.");
             }
@@ -39,7 +48,7 @@ const useProfile = (userId) => {
         fetchProfile();
     }, [fetchProfile]);
 
-    // Función para actualizar datos del perfil (Req. 1.3)
+    // Funciï¿½n para actualizar datos del perfil (Req. 1.3)
     const updateProfile = async (updates) => {
         try {
             // Llama al endpoint PUT /api/v1/users/:userId

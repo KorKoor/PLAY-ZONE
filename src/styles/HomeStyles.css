@@ -405,16 +405,18 @@
     cursor: pointer;
     /* Layout horizontal - avatar y alias en fila */
     display: flex;
-    /* Alinea verticalmente al centro */
-    align-items: center;
+    /* Alinea verticalmente - cambiamos center por flex-start */
+    align-items: flex-start;
     /* Espacio entre avatar y alias = 10px */
     gap: 10px;
     /* Espacio interno - ARRIBA/ABAJO: 5px, IZQUIERDA/DERECHA: 10px */
-    padding: 5px 10px;
+    padding: 8px 10px; /* Aumentamos padding top para compensar */
     /* Bordes redondeados = 8px */
     border-radius: 8px;
     /* Transición suave del fondo en 0.2 segundos */
     transition: background-color 0.2s;
+    /* Bajar todo el cuadradito completo */
+    transform: translateY(11px);
 }
 
     /* CUANDO PASAS EL MOUSE SOBRE EL BOTÓN DEL PERFIL */
@@ -433,6 +435,14 @@
     border-radius: 100%;
     /* Asegura que la imagen no se deforme y se recorte bien */
     object-fit: cover;
+    /* Ajuste vertical con transform - más efectivo */
+    transform: translateY(2px); /* Baja el avatar 2px */
+}
+
+/* EL TEXTO DEL ALIAS DEL USUARIO */
+.user-alias-header {
+    /* Ajustar posición vertical del texto */
+    transform: translateY(9px); /* Baja el texto para alinearlo con el avatar */
 }
 
 .user-avatar-medium {

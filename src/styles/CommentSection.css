@@ -100,6 +100,7 @@
     border-radius: 10px;
     background-color: var(--color-card);
     transition: background-color 0.2s;
+    position: relative; /* Para posicionar elementos hijos */
 }
 
     .comment-item:hover {
@@ -144,3 +145,25 @@
     background-color: var(--color-card);
     border-radius: 10px;
 }
+
+/* ----------------------------------------------------------
+ * 4. ACCIONES DE COMENTARIO (REPORTAR)
+ * ---------------------------------------------------------- */
+.comment-actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.report-button {
+    background: none;
+    border: none;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 5px;
+}
+
+    .report-button:hover {
+        color: var(--color-danger); /* Color rojo para reportes */
+    }

@@ -37,6 +37,110 @@ const DefaultAvatar = () => (
 
 const PostCard = ({ post, onLike, onDelete, onEdit, onFavorite, addComment, showRemoveFavorite = false }) => {
 
+    // Helper function para extraer nombre del usuario
+    const extractUserName = (post) => {
+        if (!post) return 'Usuario desconocido';
+        
+        console.log('[PostCard] Extrayendo nombre de usuario del post:', post);
+        
+        const possibleSources = [
+            { source: 'authorId.alias', value: post.authorId?.alias },
+            { source: 'authorId.username', value: post.authorId?.username },
+            { source: 'authorId.name', value: post.authorId?.name },
+            { source: 'author.alias', value: post.author?.alias },
+            { source: 'author.username', value: post.author?.username },
+            { source: 'author.name', value: post.author?.name },
+            { source: 'user.alias', value: post.user?.alias },
+            { source: 'user.username', value: post.user?.username },
+            { source: 'user.name', value: post.user?.name },
+            { source: 'authorName', value: post.authorName },
+            { source: 'userName', value: post.userName }
+        ];
+        
+        // Primero buscar nombres directos
+        for (const { source, value } of possibleSources) {
+            if (value && typeof value === 'string' && value.trim()) {
+                console.log(`[PostCard] ✅ Found user name in ${source}:`, value);
+                return value;
+            }
+        }
+        
+        // Buscar en objetos
+        const userObjects = [
+            { source: 'authorId object', obj: post.authorId },
+            { source: 'author object', obj: post.author },
+            { source: 'user object', obj: post.user }
+        ];
+        
+        for (const { source, obj } of userObjects) {
+            if (obj && typeof obj === 'object') {
+                const nameInObject = obj.alias || obj.username || obj.name || obj.displayName;
+                if (nameInObject && typeof nameInObject === 'string') {
+                    console.log(`[PostCard] ✅ Found user name in ${source}:`, nameInObject);
+                    return nameInObject;
+                }
+                
+                const idInObject = obj._id || obj.id;
+                if (idInObject && (typeof idInObject === 'string' || typeof idInObject === 'number')) {
+                    console.log(`[PostCard] ✅ Using ID from ${source}:`, idInObject);
+                    return `Usuario #${idInObject}`;
+                }
+            }
+        }
+        
+        return 'Usuario desconocido';
+    };
+
+    // Helper function para extraer foto del usuario
+    const extractUserPhoto = (post) => {
+        if (!post) return null;
+        
+        console.log('[PostCard] Extrayendo foto de usuario del post...');
+        
+        const possiblePhotoSources = [
+            { source: 'authorId.avatarUrl', value: post.authorId?.avatarUrl },
+            { source: 'authorId.profileImage', value: post.authorId?.profileImage },
+            { source: 'authorId.avatar', value: post.authorId?.avatar },
+            { source: 'authorId.photo', value: post.authorId?.photo },
+            { source: 'author.profileImage', value: post.author?.profileImage },
+            { source: 'author.avatar', value: post.author?.avatar },
+            { source: 'author.photo', value: post.author?.photo },
+            { source: 'author.image', value: post.author?.image },
+            { source: 'user.profileImage', value: post.user?.profileImage },
+            { source: 'user.avatar', value: post.user?.avatar },
+            { source: 'profileImage', value: post.profileImage },
+            { source: 'avatar', value: post.avatar }
+        ];
+        
+        // Buscar fotos directas
+        for (const { source, value } of possiblePhotoSources) {
+            if (value && typeof value === 'string' && value.trim()) {
+                console.log(`[PostCard] ✅ Found user photo in ${source}:`, value);
+                return value;
+            }
+        }
+        
+        // Buscar fotos en objetos
+        const userObjects = [
+            { source: 'authorId object', obj: post.authorId },
+            { source: 'author object', obj: post.author },
+            { source: 'user object', obj: post.user }
+        ];
+        
+        for (const { source, obj } of userObjects) {
+            if (obj && typeof obj === 'object') {
+                const photoInObject = obj.avatarUrl || obj.profileImage || obj.avatar || obj.photo || obj.image;
+                if (photoInObject && typeof photoInObject === 'string' && photoInObject.trim()) {
+                    console.log(`[PostCard] ✅ Found user photo in ${source}:`, photoInObject);
+                    return photoInObject;
+                }
+            }
+        }
+        
+        console.log('[PostCard] ❌ No user photo found');
+        return null;
+    };
+
     // Hooks y Estados
     const navigate = useNavigate();
     const { user } = useAuthContext();
@@ -108,20 +212,36 @@ const PostCard = ({ post, onLike, onDelete, onEdit, onFavorite, addComment, show
         <article className="post-card">
             {/* Encabezado */}
             <header className="post-header">
-                {post.authorId?.avatarUrl ? (
-                    <img
-                        src={post.authorId.avatarUrl}
-                        alt={post.authorId.alias || 'Usuario'}
-                        className="author-avatar"
-                        onClick={() => navigate(`/profile/${post.authorId._id}`)}
-                    />
-                ) : (
-                    <div className="author-avatar" onClick={() => navigate(`/profile/${post.authorId?._id}`)}>
-                        <DefaultAvatar />
-                    </div>
-                )}
+                {(() => {
+                    const userPhoto = extractUserPhoto(post);
+                    const userName = extractUserName(post);
+                    const userId = post.authorId?._id || post.author?._id || post.user?._id;
+                    
+                    return userPhoto ? (
+                        <img
+                            src={userPhoto}
+                            alt={userName}
+                            className="author-avatar"
+                            onClick={() => navigate(`/profile/${userId}`)}
+                            onError={(e) => {
+                                e.target.style.display = 'none';
+                                e.target.nextSibling.style.display = 'block';
+                            }}
+                        />
+                    ) : null;
+                })()}
+                <div 
+                    className="author-avatar author-avatar-fallback" 
+                    style={{ display: extractUserPhoto(post) ? 'none' : 'block' }}
+                    onClick={() => {
+                        const userId = post.authorId?._id || post.author?._id || post.user?._id;
+                        if (userId) navigate(`/profile/${userId}`);
+                    }}
+                >
+                    <DefaultAvatar />
+                </div>
                 <div className="author-info">
-                    <span className="author-alias">{post.authorId?.alias}</span>
+                    <span className="author-alias">{extractUserName(post)}</span>
                     <span className="post-date"><FaCalendarAlt /> {formatDate(post.createdAt)}</span>
                 </div>
 
@@ -232,8 +352,8 @@ const PostCard = ({ post, onLike, onDelete, onEdit, onFavorite, addComment, show
                     contentId={post._id}
                     contentType="post"
                     contentTitle={post.gameTitle}
-                    reportedUser={post.authorId?.alias || 'Usuario desconocido'}
-                    reportedUserId={post.authorId?._id || null}
+                    reportedUser={extractUserName(post)}
+                    reportedUserId={post.authorId?._id || post.author?._id || post.user?._id || null}
                 />
             )}
         </article>

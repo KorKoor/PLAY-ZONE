@@ -99,6 +99,11 @@ const postService = {
     // Requisito 2.6: Obtener comentarios de un post
     getComments: (postId) => {
         return get(`/posts/${postId}/comments`);
+    },
+
+    // Obtener un comentario específico por ID
+    getCommentById: (commentId) => {
+        return get(`/comments/${commentId}`);
     }
 };
 

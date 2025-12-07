@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react';
 import reportService from '../services/reportService';
 import { useAuthContext } from '../context/AuthContext';
+import { isUserAdmin } from '../config/adminConfig'; // ← Importar la función correcta
 
 /**
  * Hook personalizado para gestionar reportes de contenido
@@ -106,7 +107,7 @@ export const useAdminReports = () => {
   /**
    * Verificar si el usuario es administrador
    */
-  const isAdmin = user?.role === 'admin' || user?.isAdmin;
+  const isAdmin = isUserAdmin(user); // ← Usar la función correcta de adminConfig
 
   /**
    * Cargar reportes para administrador
@@ -123,8 +124,18 @@ export const useAdminReports = () => {
     try {
       const response = await reportService.getAllReports(params);
       
+      // Debug: Ver estructura de los reportes
+      console.log('[useReports] Respuesta completa del backend:', response);
+      
       const reportsList = response.data?.reports || response.reports || [];
       const paginationData = response.data?.pagination || response.pagination || {};
+      
+      // Debug: Ver reportes individuales
+      if (reportsList.length > 0) {
+        console.log('[useReports] Primer reporte de ejemplo:', reportsList[0]);
+        console.log('[useReports] content_data del primer reporte:', reportsList[0]?.content_data);
+        console.log('[useReports] reported_user del primer reporte:', reportsList[0]?.reported_user);
+      }
       
       setReports(reportsList);
       setPagination(prev => ({

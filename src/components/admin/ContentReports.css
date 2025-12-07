@@ -854,3 +854,25 @@
 .content-title:hover {
   text-decoration: underline;
 }
+
+/* Estilos para avatares de usuario */
+.author-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+.author-info img {
+  border: 2px solid #667eea;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.author-info img:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.author-info .fallback-icon {
+  display: none;
+}

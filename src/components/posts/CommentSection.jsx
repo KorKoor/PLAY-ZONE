@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import useComments from '../../hooks/useComments';
 import { FaPaperPlane, FaSpinner } from 'react-icons/fa';
+import CommentItem from './CommentItem'; // Importar CommentItem
 import '../../styles/CommentSection.css';
 
 const CommentSection = ({ postId, guideId, postCommentsCount, addComment: parentAddComment }) => {
@@ -35,11 +36,6 @@ const CommentSection = ({ postId, guideId, postCommentsCount, addComment: parent
         }
     };
 
-    const formatDate = (dateString) => {
-        if (!dateString) return 'Fecha Desconocida';
-        return new Date(dateString).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-    };
-
     return (
         <div className="comment-section">
             <h4>Comentarios</h4>
@@ -68,18 +64,7 @@ const CommentSection = ({ postId, guideId, postCommentsCount, addComment: parent
                 )}
 
                 {comments.map(comment => (
-                    <div key={comment._id} className="comment-item">
-                        <div className="comment-author">
-                            <img
-                                src={comment.author?.avatarUrl || '/default-avatar.png'}
-                                alt={comment.author?.alias}
-                                className="author-avatar-small"
-                            />
-                            <strong>{comment.author?.alias || 'Usuario Anónimo'}</strong>
-                        </div>
-                        <p className="comment-content">{comment.content}</p>
-                        <span className="comment-date">{formatDate(comment.createdAt)}</span>
-                    </div>
+                    <CommentItem key={comment._id} comment={comment} />
                 ))}
             </div>
         </div>
@@ -87,3 +72,4 @@ const CommentSection = ({ postId, guideId, postCommentsCount, addComment: parent
 };
 
 export default CommentSection;
+

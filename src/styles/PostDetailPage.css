@@ -83,6 +83,26 @@
     gap: 0.5rem;
 }
 
+.post-meta .author-info .author-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #667eea;
+    background: #f8f9fa;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.post-meta .author-info .author-avatar:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.post-meta .author-info .author-avatar-fallback {
+    color: #667eea;
+    font-size: 24px;
+}
+
 .post-content {
     font-size: 1.1rem;
     line-height: 1.6;

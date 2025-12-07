@@ -12,7 +12,8 @@ import {
     FaUser,
     FaFileAlt,
     FaComment,
-    FaExternalLinkAlt
+    FaExternalLinkAlt,
+    FaBookOpen
 } from 'react-icons/fa';
 import { useAdminReports } from '../../hooks/useReports';
 import { useAuthContext } from '../../context/AuthContext';
@@ -20,6 +21,74 @@ import './ContentReports.css';
 
 const ContentReports = () => {
     const { user } = useAuthContext();
+    
+    // Helper function para extraer nombre del usuario
+    const extractUserName = (author) => {
+        if (!author) return 'Usuario desconocido';
+        
+        // Buscar nombre directo
+        const directName = author.alias || author.username || author.name || author.displayName;
+        if (directName && typeof directName === 'string' && directName.trim()) {
+            return directName;
+        }
+        
+        // Si author es un objeto con _id o id
+        const authorId = author._id || author.id;
+        if (authorId && (typeof authorId === 'string' || typeof authorId === 'number')) {
+            return `Usuario #${authorId}`;
+        }
+        
+        return 'Usuario desconocido';
+    };
+
+    // Helper function para extraer foto del usuario
+    const extractUserPhoto = (author) => {
+        if (!author) return null;
+        
+        // Buscar foto en diferentes campos posibles
+        const photo = author.profileImage || 
+                     author.avatar || 
+                     author.photo || 
+                     author.image ||
+                     author.picture ||
+                     author.profilePicture;
+        
+        if (photo && typeof photo === 'string' && photo.trim()) {
+            return photo;
+        }
+        
+        return null;
+    };
+
+    // Componente para mostrar avatar del usuario
+    const UserAvatar = ({ author, size = 24 }) => {
+        const photo = extractUserPhoto(author);
+        
+        return photo ? (
+            <img 
+                src={photo} 
+                alt="Avatar del usuario"
+                style={{
+                    width: `${size}px`,
+                    height: `${size}px`,
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                    border: '2px solid #667eea',
+                    background: '#f8f9fa'
+                }}
+                onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.nextSibling.style.display = 'inline-block';
+                }}
+            />
+        ) : (
+            <FaUser style={{ 
+                fontSize: `${size}px`,
+                color: '#667eea' 
+            }} />
+        );
+    };
+    
     const {
         reports,
         isLoading,
@@ -186,6 +255,30 @@ const ContentReports = () => {
         }
     };
 
+    // Obtener texto del comentario desde los datos del reporte
+    const getCommentText = (report) => {
+        // Buscar el texto del comentario en diferentes ubicaciones posibles
+        const text = report.content_data?.text || 
+                    report.content_text || 
+                    report.additional_data?.comment_text ||
+                    report.contentData?.text ||
+                    null;
+        
+        if (!text) {
+            return {
+                text: 'Texto del comentario no disponible',
+                isAvailable: false,
+                warning: 'El contenido del comentario no fue incluido en el reporte'
+            };
+        }
+        
+        return {
+            text: text,
+            isAvailable: true,
+            warning: null
+        };
+    };
+
     // Obtener información adicional para el tooltip
     const getContentInfo = (report) => {
         const contentType = report.content_type || report.contentType;
@@ -198,6 +291,241 @@ const ContentReports = () => {
             description: description || 'Sin descripción adicional',
             title: getContentTitle(report)
         };
+    };
+
+    // Componente para mostrar detalles específicos según el tipo de contenido
+    const ContentDetails = ({ report }) => {
+        const contentType = report.content_type || report.contentType;
+        
+        if (contentType === 'comment') {
+            const commentInfo = getCommentText(report);
+            const author = report.content_data?.author || 
+                          report.content_data?.user || 
+                          report.reported_user ||
+                          report.authorData ||
+                          report.userData;
+            const postTitle = report.additional_data?.post_title || 'Post no especificado';
+            
+            return (
+                <div className="comment-details">
+                    <h4><FaComment /> Comentario Reportado</h4>
+                    
+                    {!commentInfo.isAvailable && (
+                        <div className="warning-box" style={{
+                            background: '#fff3cd',
+                            border: '1px solid #ffeaa7',
+                            color: '#856404',
+                            padding: '10px',
+                            borderRadius: '6px',
+                            marginBottom: '15px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px'
+                        }}>
+                            <FaExclamationTriangle />
+                            <span>{commentInfo.warning}</span>
+                        </div>
+                    )}
+                    
+                    <div className="comment-content">
+                        <label><strong>Texto completo del comentario:</strong></label>
+                        <div className="comment-text" style={{
+                            background: commentInfo.isAvailable ? '#f8f9fa' : '#fff3cd',
+                            border: `1px solid ${commentInfo.isAvailable ? '#dee2e6' : '#ffeaa7'}`,
+                            padding: '15px',
+                            borderRadius: '6px',
+                            fontFamily: 'monospace',
+                            fontSize: '14px',
+                            lineHeight: '1.4',
+                            whiteSpace: 'pre-wrap',
+                            maxHeight: '200px',
+                            overflowY: 'auto',
+                            fontStyle: commentInfo.isAvailable ? 'normal' : 'italic',
+                            color: commentInfo.isAvailable ? '#333' : '#856404',
+                            marginBottom: '15px',
+                            marginTop: '5px'
+                        }}>
+                            {commentInfo.text}
+                        </div>
+                        
+                        {commentInfo.isAvailable && (
+                            <div style={{ fontSize: '12px', color: '#666', marginBottom: '15px' }}>
+                                📏 Longitud: {commentInfo.text.length} caracteres
+                            </div>
+                        )}
+                    </div>
+                    
+                    {author && (
+                        <div className="comment-author" style={{ marginBottom: '15px' }}>
+                            <label><strong>Autor del comentario:</strong></label>
+                            <div className="author-info" style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                marginTop: '5px'
+                            }}>
+                                <UserAvatar author={author} size={24} />
+                                <span>{extractUserName(author)}</span>
+                                {(author?._id || author?.id) && <span className="author-id" style={{ color: '#666' }}> (ID: {author._id || author.id})</span>}
+                            </div>
+                        </div>
+                    )}
+                    
+                    <div className="comment-context">
+                        <label><strong>Contexto:</strong></label>
+                        <div className="context-info" style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            marginTop: '5px'
+                        }}>
+                            <FaFileAlt /> En: {postTitle}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+        
+        if (contentType === 'post') {
+            const author = report.content_data?.author || 
+                          report.content_data?.user || 
+                          report.reported_user ||
+                          report.authorData ||
+                          report.userData;
+            const title = report.content_data?.title || 
+                         report.additional_data?.post_title || 
+                         getContentTitle(report);
+            const content = report.content_data?.content || 
+                           report.content_data?.text ||
+                           'Contenido no disponible';
+            
+            return (
+                <div className="post-details">
+                    <h4><FaFileAlt /> Post Reportado</h4>
+                    
+                    {author && (
+                        <div className="post-author" style={{ marginBottom: '15px' }}>
+                            <label><strong>Autor del post:</strong></label>
+                            <div className="author-info" style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                marginTop: '5px'
+                            }}>
+                                <UserAvatar author={author} size={24} />
+                                <span>{extractUserName(author)}</span>
+                                {(author?._id || author?.id) && <span className="author-id" style={{ color: '#666' }}> (ID: {author._id || author.id})</span>}
+                            </div>
+                        </div>
+                    )}
+                    
+                    <div className="post-content">
+                        <label><strong>Título del post:</strong></label>
+                        <div className="post-title" style={{
+                            background: '#f8f9fa',
+                            border: '1px solid #dee2e6',
+                            padding: '10px',
+                            borderRadius: '6px',
+                            marginBottom: '15px',
+                            marginTop: '5px',
+                            fontWeight: 'bold'
+                        }}>
+                            {title}
+                        </div>
+                        
+                        <label><strong>Contenido:</strong></label>
+                        <div className="post-text" style={{
+                            background: '#f8f9fa',
+                            border: '1px solid #dee2e6',
+                            padding: '15px',
+                            borderRadius: '6px',
+                            lineHeight: '1.4',
+                            whiteSpace: 'pre-wrap',
+                            maxHeight: '200px',
+                            overflowY: 'auto',
+                            marginTop: '5px'
+                        }}>
+                            {content}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+        
+        if (contentType === 'guide') {
+            const author = report.content_data?.author || 
+                          report.content_data?.user || 
+                          report.reported_user ||
+                          report.authorData ||
+                          report.userData;
+            const title = report.content_data?.title || 
+                         report.additional_data?.guide_title || 
+                         getContentTitle(report);
+            const description = report.content_data?.description || 
+                               report.content_data?.content ||
+                               'Descripción no disponible';
+            
+            return (
+                <div className="guide-details">
+                    <h4><FaBookOpen /> Guía Reportada</h4>
+                    
+                    {author && (
+                        <div className="guide-author" style={{ marginBottom: '15px' }}>
+                            <label><strong>Autor de la guía:</strong></label>
+                            <div className="author-info" style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                marginTop: '5px'
+                            }}>
+                                <UserAvatar author={author} size={24} />
+                                <span>{extractUserName(author)}</span>
+                                {(author?._id || author?.id) && <span className="author-id" style={{ color: '#666' }}> (ID: {author._id || author.id})</span>}
+                            </div>
+                        </div>
+                    )}
+                    
+                    <div className="guide-content">
+                        <label><strong>Título de la guía:</strong></label>
+                        <div className="guide-title" style={{
+                            background: '#f8f9fa',
+                            border: '1px solid #dee2e6',
+                            padding: '10px',
+                            borderRadius: '6px',
+                            marginBottom: '15px',
+                            marginTop: '5px',
+                            fontWeight: 'bold'
+                        }}>
+                            {title}
+                        </div>
+                        
+                        <label><strong>Descripción:</strong></label>
+                        <div className="guide-text" style={{
+                            background: '#f8f9fa',
+                            border: '1px solid #dee2e6',
+                            padding: '15px',
+                            borderRadius: '6px',
+                            lineHeight: '1.4',
+                            whiteSpace: 'pre-wrap',
+                            maxHeight: '200px',
+                            overflowY: 'auto',
+                            marginTop: '5px'
+                        }}>
+                            {description}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+        
+        // Para otros tipos de contenido, mostrar información básica
+        return (
+            <div className="content-basic-details">
+                <h4>{getContentIcon(contentType)} {contentType} Reportado</h4>
+                <p><strong>ID:</strong> {report.content_id || report.contentId || 'No disponible'}</p>
+                <p><strong>Título:</strong> {getContentTitle(report)}</p>
+            </div>
+        );
     };
 
     // Navegar al contenido reportado
@@ -421,6 +749,43 @@ const ContentReports = () => {
                           {report.content_type || report.contentType || 'N/A'}
                           {report.content_id && <span className="content-id"> (ID: {report.content_id})</span>}
                         </span>
+                        
+                        {/* Mostrar contenido específico del comentario */}
+                        {(report.content_type === 'comment' || report.contentType === 'comment') && (
+                          <div className="comment-preview" style={{
+                            marginTop: '8px',
+                            padding: '8px',
+                            backgroundColor: '#f8f9fa',
+                            border: '1px solid #dee2e6',
+                            borderRadius: '4px',
+                            fontSize: '12px',
+                            color: '#666'
+                          }}>
+                            <strong>Texto del comentario:</strong>
+                            <div style={{
+                              fontStyle: 'italic',
+                              marginTop: '4px',
+                              maxHeight: '60px',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis'
+                            }}>
+                              {(() => {
+                                const commentText = report.content_data?.text || 
+                                                  report.additional_data?.comment_text || 
+                                                  report.additional_info?.comment_text ||
+                                                  getCommentText(report).text;
+                                
+                                if (!commentText || commentText === 'Texto del comentario no disponible') {
+                                  return <span style={{ color: '#dc3545' }}>❌ Texto del comentario no disponible</span>;
+                                }
+                                
+                                return commentText.length > 100 ? 
+                                  `"${commentText.substring(0, 100)}..."` : 
+                                  `"${commentText}"`;
+                              })()}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -540,10 +905,12 @@ const ContentReports = () => {
             </div>
 
             <div className="modal-body">
+              {/* Componente mejorado para mostrar detalles del contenido */}
+              <ContentDetails report={selectedReport} />
+              
               <div className="report-detail-section">
                 <h4>Información del Contenido</h4>
                 <p><strong>Tipo:</strong> {selectedReport.content_type || selectedReport.contentType}</p>
-                <p><strong>Título:</strong> {getContentTitle(selectedReport)}</p>
                 <p><strong>ID del Contenido:</strong> {selectedReport.content_id || selectedReport.contentId}</p>
                 
                 {(selectedReport.content_id || selectedReport.contentId) && (
@@ -585,6 +952,33 @@ const ContentReports = () => {
                   <p>{selectedReport.admin_notes || selectedReport.adminNotes}</p>
                 </div>
               )}
+
+              {/* Estadísticas del contenido reportado */}
+              <div className="report-detail-section">
+                <h4>📊 Estadísticas</h4>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                  <div style={{ background: '#f8f9fa', padding: '10px', borderRadius: '6px' }}>
+                    <strong>ID del Reporte:</strong><br />
+                    <code style={{ fontSize: '12px' }}>{selectedReport.id || selectedReport._id || 'N/A'}</code>
+                  </div>
+                  <div style={{ background: '#f8f9fa', padding: '10px', borderRadius: '6px' }}>
+                    <strong>Contenido ID:</strong><br />
+                    <code style={{ fontSize: '12px' }}>{selectedReport.content_id || selectedReport.contentId || 'N/A'}</code>
+                  </div>
+                </div>
+                
+                {/* Para comentarios, mostrar información adicional */}
+                {(selectedReport.content_type === 'comment' || selectedReport.contentType === 'comment') && (
+                  <div style={{ marginTop: '10px', padding: '10px', background: '#e3f2fd', borderRadius: '6px' }}>
+                    <strong>💬 Información del Comentario:</strong>
+                    <ul style={{ margin: '5px 0', paddingLeft: '20px', fontSize: '14px' }}>
+                      <li>Tipo: {selectedReport.additional_data?.type || 'Comentario de post/guía'}</li>
+                      <li>Contexto: {selectedReport.additional_data?.post_title || 'Post/Guía no especificado'}</li>
+                      <li>Longitud: {(selectedReport.content_data?.text || selectedReport.additional_data?.comment_text || '').length} caracteres</li>
+                    </ul>
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className="modal-footer">
@@ -602,20 +996,51 @@ const ContentReports = () => {
                   <button
                     className="btn btn-warning"
                     onClick={() => {
-                      handleStatusUpdate(selectedReport.id || selectedReport._id, 'dismissed');
-                      setShowDetails(false);
+                      if (window.confirm('¿Descartar este reporte como no válido?')) {
+                        handleStatusUpdate(selectedReport.id || selectedReport._id, 'dismissed');
+                        setShowDetails(false);
+                      }
                     }}
                   >
-                    <FaTimes /> Descartar
+                    <FaTimes /> ❌ Descartar
                   </button>
                 </>
               )}
+              
+              {/* Acciones adicionales siempre disponibles */}
+              <div className="additional-actions" style={{ marginTop: '10px', paddingTop: '10px', borderTop: '1px solid #dee2e6' }}>
+                {(selectedReport.content_id || selectedReport.contentId) && (
+                  <button
+                    className="btn btn-info"
+                    onClick={() => {
+                      handleViewContent(selectedReport);
+                      // No cerrar el modal para poder volver fácilmente
+                    }}
+                    title="Ver contenido reportado en nueva pestaña"
+                    style={{ marginRight: '10px' }}
+                  >
+                    <FaExternalLinkAlt /> Ver Contenido
+                  </button>
+                )}
+                
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => setShowDetails(false)}
+                  style={{ marginRight: '10px' }}
+                >
+                  Cerrar
+                </button>
+              </div>
+              
               <button
                 className="btn btn-danger"
                 onClick={() => {
-                  handleDeleteReport(selectedReport.id || selectedReport._id);
-                  setShowDetails(false);
+                  if (window.confirm('⚠️ PELIGRO\\n\\n¿Eliminar completamente este reporte?\\n\\nEsta acción no se puede deshacer.')) {
+                    handleDeleteReport(selectedReport.id || selectedReport._id);
+                    setShowDetails(false);
+                  }
                 }}
+                title="Eliminar reporte permanentemente"
               >
                 <FaTrash /> Eliminar
               </button>

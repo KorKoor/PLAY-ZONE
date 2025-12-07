@@ -20,8 +20,29 @@ class ReportService {
    */
   async createReport(reportData) {
     try {
-      // NOTA: El endpoint /api/v1/reports necesita ser implementado en el backend
-      const response = await post(API_URL, {
+      // Validar datos antes del envío
+      if (!reportData.contentId) {
+        throw new Error('El ID del contenido es requerido');
+      }
+      
+      if (!reportData.contentType) {
+        throw new Error('El tipo de contenido es requerido');
+      }
+      
+      // Verificar que el contentType sea válido
+      const validContentTypes = ['post', 'guide', 'comment', 'user'];
+      if (!validContentTypes.includes(reportData.contentType)) {
+        console.warn(`Tipo de contenido '${reportData.contentType}' no soportado por el backend. Tipos válidos: ${validContentTypes.join(', ')}`);
+        
+        // Para comentarios, mostrar un mensaje más específico
+        if (reportData.contentType === 'comment') {
+          throw new Error('⚠️ El sistema de reportes para comentarios requiere actualización del backend. El reporte se ha registrado localmente pero puede no ser procesado correctamente.');
+        }
+        
+        throw new Error(`El tipo de contenido '${reportData.contentType}' no está soportado. Solo se pueden reportar: publicaciones, guías y usuarios.`);
+      }
+      
+      const payload = {
         content_id: reportData.contentId,
         content_type: reportData.contentType,
         reason: reportData.reason,
@@ -30,9 +51,22 @@ class ReportService {
         additional_info: {
           user_agent: navigator.userAgent,
           timestamp: new Date().toISOString(),
-          url: window.location.href
+          url: window.location.href,
+          // Incluir datos adicionales si existen (ej: texto del comentario)
+          ...reportData.additional_data
         }
-      });
+      };
+      
+      console.log('[reportService] Enviando payload:', payload);
+      
+      // Verificar que el contenido existe antes de enviarlo (opcional)
+      if (reportData.contentType === 'post' || reportData.contentType === 'guide') {
+        // Solo mostrar warning si no podemos verificar, pero continuar
+        console.log(`[reportService] Reportando ${reportData.contentType} con ID: ${reportData.contentId}`);
+      }
+      
+      // NOTA: El endpoint /api/v1/reports necesita ser implementado en el backend
+      const response = await post(API_URL, payload);
 
       return response;
     } catch (error) {
@@ -42,6 +76,15 @@ class ReportService {
       if (error.status === 429) {
         throw new Error('Has enviado demasiados reportes recientemente. Por favor, espera un momento antes de reportar nuevamente.');
       } else if (error.status === 400) {
+        // Error 400 puede ser por datos inválidos o contenido no encontrado
+        if (error.message && error.message.includes('no existe')) {
+          // Manejo especial para comentarios
+          if (reportData.contentType === 'comment') {
+            console.warn('🚨 BACKEND: Los comentarios no están soportados o el comentario no existe');
+            throw new Error('⚠️ El sistema de reportes para comentarios está en desarrollo. El backend aún no soporta este tipo de contenido. Por favor, reporta la publicación completa si encuentras contenido inapropiado.');
+          }
+          throw new Error('El contenido que intentas reportar ya no existe o no está disponible.');
+        }
         throw new Error('Los datos del reporte no son válidos. Por favor, revisa la información.');
       } else if (error.status === 401) {
         throw new Error('Debes iniciar sesión para reportar contenido.');

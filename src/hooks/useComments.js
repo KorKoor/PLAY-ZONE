@@ -9,21 +9,21 @@ const useComments = (contentId, contentType = 'post') => {
     const [error, setError] = useState(null);
 
     const fetchComments = useCallback(async () => {
-        if (!contentId) return;
+        if (!contentId) {
+            return;
+        }
         setIsLoading(true);
         setError(null);
         try {
             let fetchedComments;
             
             if (contentType === 'guide') {
-                // Para guías, usar la API real del backend
                 fetchedComments = await guideService.getGuideComments(contentId);
             } else {
-                // Para posts, usar el servicio existente
                 fetchedComments = await postService.getComments?.(contentId) || [];
             }
             
-            setComments(Array.isArray(fetchedComments) ? fetchedComments : fetchedComments?.data || []);
+            setComments(Array.isArray(fetchedComments) ? fetchedComments : fetchedComments?.comments || fetchedComments?.data || []);
         } catch (err) {
             setError('No se pudieron cargar los comentarios.');
             console.error(err);

@@ -1,9 +1,10 @@
 // src/pages/CommunityPage.jsx
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Header from '../components/layout/Header';
 import userService from '../services/userService';
 import gameService from '../services/gameService';
+import postService from '../services/postService';
 import useAuth from '../hooks/useAuth';
 import { 
     FaUsers, 
@@ -16,12 +17,15 @@ import {
     FaTrophy,
     FaChartLine,
     FaEye,
-    FaFilter
+    FaFilter,
+    FaTimes,
+    FaExternalLinkAlt
 } from 'react-icons/fa';
 import '../styles/CommunityPage.css';
 
 const CommunityPage = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const { user, isLoading: authLoading } = useAuth();
     
     // Si no está autenticado, redirigir
@@ -46,6 +50,12 @@ const CommunityPage = () => {
     const [gamesLoading, setGamesLoading] = useState(true);
     const [gamesError, setGamesError] = useState(null);
     
+    // Estados para comentario específico
+    const [showCommentModal, setShowCommentModal] = useState(false);
+    const [selectedComment, setSelectedComment] = useState(null);
+    const [commentLoading, setCommentLoading] = useState(false);
+    const [commentError, setCommentError] = useState(null);
+    
     // Estados para estadísticas
     const [stats, setStats] = useState({
         totalUsers: 0,
@@ -61,13 +71,183 @@ const CommunityPage = () => {
     useEffect(() => {
         loadCommunityData();
     }, []);
-    
+
+    // Efecto para detectar comentario específico en la URL
+    useEffect(() => {
+        const hash = location.hash;
+        if (hash.startsWith('#comment-')) {
+            const commentId = hash.replace('#comment-', '');
+            loadSpecificComment(commentId);
+        }
+    }, [location.hash]);
+
+    // Helper function para extraer nombre del usuario del comentario
+    const extractUserName = (comment) => {
+        console.log('[CommunityPage] Extrayendo nombre de usuario...');
+        
+        const possibleSources = [
+            { source: 'author.alias', value: comment.author?.alias },
+            { source: 'author.username', value: comment.author?.username },
+            { source: 'author.name', value: comment.author?.name },
+            { source: 'user.alias', value: comment.user?.alias },
+            { source: 'user.username', value: comment.user?.username },
+            { source: 'user.name', value: comment.user?.name },
+            { source: 'createdBy.alias', value: comment.createdBy?.alias },
+            { source: 'createdBy.username', value: comment.createdBy?.username },
+            { source: 'createdBy.name', value: comment.createdBy?.name },
+            { source: 'authorName', value: comment.authorName },
+            { source: 'userName', value: comment.userName },
+            { source: 'ownerName', value: comment.ownerName },
+            { source: 'userAlias', value: comment.userAlias },
+            { source: 'authorAlias', value: comment.authorAlias }
+        ];
+        
+        // Primero buscar nombres directos
+        for (const { source, value } of possibleSources) {
+            console.log(`[CommunityPage] Checking ${source}:`, value);
+            if (value && typeof value === 'string' && value.trim()) {
+                console.log(`[CommunityPage] ✅ Found user name in ${source}:`, value);
+                return value;
+            }
+        }
+        
+        // Si no encontramos nombre directo, buscar en objetos de usuario
+        const userObjects = [
+            { source: 'userId object', obj: comment.userId },
+            { source: 'authorId object', obj: comment.authorId },
+            { source: 'author object', obj: comment.author },
+            { source: 'user object', obj: comment.user },
+            { source: 'createdBy object', obj: comment.createdBy }
+        ];
+        
+        for (const { source, obj } of userObjects) {
+            if (obj && typeof obj === 'object') {
+                console.log(`[CommunityPage] Found ${source}:`, obj);
+                
+                // Buscar nombre en el objeto
+                const nameInObject = obj.alias || obj.username || obj.name || obj.displayName;
+                if (nameInObject && typeof nameInObject === 'string') {
+                    console.log(`[CommunityPage] ✅ Found user name in ${source}:`, nameInObject);
+                    return nameInObject;
+                }
+                
+                // Si es solo un ID string/number
+                const idInObject = obj._id || obj.id;
+                if (idInObject && (typeof idInObject === 'string' || typeof idInObject === 'number')) {
+                    console.log(`[CommunityPage] ✅ Using ID from ${source}:`, idInObject);
+                    return `Usuario #${idInObject}`;
+                }
+            }
+        }
+        
+        // Fallback final
+        console.log('[CommunityPage] ❌ No user name found, using fallback');
+        return 'Usuario desconocido';
+    };
+
+    // Helper function para extraer foto del usuario del comentario
+    const extractUserPhoto = (comment) => {
+        console.log('[CommunityPage] Extrayendo foto de usuario...');
+        
+        const possiblePhotoSources = [
+            { source: 'author.profileImage', value: comment.author?.profileImage },
+            { source: 'author.avatar', value: comment.author?.avatar },
+            { source: 'author.photo', value: comment.author?.photo },
+            { source: 'author.image', value: comment.author?.image },
+            { source: 'user.profileImage', value: comment.user?.profileImage },
+            { source: 'user.avatar', value: comment.user?.avatar },
+            { source: 'user.photo', value: comment.user?.photo },
+            { source: 'user.image', value: comment.user?.image },
+            { source: 'createdBy.profileImage', value: comment.createdBy?.profileImage },
+            { source: 'createdBy.avatar', value: comment.createdBy?.avatar },
+            { source: 'createdBy.photo', value: comment.createdBy?.photo },
+            { source: 'createdBy.image', value: comment.createdBy?.image },
+            { source: 'profileImage', value: comment.profileImage },
+            { source: 'avatar', value: comment.avatar },
+            { source: 'userPhoto', value: comment.userPhoto },
+            { source: 'authorPhoto', value: comment.authorPhoto }
+        ];
+        
+        // Buscar foto en objetos también
+        const userObjects = [
+            { source: 'userId object', obj: comment.userId },
+            { source: 'authorId object', obj: comment.authorId },
+            { source: 'author object', obj: comment.author },
+            { source: 'user object', obj: comment.user },
+            { source: 'createdBy object', obj: comment.createdBy }
+        ];
+        
+        // Buscar fotos directas
+        for (const { source, value } of possiblePhotoSources) {
+            console.log(`[CommunityPage] Checking photo ${source}:`, value);
+            if (value && typeof value === 'string' && value.trim()) {
+                console.log(`[CommunityPage] ✅ Found user photo in ${source}:`, value);
+                return value;
+            }
+        }
+        
+        // Buscar fotos en objetos
+        for (const { source, obj } of userObjects) {
+            if (obj && typeof obj === 'object') {
+                const photoInObject = obj.profileImage || obj.avatar || obj.photo || obj.image;
+                if (photoInObject && typeof photoInObject === 'string' && photoInObject.trim()) {
+                    console.log(`[CommunityPage] ✅ Found user photo in ${source}:`, photoInObject);
+                    return photoInObject;
+                }
+            }
+        }
+        
+        console.log('[CommunityPage] ❌ No user photo found');
+        return null;
+    };
+
     const loadCommunityData = async () => {
         await Promise.all([
             loadUsers(),
             loadGames(),
             loadStats()
         ]);
+    };
+
+    // Función para cargar un comentario específico
+    const loadSpecificComment = async (commentId) => {
+        try {
+            setCommentLoading(true);
+            setCommentError(null);
+            
+            console.log('[CommunityPage] Buscando comentario:', commentId);
+            
+            // Obtener el comentario desde el endpoint implementado
+            const response = await postService.getCommentById(commentId);
+            const comment = response.data || response;
+            
+            if (comment) {
+                // Debug: Ver la estructura completa del comentario
+                console.log('[CommunityPage] Estructura completa del comentario:', comment);
+                console.log('[CommunityPage] Información del autor:', comment.author || comment.user || comment.authorId);
+                console.log('[CommunityPage] Propiedades del objeto comentario:', Object.keys(comment));
+                
+                // Debug: Intentar todas las posibles ubicaciones del autor
+                console.log('[CommunityPage] comment.author:', comment.author);
+                console.log('[CommunityPage] comment.user:', comment.user);
+                console.log('[CommunityPage] comment.createdBy:', comment.createdBy);
+                console.log('[CommunityPage] comment.userId:', comment.userId);
+                console.log('[CommunityPage] comment.authorId:', comment.authorId);
+                console.log('[CommunityPage] comment.owner:', comment.owner);
+                
+                setSelectedComment(comment);
+                setShowCommentModal(true);
+                console.log('[CommunityPage] Comentario encontrado:', comment);
+            } else {
+                throw new Error('Comentario no encontrado');
+            }
+        } catch (error) {
+            console.error('[CommunityPage] Error cargando comentario:', error);
+            setCommentError('No se pudo cargar el comentario. Puede haber sido eliminado o no existe.');
+            setShowCommentModal(true);
+        } finally {
+            setCommentLoading(false);
+        }
     };
     
     const loadUsers = async () => {
@@ -470,6 +650,128 @@ const CommunityPage = () => {
                     {activeTab === 'games' && <GamesSection />}
                 </div>
             </div>
+
+            {/* Modal para mostrar comentario específico */}
+            {showCommentModal && (
+                <div className="comment-modal-overlay" onClick={() => {
+                    setShowCommentModal(false);
+                    setSelectedComment(null);
+                    setCommentError(null);
+                    // Limpiar el hash de la URL
+                    window.history.replaceState(null, '', window.location.pathname);
+                }}>
+                    <div className="comment-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="comment-modal-header">
+                            <h3>💬 Comentario Reportado</h3>
+                            <button 
+                                className="close-btn" 
+                                onClick={() => {
+                                    setShowCommentModal(false);
+                                    setSelectedComment(null);
+                                    setCommentError(null);
+                                    window.history.replaceState(null, '', window.location.pathname);
+                                }}
+                            >
+                                <FaTimes />
+                            </button>
+                        </div>
+
+                        <div className="comment-modal-body">
+                            {commentLoading ? (
+                                <div className="loading-state">
+                                    <div className="spinner"></div>
+                                    <p>Cargando comentario...</p>
+                                </div>
+                            ) : commentError ? (
+                                <div className="error-state">
+                                    <div className="error-icon">❌</div>
+                                    <h4>Comentario no disponible</h4>
+                                    <p>{commentError}</p>
+                                    <div className="error-help">
+                                        <p><strong>Posibles razones:</strong></p>
+                                        <ul>
+                                            <li>El comentario fue eliminado</li>
+                                            <li>El post que contenía el comentario fue eliminado</li>
+                                            <li>No tienes permisos para ver este contenido</li>
+                                            <li>El ID del comentario no es válido</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            ) : selectedComment ? (
+                                <div className="comment-display">
+                                    <div className="comment-info">
+                                        <div className="comment-author">
+                                            {(() => {
+                                                const userPhoto = extractUserPhoto(selectedComment);
+                                                return userPhoto ? (
+                                                    <img 
+                                                        src={userPhoto} 
+                                                        alt="Avatar del usuario"
+                                                        className="user-avatar"
+                                                        onError={(e) => {
+                                                            e.target.style.display = 'none';
+                                                            e.target.nextSibling.style.display = 'block';
+                                                        }}
+                                                    />
+                                                ) : null;
+                                            })()}
+                                            <FaUserCircle className="user-avatar-fallback" style={{ 
+                                                display: extractUserPhoto(selectedComment) ? 'none' : 'block'
+                                            }} />
+                                            <div className="user-info">
+                                                <span className="user-name">
+                                                    {extractUserName(selectedComment)}
+                                                </span>
+                                                <span className="comment-date">
+                                                    {selectedComment.createdAt ? 
+                                                        new Date(selectedComment.createdAt).toLocaleDateString('es-ES', {
+                                                            day: 'numeric',
+                                                            month: 'long', 
+                                                            year: 'numeric',
+                                                            hour: '2-digit',
+                                                            minute: '2-digit'
+                                                        }) : 'Fecha no disponible'
+                                                    }
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="comment-content">
+                                        <h4>Contenido del comentario:</h4>
+                                        <div className="comment-text">
+                                            {selectedComment.text || selectedComment.content || 'Texto no disponible'}
+                                        </div>
+                                    </div>
+
+                                    {selectedComment.postTitle && (
+                                        <div className="comment-context">
+                                            <h4>Contexto:</h4>
+                                            <div className="context-info">
+                                                <FaBookOpen />
+                                                <span>Comentario en: "{selectedComment.postTitle}"</span>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    <div className="comment-actions">
+                                        {selectedComment.postId && (
+                                            <button 
+                                                className="btn btn-primary"
+                                                onClick={() => {
+                                                    navigate(`/posts/${selectedComment.postId}`);
+                                                }}
+                                            >
+                                                <FaExternalLinkAlt /> Ver Post Completo
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                            ) : null}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

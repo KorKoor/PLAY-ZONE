@@ -39,8 +39,31 @@ const ReportModal = ({
     const handleSubmit = async (e) => {
         e.preventDefault();
         
+        console.log("[ReportModal] Iniciando submit. contentId:", contentId, "contentType:", contentType);
+
         if (!reason || (reason === 'other' && !customReason.trim())) {
             return;
+        }
+
+        // Validación adicional para tipos de contenido soportados
+        const supportedTypes = ['post', 'guide', 'comment', 'user'];
+        if (!supportedTypes.includes(contentType)) {
+            console.warn(`[ReportModal] Tipo de contenido no soportado: ${contentType}`);
+            return;
+        }
+
+        // Advertencia especial para comentarios
+        if (contentType === 'comment') {
+            const confirmReport = window.confirm(
+                '⚠️ AVISO: El sistema de reportes para comentarios está en desarrollo.\n\n' +
+                'El backend puede no procesar correctamente este reporte.\n\n' +
+                '¿Deseas continuar de todas formas?\n\n' +
+                '(Recomendamos reportar la publicación completa como alternativa)'
+            );
+            
+            if (!confirmReport) {
+                return;
+            }
         }
 
         const reportData = {
@@ -51,6 +74,19 @@ const ReportModal = ({
             reportedUserId: reportedUserId
         };
 
+        // Para comentarios, agregar datos adicionales
+        if (contentType === 'comment') {
+            // El texto del comentario se puede extraer del contentTitle
+            const commentText = contentTitle?.startsWith('Comentario: ') ? 
+                contentTitle.replace('Comentario: ', '').replace('...', '') : null;
+            
+            reportData.additional_data = {
+                comment_text: commentText,
+                content_preview: contentTitle
+            };
+        }
+
+        console.log("[ReportModal] Enviando reportData:", reportData);
         const success = await submitReport(reportData);
         
         if (success) {
@@ -105,7 +141,13 @@ const ReportModal = ({
                     <>
                         <div className="report-modal-body">
                             <div className="content-info">
-                                <p><strong>Reportando:</strong> {contentType === 'post' ? 'Publicación' : 'Guía'}</p>
+                                <p><strong>Reportando:</strong> {
+                                    contentType === 'post' ? 'Publicación' : 
+                                    contentType === 'guide' ? 'Guía' :
+                                    contentType === 'comment' ? 'Comentario' :
+                                    contentType === 'user' ? 'Usuario' : 
+                                    'Contenido'
+                                }</p>
                                 {contentTitle && (
                                     <p className="content-title">"{contentTitle}"</p>
                                 )}
@@ -113,6 +155,29 @@ const ReportModal = ({
                                     <p><strong>Usuario:</strong> {reportedUser}</p>
                                 )}
                             </div>
+
+                            {/* Advertencia específica para comentarios */}
+                            {contentType === 'comment' && (
+                                <div className="warning-message" style={{
+                                    background: '#fff3cd',
+                                    border: '1px solid #ffeaa7',
+                                    color: '#856404',
+                                    padding: '12px',
+                                    borderRadius: '8px',
+                                    marginBottom: '16px',
+                                    fontSize: '14px',
+                                    display: 'flex',
+                                    alignItems: 'flex-start',
+                                    gap: '8px'
+                                }}>
+                                    <FaInfoCircle style={{ marginTop: '2px', flexShrink: 0 }} />
+                                    <div>
+                                        <strong>Función en desarrollo:</strong><br />
+                                        El reporte de comentarios puede no procesarse correctamente. 
+                                        Como alternativa, puedes reportar la publicación completa.
+                                    </div>
+                                </div>
+                            )}
 
                             {reportError && (
                                 <div className="error-message" style={{

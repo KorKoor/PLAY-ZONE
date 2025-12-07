@@ -33,17 +33,17 @@ const GameDetailPage = () => {
     
     // Estados principales
     const [game, setGame] = useState(null);
-    const [posts, setPosts] = useState([]);
-    const [guides, setGuides] = useState([]);
+    const [posts, setPosts] = useState([]); // TODO: Implementar posts para el juego
+    const [guides, setGuides] = useState({ data: [], total: 0 }); // Inicializar como objeto
     const [isLoadingGame, setIsLoadingGame] = useState(true);
-    const [isLoadingPosts, setIsLoadingPosts] = useState(true);
+    const [isLoadingPosts, setIsLoadingPosts] = useState(true); // TODO: Implementar posts para el juego
     const [isLoadingGuides, setIsLoadingGuides] = useState(true);
     const [error, setError] = useState(null);
     
     // Estados de UI
     const [activeTab, setActiveTab] = useState('overview');
-    const [postsFilter, setPostsFilter] = useState('all');
-    const [guidesFilter, setGuidesFilter] = useState('all');
+    const [postsFilter, setPostsFilter] = useState('all'); // TODO: Implementar filtros para posts
+    const [guidesFilter, setGuidesFilter] = useState('all'); // TODO: Implementar filtros para guías
     
     // Cargar datos del juego
     useEffect(() => {
@@ -51,6 +51,13 @@ const GameDetailPage = () => {
             loadGameData();
         }
     }, [gameId]);
+
+    // Cargar guías cuando la pestaña de guías está activa
+    useEffect(() => {
+        if (gameId && activeTab === 'guides') {
+            loadGuidesData();
+        }
+    }, [gameId, activeTab]);
     
     const loadGameData = async () => {
         try {
@@ -63,6 +70,19 @@ const GameDetailPage = () => {
             setError('Juego no encontrado');
         } finally {
             setIsLoadingGame(false);
+        }
+    };
+
+    const loadGuidesData = async () => {
+        try {
+            setIsLoadingGuides(true);
+            const response = await guideService.getGuidesByGameId(gameId);
+            setGuides({ data: response.guides || [], total: response.total || 0 }); // Asumiendo que el backend devuelve {guides: [], total: X}
+        } catch (error) {
+            console.error('Error loading guides:', error);
+            // Manejo de error, quizás mostrar un mensaje al usuario
+        } finally {
+            setIsLoadingGuides(false);
         }
     };
     
@@ -282,10 +302,25 @@ const GameDetailPage = () => {
                         )}
                         
                         {activeTab === 'guides' && (
-                            <div className="empty-state">
-                                <FaBookOpen size={48} />
-                                <h3>Guías y Tutoriales</h3>
-                                <p>Las guías estarán disponibles próximamente</p>
+                            <div className="guides-content">
+                                <h3><FaBookOpen /> Guías y Tutoriales</h3>
+                                {isLoadingGuides ? (
+                                    <div className="loading-state">
+                                        <FaSpinner className="spinner" />
+                                        <p>Cargando guías...</p>
+                                    </div>
+                                ) : guides.data.length > 0 ? (
+                                    <div className="guides-list">
+                                        {guides.data.map(guide => (
+                                            <GuideCard key={guide._id || guide.id} guide={guide} />
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="empty-state">
+                                        <FaBookOpen size={48} />
+                                        <p>No hay guías disponibles para este juego aún.</p>
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>

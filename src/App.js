@@ -13,6 +13,7 @@ import GameCatalogPage from './pages/GameCatalogPage';
 import GameDetailPage from './pages/GameDetailPage';
 import AdminDashboard from './pages/AdminDashboard';
 import PostDetailPage from './pages/PostDetailPage';
+import SearchPage from './pages/SearchPage';
 import ProtectedRoute from './components/common/routes/ProtectedRoute';
 import AdminRoute from './components/common/routes/AdminRoute';
 
@@ -21,6 +22,7 @@ import './styles/GlobalStyles.css';
 import './styles/AuthStyles.css';
 import './styles/HomeStyles.css';
 import './styles/ProfileStyles.css';
+import './styles/SearchPage.css';
 
 function AppContent() {
     return (
@@ -39,6 +41,7 @@ function AppContent() {
                 {/* Rutas Protegidas */}
                 <Route element={<ProtectedRoute />}>
                     <Route path="/home" element={<HomePage />} />
+                    <Route path="/search" element={<SearchPage />} />
                     <Route path="/community" element={<CommunityPage />} />
                     <Route path="/games" element={<GameCatalogPage />} />
                     <Route path="/games/:gameId" element={<GameDetailPage />} />

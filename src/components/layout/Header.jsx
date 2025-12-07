@@ -9,6 +9,7 @@ import useAuth from '../../hooks/useAuth';
 import { useContext } from 'react';
 import { ThemeContext } from '../../context/ThemeContext';
 import useAdmin from '../../hooks/useAdmin';
+import SearchSuggestions from '../common/SearchSuggestions';
 
 const Header = () => {
     const { user, logout } = useAuth();
@@ -18,17 +19,34 @@ const Header = () => {
     const actualUser = user?.user || user;
     
     const navigate = useNavigate();
-﻿    const [searchTerm, setSearchTerm] = useState('');
-﻿    const [isMenuOpen, setIsMenuOpen] = useState(false);
-﻿    const { theme, toggleTheme } = useContext(ThemeContext);
-﻿
-﻿    const handleSearchSubmit = (e) => {
-﻿        e.preventDefault();
-﻿        if (searchTerm.trim()) {
-﻿            navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
-﻿            setSearchTerm('');
-﻿        }
-﻿    };
+    const [searchTerm, setSearchTerm] = useState('');
+    const [showSearchSuggestions, setShowSearchSuggestions] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const { theme, toggleTheme } = useContext(ThemeContext);
+
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        if (searchTerm.trim()) {
+            navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
+            setSearchTerm('');
+            setShowSearchSuggestions(false);
+        }
+    };
+
+    const handleSearchInputChange = (value) => {
+        setSearchTerm(value);
+        setShowSearchSuggestions(value.length > 0);
+    };
+
+    const handleSuggestionSelect = (suggestion) => {
+        setSearchTerm('');
+        setShowSearchSuggestions(false);
+    };
+
+    const handleClearSearch = () => {
+        setSearchTerm('');
+        setShowSearchSuggestions(false);
+    };
 ﻿
 ﻿    const handleLogout = () => {
 ﻿        logout();
@@ -63,15 +81,30 @@ const Header = () => {
 ﻿                </div>
 ﻿
 ﻿                {/* Barra de Búsqueda (Central, más prominente) */}
-﻿                <form onSubmit={handleSearchSubmit} className="search-bar">
-﻿                    <input
-﻿                        type="text"
-﻿                        placeholder="Buscar juegos, guías o jugadores..."
-﻿                        value={searchTerm}
-﻿                        onChange={(e) => setSearchTerm(e.target.value)}
-﻿                    />
-﻿                    <button type="submit" className="search-btn" title="Buscar"><FaSearch /></button>
-﻿                </form>
+﻿                <div className="search-bar-container">
+                    <form onSubmit={handleSearchSubmit} className="search-bar">
+﻿                        <input
+﻿                            type="text"
+﻿                            placeholder="Buscar juegos, guías o jugadores..."
+﻿                            value={searchTerm}
+﻿                            onChange={(e) => handleSearchInputChange(e.target.value)}
+                            onFocus={() => setShowSearchSuggestions(searchTerm.length > 0)}
+                            onBlur={(e) => {
+                                // Delay para permitir clicks en sugerencias
+                                setTimeout(() => setShowSearchSuggestions(false), 200);
+                            }}
+﻿                        />
+﻿                        <button type="submit" className="search-btn" title="Buscar"><FaSearch /></button>
+﻿                    </form>
+
+                    {showSearchSuggestions && (
+                        <SearchSuggestions
+                            searchTerm={searchTerm}
+                            onSelect={handleSuggestionSelect}
+                            onClear={handleClearSearch}
+                        />
+                    )}
+                </div>
 ﻿
                 {/* Perfil e Interacciones (Derecha) */}
                 <div className="header-right">

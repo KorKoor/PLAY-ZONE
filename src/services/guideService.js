@@ -14,8 +14,14 @@ const guideService = {
         if (filters.category) endpoint += `&category=${encodeURIComponent(filters.category)}`;
         if (filters.difficulty) endpoint += `&difficulty=${encodeURIComponent(filters.difficulty)}`;
         if (filters.search) endpoint += `&search=${encodeURIComponent(filters.search)}`;
+        if (filters.gameId) endpoint += `&gameId=${encodeURIComponent(filters.gameId)}`; // Nuevo filtro por gameId
         
         return get(endpoint);
+    },
+
+    // Obtener guías por ID de juego
+    getGuidesByGameId: (gameId, page = 1, limit = 10) => {
+        return guideService.getAllGuides(page, limit, { gameId });
     },
 
     // Obtener guía por ID

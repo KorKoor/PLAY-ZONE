@@ -109,6 +109,15 @@
 
 /* === BARRA DE BÚSQUEDA CENTRAL === */
 /* CONTENEDOR DE LA BARRA DE BÚSQUEDA */
+.search-bar-container {
+    /* Posición relativa para las sugerencias absolutas */
+    position: relative;
+    /* La barra crece y toma espacio disponible (60% del máximo) */
+    flex-grow: 0.6;
+    /* Ancho máximo de la barra = 450px */
+    max-width: 450px;
+}
+
 .search-bar {
     /* Layout horizontal - input y botón de búsqueda en fila */
     display: flex;
@@ -118,10 +127,8 @@
     background-color: var(--color-input-bg);
     /* Bordes redondeados = 8px */
     border-radius: 8px;
-    /* La barra crece y toma espacio disponible (60% del máximo) */
-    flex-grow: 0.6; /* Permite que la barra crezca y sea el foco */
-    /* Ancho máximo de la barra = 450px */
-    max-width: 450px;
+    /* Ancho completo del contenedor */
+    width: 100%;
     /* Borde inicial transparente (cambia al hacer foco) */
     border: 1px solid transparent;
     /* Transición suave del borde cuando se enfoca */

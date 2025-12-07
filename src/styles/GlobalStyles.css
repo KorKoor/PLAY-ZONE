@@ -91,3 +91,51 @@ body {
     cursor: not-allowed;
     box-shadow: none;
 }
+
+/* ----------------------------------------------------------
+ * NOTIFICACIONES DE FAVORITOS
+ * ---------------------------------------------------------- */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+.favorite-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 10000;
+    font-weight: 600;
+    color: white;
+    animation: slideIn 0.3s ease-out;
+}
+
+.favorite-notification.success {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+}
+
+.favorite-notification.removed {
+    background: linear-gradient(135deg, #FF9800, #f57c00);
+}
+
+.favorite-notification.fadeout {
+    animation: fadeOut 0.3s ease-in;
+}

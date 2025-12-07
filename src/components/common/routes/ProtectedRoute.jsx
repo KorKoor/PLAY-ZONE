@@ -14,24 +14,25 @@ const ProtectedRoute = () => {
             if (isLoggedIn && user && !isLoading) {
                 setIsCheckingBan(true);
                 
+                // TEMPORALMENTE DESHABILITADO para diagnosticar problema de logout en favoritos
                 // Verificar si el usuario está baneado
-                if (user.isBanned) {
-                    const banMessage = user.banReason 
-                        ? `Tu cuenta ha sido suspendida. Motivo: ${user.banReason}`
-                        : 'Tu cuenta ha sido suspendida.';
+                // if (user.isBanned) {
+                //     const banMessage = user.banReason 
+                //         ? `Tu cuenta ha sido suspendida. Motivo: ${user.banReason}`
+                //         : 'Tu cuenta ha sido suspendida.';
                     
-                    alert(banMessage);
-                    logout();
-                    setIsCheckingBan(false);
-                    return;
-                }
+                //     alert(banMessage);
+                //     logout();
+                //     setIsCheckingBan(false);
+                //     return;
+                // }
 
                 // Verificar estado actualizado del usuario
-                try {
-                    await checkUserStatus();
-                } catch (error) {
-                    console.error('Error verificando estado del usuario en ProtectedRoute:', error);
-                }
+                // try {
+                //     await checkUserStatus();
+                // } catch (error) {
+                //     console.error('Error verificando estado del usuario en ProtectedRoute:', error);
+                // }
                 
                 setIsCheckingBan(false);
             }

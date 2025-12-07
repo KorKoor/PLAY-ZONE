@@ -1,199 +1,81 @@
-// src/hooks/usePosts.js
+// src/services/guideService.js
+import { post, put, del, get } from './httpService';
 
-import { useState, useEffect, useCallback } from 'react';
-import postService from '../services/postService';
-import userService from '../services/userService'; // Necesario para toggleFavorite
-
-const POSTS_PER_PAGE = 10;
-
-const usePosts = () => {
-    const [posts, setPosts] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [page, setPage] = useState(1);
-    const [hasMore, setHasMore] = useState(true);
-
+const guideService = {
     // ==========================================================
-    // LÓGICA DE CARGA Y PAGINACIÓN
-    // ==========================================================
-    const fetchPosts = useCallback(async (reset = false) => {
-        if (!hasMore && !reset) return;
-
-        setIsLoading(true);
-        setError(null);
-
-        const currentPage = reset ? 1 : page;
-
-        try {
-            const data = await postService.getAllPosts(currentPage, POSTS_PER_PAGE);
-
-            setPosts(prevPosts => reset ? data.posts : [...prevPosts, ...data.posts]);
-
-            setHasMore(data.posts.length === POSTS_PER_PAGE);
-
-            if (data.posts.length > 0) {
-                setPage(currentPage + 1);
-            }
-            if (reset) {
-                setPage(2);
-            }
-
-
-        } catch (err) {
-            setError(err.message || "No se pudieron cargar las publicaciones del feed.");
-        } finally {
-            setIsLoading(false);
-        }
-    }, [page, hasMore]);
-
-    // Cargar posts iniciales al montar
-    useEffect(() => {
-        fetchPosts(true);
-    }, [fetchPosts]);
-
-    // Inserta el nuevo post creado por el PostForm al inicio del array
-    const addNewPost = (newPost) => {
-        setPosts(prevPosts => [newPost, ...prevPosts]);
-    };
-
-    // ==========================================================
-    // LÓGICA DE INTERACCIÓN SOCIAL (OPTIMISTIC UI)
+    // GESTIÃ“N DE GUÃAS
     // ==========================================================
 
-    // 1. MANEJAR LIKES (Requisito 2.4)
-    const handleLike = async (postId, currentIsLiked) => {
-        // Optimistic UI: Actualizar el estado asumiendo éxito
-        setPosts(currentPosts =>
-            currentPosts.map(post =>
-                post._id === postId ? {
-                    ...post,
-                    isLiked: !currentIsLiked,
-                    likesCount: currentIsLiked ? post.likesCount - 1 : post.likesCount + 1
-                } : post
-            )
-        );
+    // Obtener todas las guÃ­as (con paginaciÃ³n y filtros)
+    getAllGuides: (page = 1, limit = 10, filters = {}) => {
+        let endpoint = `/guides?page=${page}&limit=${limit}`;
+        
+        // Agregar filtros si existen
+        if (filters.category) endpoint += `&category=${encodeURIComponent(filters.category)}`;
+        if (filters.difficulty) endpoint += `&difficulty=${encodeURIComponent(filters.difficulty)}`;
+        if (filters.search) endpoint += `&search=${encodeURIComponent(filters.search)}`;
+        
+        return get(endpoint);
+    },
 
-        try {
-            await postService.toggleLike(postId);
+    // Obtener guÃ­a por ID
+    getGuideById: (guideId) => {
+        return get(`/guides/${guideId}`);
+    },
 
-        } catch (err) {
-            setError("Error al registrar el like. Intenta de nuevo.");
-            // Revertir el estado si falla
-            setPosts(currentPosts =>
-                currentPosts.map(post =>
-                    post._id === postId ? {
-                        ...post,
-                        isLiked: currentIsLiked,
-                        likesCount: currentIsLiked ? post.likesCount + 1 : post.likesCount - 1
-                    } : post
-                )
-            );
-        }
-    };
+    // Crear nueva guÃ­a
+    createGuide: (guideData) => {
+        return post('/guides', guideData);
+    },
 
-    // 2. MANEJAR FAVORITOS (Requisito 2.11)
-    const handleFavorite = async (postId, currentIsFavorite) => {
-        // Optimistic UI: Asumimos éxito
-        setPosts(currentPosts =>
-            currentPosts.map(post =>
-                post._id === postId ? {
-                    ...post,
-                    isFavorite: !currentIsFavorite,
-                } : post
-            )
-        );
+    // Actualizar guÃ­a existente
+    updateGuide: (guideId, updatedData) => {
+        return put(`/guides/${guideId}`, updatedData);
+    },
 
-        try {
-            await userService.toggleFavorite(postId);
+    // Eliminar guÃ­a
+    deleteGuide: (guideId) => {
+        return del(`/guides/${guideId}`);
+    },
 
-        } catch (err) {
-            setError("Error al marcar como favorito.");
-            // Revertir el estado si falla
-            setPosts(currentPosts =>
-                currentPosts.map(post =>
-                    post._id === postId ? {
-                        ...post,
-                        isFavorite: currentIsFavorite,
-                    } : post
-                )
-            );
-        }
-    };
+    // ==========================================================
+    // INTERACCIONES CON GUÃAS
+    // ==========================================================
 
-    // 3. AÑADIR COMENTARIO (Requisito 2.5)
-    const addComment = async (postId, content) => {
-        try {
-            const result = await postService.addComment(postId, content);
+    // Marcar/desmarcar guÃ­a como Ãºtil
+    toggleUseful: (guideId) => {
+        return put(`/guides/${guideId}/useful`);
+    },
 
-            // Incrementar el contador de comentarios en el estado local
-            setPosts(currentPosts =>
-                currentPosts.map(post =>
-                    post._id === postId ? {
-                        ...post,
-                        commentsCount: post.commentsCount + 1
-                    } : post
-                )
-            );
-            return result; // Devuelve el comentario para la UI
-        } catch (err) {
-            setError("Fallo al publicar el comentario.");
-            throw err;
-        }
-    };
+    // Obtener comentarios de una guÃ­a
+    getGuideComments: (guideId) => {
+        return get(`/guides/${guideId}/comments`);
+    },
 
-    // 4. ELIMINAR POST (Requisito 2.7, 2.13)
-    const handleDelete = async (postId) => {
-        const originalPosts = posts;
+    // AÃ±adir comentario a una guÃ­a
+    addGuideComment: (guideId, content) => {
+        return post(`/guides/${guideId}/comments`, { content });
+    },
 
-        // Optimistic UI: Eliminar el post del estado inmediatamente
-        setPosts(currentPosts => currentPosts.filter(post => post._id !== postId));
+    // Buscar guÃ­as
+    searchGuides: (query) => {
+        return get(`/guides/search?q=${encodeURIComponent(query)}`);
+    },
 
-        try {
-            // Llama al endpoint DELETE /api/v1/posts/:postId
-            await postService.deletePost(postId);
+    // Obtener guÃ­as por categorÃ­a
+    getGuidesByCategory: (category) => {
+        return get(`/guides/category/${encodeURIComponent(category)}`);
+    },
 
-        } catch (err) {
-            setError("Error al eliminar la publicación. El servidor no respondió.");
-            // Revertir el estado si falla
-            setPosts(originalPosts);
-        }
-    };
+    // Obtener guÃ­as destacadas
+    getFeaturedGuides: () => {
+        return get('/guides/featured');
+    },
 
-    // 5. EDITAR POST (Requisito 2.7)
-    const handleEdit = async (postId, updates) => {
-        try {
-            // Llama al endpoint PUT /api/v1/posts/:postId
-            const updatedPost = await postService.updatePost(postId, updates);
-
-            // Actualización Optimista: Reemplazar el post viejo con el nuevo
-            setPosts(currentPosts =>
-                currentPosts.map(post =>
-                    post._id === postId ? updatedPost : post
-                )
-            );
-            return { success: true };
-
-        } catch (err) {
-            setError("Error al guardar la edición.");
-            return { success: false, error: err.message };
-        }
-    };
-
-
-    return {
-        posts,
-        isLoading,
-        error,
-        fetchMorePosts: () => fetchPosts(false),
-        addNewPost,
-
-        // EXPORTACIONES DE INTERACCIÓN Y ADMINISTRACIÓN COMPLETAS
-        handleLike,
-        handleFavorite,
-        addComment,
-        handleDelete,
-        handleEdit,
-    };
+    // Obtener estadÃ­sticas de guÃ­as para admin
+    getGuidesStats: () => {
+        return get('/guides/stats');
+    }
 };
 
-export default usePosts;
+export default guideService;

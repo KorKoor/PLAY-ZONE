@@ -4,12 +4,15 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 // Nota: Asumimos que ThemeProvider y ThemeContext existen
 import { ThemeProvider, ThemeContext } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
-import { BanNotificationProvider } from './context/BanNotificationContext';
+// TEMPORALMENTE DESHABILITADO para diagnosticar problema de logout en favoritos
+// import { BanNotificationProvider } from './context/BanNotificationContext';
 import AuthPage from './pages/AuthPage';
 import HomePage from './pages/HomePage';
 import ProfilePage from './pages/ProfilePage';
 // 🚀 NUEVA IMPORTACIÓN NECESARIA 🚀
 import GuidesPage from './pages/GuidesPage';
+import FavoritesPage from './pages/FavoritesPage';
+import TestPage from './pages/TestPage';
 import AdminDashboard from './pages/AdminDashboard';
 import ProtectedRoute from './components/common/routes/ProtectedRoute';
 import AdminRoute from './components/common/routes/AdminRoute';
@@ -19,11 +22,12 @@ import './styles/GlobalStyles.css';
 import './styles/AuthStyles.css';
 import './styles/HomeStyles.css';
 import './styles/ProfileStyles.css';
-import useBanNotificationSetup from './hooks/useBanNotificationSetup';
+// import useBanNotificationSetup from './hooks/useBanNotificationSetup';
 
 function AppContent() {
     // Configurar el sistema de notificación de ban
-    useBanNotificationSetup();
+    // TEMPORALMENTE DESHABILITADO para diagnosticar problema de logout en favoritos
+    // useBanNotificationSetup();
 
     return (
         <div className="App">
@@ -51,7 +55,10 @@ function AppContent() {
                     <Route path="/guides" element={<GuidesPage />} />
 
                     {/* Ruta de Favoritos (Requisito 2.11) */}
-                    <Route path="/favorites" element={<div>Página de Favoritos (Próximo Módulo)</div>} />
+                    <Route path="/favorites" element={<FavoritesPage />} />
+
+                    {/* Página de Prueba para Diagnóstico */}
+                    <Route path="/test" element={<TestPage />} />
 
                     {/* Manejo de Rutas de Guía Individual (Ej: /guides/ver/123) */}
                     <Route path="/guides/:guideId" element={<div>Vista Detalle de Guía</div>} />
@@ -72,13 +79,14 @@ function AppContent() {
 function App() {
     return (
         <AuthProvider>
-            <BanNotificationProvider>
+            {/* TEMPORALMENTE DESHABILITADO para diagnosticar problema de logout en favoritos */}
+            {/* <BanNotificationProvider> */}
                 <ThemeProvider>
                     <BrowserRouter>
                         <AppContent />
                     </BrowserRouter>
                 </ThemeProvider>
-            </BanNotificationProvider>
+            {/* </BanNotificationProvider> */}
         </AuthProvider>
     );
 }

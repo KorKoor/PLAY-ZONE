@@ -34,7 +34,7 @@ const DefaultAvatar = () => (
     </svg>
 );
 
-const PostCard = ({ post, onLike, onDelete, onEdit, onFavorite, addComment }) => {
+const PostCard = ({ post, onLike, onDelete, onEdit, onFavorite, addComment, showRemoveFavorite = false }) => {
 
     // Hooks y Estados
     const navigate = useNavigate();
@@ -57,7 +57,13 @@ const PostCard = ({ post, onLike, onDelete, onEdit, onFavorite, addComment }) =>
     };
 
     const handleFavoriteClick = () => {
-        if (onFavorite) onFavorite(post._id, post.isFavorite);
+        console.log(`💖 ${post.isFavorite ? 'Removiendo' : 'Agregando'} favorito: ${post.gameTitle}`);
+        
+        if (onFavorite) {
+            onFavorite(post._id, post.isFavorite);
+        } else {
+            console.warn('⚠️ onFavorite function not provided to PostCard');
+        }
     };
 
     const handleCommentToggle = () => {
@@ -167,10 +173,11 @@ const PostCard = ({ post, onLike, onDelete, onEdit, onFavorite, addComment }) =>
                 </button>
                 <button
                     onClick={handleFavoriteClick}
-                    className={`btn-action btn-favorite ${post.isFavorite ? 'favorited' : ''}`}
-                    aria-label={post.isFavorite ? 'Quitar de favoritos' : 'Marcar Favorita'}
+                    className={`btn-action btn-favorite ${post.isFavorite ? 'favorited' : ''} ${showRemoveFavorite ? 'remove-favorite' : ''}`}
+                    aria-label={showRemoveFavorite ? 'Quitar de favoritos' : (post.isFavorite ? 'Quitar de favoritos' : 'Marcar Favorita')}
                 >
-                    <FaStar /> {post.isFavorite ? 'Favorita' : 'Marcar Favorita'}
+                    <FaStar /> 
+                    {showRemoveFavorite ? 'Quitar de Favoritos' : (post.isFavorite ? 'Favorita' : 'Marcar Favorita')}
                 </button>
             </footer>
 

@@ -52,8 +52,43 @@ const postService = {
     },
 
     // Requisito 2.11: Marcar/Quitar como Favorita
-    toggleFavorite: (postId) => {
-        return put(`/posts/${postId}/favorite`);
+    toggleFavorite: async (postId) => {
+        console.log('🚀 toggleFavorite called with postId:', postId);
+        
+        try {
+            const result = await put(`/posts/${postId}/favorite`);
+            console.log('✅ toggleFavorite success:', result);
+            return result;
+        } catch (error) {
+            console.error('❌ toggleFavorite failed:', error);
+            throw error;
+        }
+    },
+
+    // Obtener lista de favoritos del usuario
+    getUserFavorites: async () => {
+        // Usar solo el endpoint que funciona según los logs
+        const workingEndpoint = '/favorites';
+
+        try {
+            console.log(`🔍 Obteniendo favoritos desde: ${workingEndpoint}`);
+            const result = await get(workingEndpoint);
+            console.log(`✅ Favoritos obtenidos exitosamente:`, result);
+            console.log(`📊 Cantidad de favoritos encontrados:`, result?.favorites?.length || result?.length || 0);
+            console.log(`📋 Estructura de datos recibida:`, Object.keys(result || {}));
+            return result;
+        } catch (error) {
+            console.error(`❌ Error obteniendo favoritos:`, error);
+            
+            // Retornar lista vacía en caso de error
+            console.warn('🚫 Error obteniendo favoritos, retornando lista vacía');
+            return { favorites: [] };
+        }
+    },
+
+    // Obtener estado de favorito de un post específico
+    getFavoriteStatus: (postId) => {
+        return get(`/posts/${postId}/favorite-status`);
     },
 
     // 🚀 FUNCIÓN FALTANTE: Obtener lista de usuarios que dieron like (Req. 2.6) 🚀

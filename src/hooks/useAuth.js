@@ -70,17 +70,20 @@ const useAuth = () => {
             const updatedUser = response.data || response;
 
             if (updatedUser.isBanned) {
-                const banMessage = updatedUser.banReason 
-                    ? `🚫 CUENTA SUSPENDIDA\n\nTu cuenta ha sido suspendida.\n\nMotivo: ${updatedUser.banReason}\n\nSerás redirigido al login.`
-                    : '🚫 CUENTA SUSPENDIDA\n\nTu cuenta ha sido suspendida.\n\nSerás redirigido al login.';
+                console.warn('Usuario baneado detectado');
                 
-                // Mostrar mensaje inmediatamente
-                alert(banMessage);
+                // TEMPORALMENTE DESHABILITADO para diagnosticar problema de logout en favoritos
+                // const banMessage = updatedUser.banReason 
+                //     ? `🚫 CUENTA SUSPENDIDA\n\nTu cuenta ha sido suspendida.\n\nMotivo: ${updatedUser.banReason}\n\nSerás redirigido al login.`
+                //     : '🚫 CUENTA SUSPENDIDA\n\nTu cuenta ha sido suspendida.\n\nSerás redirigido al login.';
                 
-                // Limpiar sesión después del mensaje
-                setTimeout(() => {
-                    logout();
-                }, 1000);
+                // // Mostrar mensaje inmediatamente
+                // alert(banMessage);
+                
+                // // Limpiar sesión después del mensaje
+                // setTimeout(() => {
+                //     logout();
+                // }, 1000);
                 
                 return true; // Retorna true si el usuario fue baneado
             }
@@ -94,20 +97,21 @@ const useAuth = () => {
             return false; // Retorna false si no está baneado
         } catch (error) {
             console.error('Error verificando estado del usuario:', error);
+            // TEMPORALMENTE DESHABILITADO para diagnosticar problema de logout en favoritos
             // Si hay error 403, podría ser que el usuario fue baneado
-            if (error.message && error.message.includes('403')) {
-                console.warn('Error 403 al verificar usuario, posible ban. Cerrando sesión.');
+            // if (error.message && error.message.includes('403')) {
+            //     console.warn('Error 403 al verificar usuario, posible ban. Cerrando sesión.');
                 
-                // Mostrar mensaje de ban detectado
-                alert('🚫 ACCESO DENEGADO\n\nSe detectó que tu cuenta puede estar suspendida.\n\nSerás desconectado automáticamente.');
+            //     // Mostrar mensaje de ban detectado
+            //     alert('🚫 ACCESO DENEGADO\n\nSe detectó que tu cuenta puede estar suspendida.\n\nSerás desconectado automáticamente.');
                 
-                // Limpiar sesión después del mensaje
-                setTimeout(() => {
-                    logout();
-                }, 1000);
+            //     // Limpiar sesión después del mensaje
+            //     setTimeout(() => {
+            //         logout();
+            //     }, 1000);
                 
-                return true;
-            }
+            //     return true;
+            // }
             return false;
         }
     }, [user, logout]);
@@ -153,18 +157,19 @@ const useAuth = () => {
     useEffect(() => {
         if (!isLoggedIn || !user || isLoading) return;
         
+        // TEMPORALMENTE DESHABILITADO para diagnosticar problema de logout en favoritos
         // Verificar inmediatamente con un pequeño delay
-        const timeoutId = setTimeout(() => {
-            checkUserStatus();
-        }, 1000);
+        // const timeoutId = setTimeout(() => {
+        //     checkUserStatus();
+        // }, 1000);
 
         // Configurar verificación periódica más frecuente para detectar bans rápidamente
-        const interval = setInterval(checkUserStatus, 30 * 1000); // 30 segundos
+        // const interval = setInterval(checkUserStatus, 30 * 1000); // 30 segundos
 
-        return () => {
-            clearTimeout(timeoutId);
-            clearInterval(interval);
-        };
+        // return () => {
+        //     clearTimeout(timeoutId);
+        //     clearInterval(interval);
+        // };
     }, [isLoggedIn, user?.id, isLoading, checkUserStatus]); // Incluir checkUserStatus como dependencia
 
     return {

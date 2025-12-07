@@ -1,6 +1,7 @@
 ﻿// src/components/layout/Header.jsx
 ﻿
 ﻿import React, { useState } from 'react';
+import './Header.css';
 ﻿// ⚠️ CORRECCIÓN: Añadir FaHeart y FaUserShield a la importación ⚠️
 ﻿import { FaSearch, FaBell, FaUserCircle, FaSignOutAlt, FaTachometerAlt, FaBookOpen, FaHeart, FaSun, FaMoon, FaUserShield } from 'react-icons/fa';
 import useAuth from '../../hooks/useAuth';
@@ -69,16 +70,14 @@ const Header = () => {
 ﻿                    <button type="submit" className="search-btn" title="Buscar"><FaSearch /></button>
 ﻿                </form>
 ﻿
-﻿                {/* Perfil e Interacciones (Derecha) */}
-﻿                <div className="header-right">
-﻿
-﻿                    <button className="icon-btn" title="Notificaciones"><FaBell /></button>
-﻿
-﻿                    <button onClick={toggleTheme} className="icon-btn theme-toggle-btn" title="Cambiar tema">
-﻿                        {theme === 'light' ? <FaMoon /> : <FaSun />}
-﻿                    </button>
-﻿
-﻿                    {/* Contenedor del Menú de Usuario (con Dropdown) */}
+                {/* Perfil e Interacciones (Derecha) */}
+                <div className="header-right">
+
+                    <button className="icon-btn" title="Notificaciones"><FaBell /></button>
+
+                    <button onClick={toggleTheme} className="icon-btn theme-toggle-btn" title="Cambiar tema">
+                        {theme === 'light' ? <FaMoon /> : <FaSun />}
+                    </button>﻿                    {/* Contenedor del Menú de Usuario (con Dropdown) */}
 ﻿                    <div className="user-menu-container">
                         <button
                             className="user-profile-btn"
@@ -102,10 +101,12 @@ const Header = () => {
                                     if (userId) {
                                         navigate(`/profile/${userId}`);
                                     }
+                                    setIsMenuOpen(false);
                                 }}><FaUserCircle /> Mi Perfil</button>
-﻿                                <button onClick={() => navigate('/favorites')}><FaHeart /> Favoritos</button>
-
-﻿                                {/* ENLACE DE ADMIN CONDICIONAL */}
+                                <button onClick={() => { 
+                                    setIsMenuOpen(false); 
+                                    navigate('/favorites'); 
+                                }}><FaHeart /> Favoritos</button>﻿                                {/* ENLACE DE ADMIN CONDICIONAL */}
 ﻿                                {isAdmin && (
 ﻿                                    <button onClick={() => { navigate('/admin'); setIsMenuOpen(false); }}><FaUserShield /> Panel Admin</button>
 ﻿                                )}﻿                                <button onClick={handleLogout} className="logout-btn"><FaSignOutAlt /> Cerrar Sesión</button>

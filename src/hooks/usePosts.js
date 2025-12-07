@@ -1,268 +1,245 @@
-﻿// src/hooks/usePosts.js
-
 import { useState, useEffect, useCallback } from 'react';
 import postService from '../services/postService';
-import userService from '../services/userService'; // Necesario para favoritos
 import useAuth from './useAuth';
 
-const POSTS_PER_PAGE = 10;
-
-const usePosts = () => {
+const usePosts = (initialPage = 1) => {
     const [posts, setPosts] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [page, setPage] = useState(1);
-    const [hasMore, setHasMore] = useState(true);
+    const [page, setPage] = useState(initialPage);
+    const [totalPages, setTotalPages] = useState(1);
     const { isLoggedIn, checkUserStatus } = useAuth();
 
-    // ==========================================================
-    // LÓGICA DE CARGA Y PAGINACIÓN
-    // ==========================================================
-    const fetchPosts = useCallback(async (reset = false) => {
-        // Si no hay usuario logueado, no intentar cargar posts
+    const fetchPosts = useCallback(async (loadMore = false) => {
         if (!isLoggedIn) {
             setPosts([]);
             setIsLoading(false);
-            setError("Necesitas estar logueado para ver publicaciones.");
+            setError("Necesitas estar logueado para ver los posts.");
             return;
         }
 
-        if (!hasMore && !reset) return;
-
-        setIsLoading(true);
-        setError(null);
-
-        const currentPage = reset ? 1 : page;
+        if (!loadMore) {
+            setIsLoading(true);
+            setError(null);
+        }
 
         try {
-            // Llama a GET /api/v1/posts/feed
-            const data = await postService.getAllPosts(currentPage, POSTS_PER_PAGE);
-
-            setPosts(prevPosts => reset ? data.posts : [...prevPosts, ...data.posts]);
-
-            // Verifica si la respuesta fue menor que el limite
-            setHasMore(data.posts.length === POSTS_PER_PAGE);
-
-            if (!reset) {
-                setPage(currentPage + 1);
+            const currentPage = loadMore ? page + 1 : page;
+            const response = await postService.getAllPosts(currentPage, 10);
+            
+            if (loadMore) {
+                setPosts(prev => [...prev, ...(response.posts || [])]);
+                setPage(currentPage);
+            } else {
+                setPosts(response.posts || []);
             }
+            
+            setTotalPages(response.totalPages || 1);
         } catch (err) {
             console.error('Error cargando posts:', err);
-            
-            // Si es un error 403, verificar si el usuario fue baneado
-            if (err.message && err.message.includes('403')) {
-                console.warn('Error 403 en usePosts, verificando estado del usuario...');
-                
-                // Mostrar mensaje inmediatamente
-                alert('🚫 ACCESO DENEGADO\n\nNo puedes acceder al contenido.\n\nTu cuenta puede estar suspendida.');
-                
-                const wasBanned = await checkUserStatus();
-                if (!wasBanned) {
-                    // Si no fue baneado, mostrar error específico
-                    setError("Error cargando el feed: Error 403: Forbidden");
-                }
-                // Si fue baneado, checkUserStatus ya manejó el logout
-            } else {
-                setError(err.message || "No se pudieron cargar las publicaciones del feed.");
-            }
+            setError("No se pudo cargar el feed de publicaciones.");
         } finally {
             setIsLoading(false);
         }
-    }, [page, hasMore, isLoggedIn, checkUserStatus]);
+    }, [page, isLoggedIn, checkUserStatus]);
 
-    // Cargar posts iniciales al montar y cuando cambie el estado de login
     useEffect(() => {
-        if (isLoggedIn) {
-            fetchPosts(true);
-        }
-    }, [isLoggedIn, fetchPosts]); // Incluir fetchPosts como dependencia
+        fetchPosts();
+    }, [fetchPosts]);
 
-    // Inserta el nuevo post creado por el PostForm al inicio del array
-    const addNewPost = (newPost) => {
-        setPosts(prevPosts => [newPost, ...prevPosts]);
+    const addNewPost = async (postData) => {
+        try {
+            const newPost = await postService.createPost(postData);
+            setPosts(prev => [newPost, ...prev]);
+            return { success: true, post: newPost };
+        } catch (err) {
+            console.error('Error creando post:', err);
+            return { success: false, error: err.message };
+        }
     };
 
-    // ==========================================================
-    // LÓGICA DE INTERACCIÓN SOCIAL (OPTIMISTIC UI)
-    // ==========================================================
-
-    // 1. MANEJAR LIKES (Requisito 2.4)
     const handleLike = async (postId, currentIsLiked) => {
-        // Optimistic UI: Actualizar el estado asumiendo éxito
+        console.log('🔍 handleLike called:', { postId, currentIsLiked });
+        
         setPosts(currentPosts =>
             currentPosts.map(post =>
-                post._id === postId ? {
-                    ...post,
-                    isLiked: !currentIsLiked,
-                    likesCount: currentIsLiked ? post.likesCount - 1 : post.likesCount + 1
-                } : post
+                post._id === postId
+                    ? {
+                        ...post,
+                        isLiked: !currentIsLiked,
+                        likesCount: !currentIsLiked
+                            ? (post.likesCount || 0) + 1
+                            : Math.max((post.likesCount || 0) - 1, 0)
+                    }
+                    : post
             )
         );
 
         try {
             await postService.toggleLike(postId);
-
         } catch (err) {
-            console.error('Error en handleLike:', err);
+            console.error('❌ Error en handleLike:', err);
             
-            // Si es un error 403, verificar si el usuario fue baneado
-            if (err.message && err.message.includes('403')) {
-                console.warn('Error 403 en handleLike, verificando estado del usuario...');
-                
-                // Mostrar mensaje inmediatamente
-                alert('🚫 ACCIÓN BLOQUEADA\n\nNo puedes dar like.\n\nTu cuenta puede estar suspendida.');
-                
-                const wasBanned = await checkUserStatus();
-                if (!wasBanned) {
-                    setError("Error al registrar el like. Error 403: Forbidden");
-                }
-                // Si fue baneado, checkUserStatus ya manejó el logout
-            } else {
-                setError("Error al registrar el like. Intenta de nuevo.");
-            }
-            
-            // Revertir el estado si falla
             setPosts(currentPosts =>
                 currentPosts.map(post =>
-                    post._id === postId ? {
-                        ...post,
-                        isLiked: currentIsLiked,
-                        likesCount: currentIsLiked ? post.likesCount + 1 : post.likesCount - 1
-                    } : post
+                    post._id === postId
+                        ? {
+                            ...post,
+                            isLiked: currentIsLiked,
+                            likesCount: currentIsLiked
+                                ? (post.likesCount || 0) + 1
+                                : Math.max((post.likesCount || 0) - 1, 0)
+                        }
+                        : post
                 )
             );
+            
+            setError("No se pudo procesar el me gusta.");
         }
     };
 
-    // 2. MANEJAR FAVORITOS (Requisito 2.11)
     const handleFavorite = async (postId, currentIsFavorite) => {
-        // Optimistic UI: Asumimos éxito
+        console.log('🔍 handleFavorite called:', { postId, currentIsFavorite });
+        
+        // Optimistic UI: Actualizar inmediatamente
         setPosts(currentPosts =>
             currentPosts.map(post =>
-                post._id === postId ? {
-                    ...post,
-                    isFavorite: !currentIsFavorite,
-                } : post
+                post._id === postId
+                    ? {
+                        ...post,
+                        isFavorite: !currentIsFavorite,
+                        favoritesCount: !currentIsFavorite 
+                            ? (post.favoritesCount || 0) + 1 
+                            : Math.max((post.favoritesCount || 0) - 1, 0)
+                    }
+                    : post
             )
         );
 
         try {
-            await userService.toggleFavorite(postId);
-
-        } catch (err) {
-            console.error('Error en handleFavorite:', err);
+            console.log('🚀 Calling postService.toggleFavorite with postId:', postId);
+            const result = await postService.toggleFavorite(postId);
+            console.log('✅ toggleFavorite success:', result);
             
-            // Si es un error 403, verificar si el usuario fue baneado
-            if (err.message && err.message.includes('403')) {
-                console.warn('Error 403 en handleFavorite, verificando estado del usuario...');
-                
-                // Mostrar mensaje inmediatamente
-                alert('🚫 ACCIÓN BLOQUEADA\n\nNo puedes marcar favoritos.\n\nTu cuenta puede estar suspendida.');
-                
-                const wasBanned = await checkUserStatus();
-                if (!wasBanned) {
-                    setError("Error al marcar como favorito. Error 403: Forbidden");
+            // Mostrar notificación visual clara
+            const action = !currentIsFavorite ? 'agregado a' : 'removido de';
+            const message = `✅ Post ${action} favoritos exitosamente`;
+            console.log(message);
+            
+            // Mostrar notificación temporal en pantalla
+            const notification = document.createElement('div');
+            notification.innerHTML = `
+                <div style="
+                    position: fixed; 
+                    top: 20px; 
+                    right: 20px; 
+                    background: ${!currentIsFavorite ? '#4CAF50' : '#FF9800'}; 
+                    color: white; 
+                    padding: 15px 20px; 
+                    border-radius: 8px; 
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                    z-index: 10000;
+                    font-weight: 600;
+                    animation: slideIn 0.3s ease-out;
+                ">
+                    ${!currentIsFavorite ? '💖 Agregado a favoritos' : '💔 Removido de favoritos'}
+                </div>
+            `;
+            document.body.appendChild(notification);
+            
+            // Remover notificación después de 3 segundos
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
                 }
-            } else {
-                setError("Error al marcar como favorito.");
-            }
+            }, 3000);
             
-            // Revertir el estado si falla
+        } catch (err) {
+            console.error('❌ Error en handleFavorite:', err);
+            
+            // Mostrar el error específico
+            alert(`❌ Error: ${err.message || 'No se pudo procesar la acción de favoritos'}`);
+            
+            // Revertir cambios optimistas si falla
             setPosts(currentPosts =>
                 currentPosts.map(post =>
-                    post._id === postId ? {
-                        ...post,
-                        isFavorite: currentIsFavorite,
-                    } : post
+                    post._id === postId
+                        ? {
+                            ...post,
+                            isFavorite: currentIsFavorite,
+                            favoritesCount: currentIsFavorite 
+                                ? (post.favoritesCount || 0) + 1 
+                                : Math.max((post.favoritesCount || 0) - 1, 0)
+                        }
+                        : post
                 )
             );
+            
+            setError(`No se pudo ${!currentIsFavorite ? 'agregar a' : 'remover de'} favoritos: ${err.message}`);
         }
     };
 
-    // 3. AÑADIR COMENTARIO (Requisito 2.5)
     const addComment = async (postId, content) => {
         try {
             const result = await postService.addComment(postId, content);
-
-            // Incrementar el contador de comentarios en el estado local
+            
             setPosts(currentPosts =>
                 currentPosts.map(post =>
-                    post._id === postId ? {
-                        ...post,
-                        commentsCount: post.commentsCount + 1
-                    } : post
+                    post._id === postId
+                        ? { ...post, commentsCount: (post.commentsCount || 0) + 1 }
+                        : post
                 )
             );
-            return result; // Devuelve el comentario para la UI
-        } catch (err) {
-            console.error('Error en addComment:', err);
             
-            // Si es un error 403, verificar si el usuario fue baneado
-            if (err.message && err.message.includes('403')) {
-                console.warn('Error 403 en addComment, verificando estado del usuario...');
-                
-                // Mostrar mensaje inmediatamente
-                alert('🚫 COMENTARIO BLOQUEADO\n\nNo puedes comentar.\n\nTu cuenta puede estar suspendida.');
-                
-                const wasBanned = await checkUserStatus();
-                if (!wasBanned) {
-                    setError("Error al publicar el comentario. Error 403: Forbidden");
-                }
-            } else {
-                setError("Fallo al publicar el comentario.");
-            }
-            throw err;
+            return result;
+        } catch (err) {
+            console.error('Error añadiendo comentario:', err);
+            setError("No se pudo añadir el comentario.");
         }
     };
 
-    // 4. ELIMINAR POST (Requisito 2.7, 2.13)
     const handleDelete = async (postId) => {
-        const originalPosts = posts;
+        const userConfirmation = window.confirm("¿Estás seguro de que deseas eliminar esta publicación?");
+        if (!userConfirmation) return;
 
-        // Optimistic UI: Eliminar el post del estado inmediatamente
+        const originalPosts = [...posts];
         setPosts(currentPosts => currentPosts.filter(post => post._id !== postId));
 
         try {
             await postService.deletePost(postId);
-
+            console.log("Publicación eliminada exitosamente");
         } catch (err) {
-            setError("Error al eliminar la publicacion. El servidor no respondio.");
-            // Revertir el estado si falla
+            console.error('Error eliminando post:', err);
+            setError("Error al eliminar la publicacion.");
             setPosts(originalPosts);
         }
     };
 
-    // 5. EDITAR POST (Requisito 2.7)
     const handleEdit = async (postId, updates) => {
         try {
             const updatedPost = await postService.updatePost(postId, updates);
 
-            // Actualización Optimista: Reemplazar el post viejo con el nuevo
             setPosts(currentPosts =>
                 currentPosts.map(post =>
                     post._id === postId ? updatedPost : post
                 )
             );
             return { success: true };
-
         } catch (err) {
             setError("Error al guardar la edicion.");
             return { success: false, error: err.message };
         }
     };
 
-
     return {
         posts,
         isLoading,
         error,
-        fetchMorePosts: () => fetchPosts(false),
+        fetchMorePosts: () => fetchPosts(true),
         addNewPost,
         addComment,
         handleLike,
         handleFavorite,
-
-        // 🚀 EXPORTACIONES DE ADMINISTRACIÓN COMPLETAS 🚀
         handleDelete,
         handleEdit,
     };

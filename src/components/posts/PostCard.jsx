@@ -2,12 +2,13 @@
 
 import React, { useState } from 'react';
 import '../../styles/PostCard.css';
-import { FaHeart, FaComment, FaStar, FaEllipsisV, FaTrash, FaEdit, FaCalendarAlt, FaUserMinus, FaUserPlus } from 'react-icons/fa';
+import { FaHeart, FaComment, FaStar, FaEllipsisV, FaTrash, FaEdit, FaCalendarAlt, FaUserMinus, FaUserPlus, FaFlag } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom'; // Para navegación de perfil
 import { useAuthContext } from '../../context/AuthContext';
 import postService from '../../services/postService'; // Servicio para obtener la lista de likes
 import CommentSection from './CommentSection';
 import LikeListDropdown from './LikeListDropdown'; // Componente para mostrar la lista
+import ReportModal from '../common/ReportModal';
 
 // Funciones utilitarias (simuladas aquí, pero la lógica va en usePosts)
 const formatDate = (dateString) => {
@@ -43,6 +44,7 @@ const PostCard = ({ post, onLike, onDelete, onEdit, onFavorite, addComment, show
 
     const [isCommentsOpen, setIsCommentsOpen] = useState(false);
     const [isLikeListOpen, setIsLikeListOpen] = useState(false);
+    const [showReportModal, setShowReportModal] = useState(false);
 
     // ⚠️ ESTADOS PARA LA CARGA DE LIKES REALES ⚠️
     const [likesData, setLikesData] = useState(null);
@@ -92,6 +94,15 @@ const PostCard = ({ post, onLike, onDelete, onEdit, onFavorite, addComment, show
         }
     };
 
+    // Manejar reporte
+    const handleReportClick = () => {
+        setShowReportModal(true);
+    };
+
+    const handleReportClose = () => {
+        setShowReportModal(false);
+    };
+
 
     return (
         <article className="post-card">
@@ -114,14 +125,24 @@ const PostCard = ({ post, onLike, onDelete, onEdit, onFavorite, addComment, show
                     <span className="post-date"><FaCalendarAlt /> {formatDate(post.createdAt)}</span>
                 </div>
 
-                {/* Opciones solo si es autor */}
-                {isAuthor && (
-                    <div className="post-options">
-                        <button onClick={() => onEdit(post)} aria-label="Editar post" className="btn-icon"><FaEdit /></button>
-                        <button onClick={() => onDelete(post._id)} aria-label="Eliminar post" className="btn-icon delete-btn"><FaTrash /></button>
-                        <button className="btn-options-icon" aria-label="Más opciones"><FaEllipsisV /></button>
-                    </div>
-                )}
+                {/* Opciones */}
+                <div className="post-options">
+                    {isAuthor ? (
+                        // Opciones del autor
+                        <>
+                            <button onClick={() => onEdit(post)} aria-label="Editar post" className="btn-icon"><FaEdit /></button>
+                            <button onClick={() => onDelete(post._id)} aria-label="Eliminar post" className="btn-icon delete-btn"><FaTrash /></button>
+                            <button className="btn-options-icon" aria-label="Más opciones"><FaEllipsisV /></button>
+                        </>
+                    ) : (
+                        // Opciones para otros usuarios
+                        user && (
+                            <button onClick={handleReportClick} aria-label="Reportar post" className="btn-icon report-btn" title="Reportar contenido">
+                                <FaFlag />
+                            </button>
+                        )
+                    )}
+                </div>
             </header>
 
             {/* Contenido */}
@@ -201,6 +222,19 @@ const PostCard = ({ post, onLike, onDelete, onEdit, onFavorite, addComment, show
                         addComment={addComment}
                     />
                 </div>
+            )}
+
+            {/* MODAL DE REPORTE */}
+            {showReportModal && (
+                <ReportModal
+                    isOpen={showReportModal}
+                    onClose={handleReportClose}
+                    contentId={post._id}
+                    contentType="post"
+                    contentTitle={post.gameTitle}
+                    reportedUser={post.authorId?.alias || 'Usuario desconocido'}
+                    reportedUserId={post.authorId?._id || null}
+                />
             )}
         </article>
     );

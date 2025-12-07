@@ -2,13 +2,15 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaClock, FaThumbsUp, FaComment, FaAngleRight, FaEdit, FaTrash } from 'react-icons/fa';
+import { FaClock, FaThumbsUp, FaComment, FaAngleRight, FaEdit, FaTrash, FaFlag } from 'react-icons/fa';
 import '../../styles/GuideCard.css';
 import CommentSection from '../posts/CommentSection'; // Importar la nueva sección de comentarios
+import ReportModal from '../common/ReportModal';
 
 const GuideCard = ({ guide, currentUser, onToggleUseful, onEdit, onDelete }) => {
     const navigate = useNavigate();
     const [showComments, setShowComments] = useState(false); // Estado para mostrar/ocultar comentarios
+    const [showReportModal, setShowReportModal] = useState(false); // Estado para modal de reporte
 
     const isAuthor = currentUser && currentUser.id === guide.authorId._id;
     const isAdmin = currentUser && currentUser.role === 'admin';
@@ -21,6 +23,15 @@ const GuideCard = ({ guide, currentUser, onToggleUseful, onEdit, onDelete }) => 
     const formatDate = (dateString) => {
         if (!dateString) return 'Fecha Desconocida';
         return new Date(dateString).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+    };
+
+    // Manejar reporte
+    const handleReportClick = () => {
+        setShowReportModal(true);
+    };
+
+    const handleReportClose = () => {
+        setShowReportModal(false);
     };
 
     return (
@@ -65,6 +76,13 @@ const GuideCard = ({ guide, currentUser, onToggleUseful, onEdit, onDelete }) => 
                 <button onClick={handleViewGuide} className="btn-details">
                     Ver Guía <FaAngleRight />
                 </button>
+
+                {/* Botón de reportar para usuarios que no son autores */}
+                {!isAuthor && currentUser && (
+                    <button onClick={handleReportClick} className="btn-report" title="Reportar guía">
+                        <FaFlag />
+                    </button>
+                )}
             </div>
 
             {(isAuthor || isAdmin) && (
@@ -79,6 +97,19 @@ const GuideCard = ({ guide, currentUser, onToggleUseful, onEdit, onDelete }) => 
                 <div className="guide-card-comments-wrapper">
                     <CommentSection guideId={guide._id} />
                 </div>
+            )}
+
+            {/* MODAL DE REPORTE */}
+            {showReportModal && (
+                <ReportModal
+                    isOpen={showReportModal}
+                    onClose={handleReportClose}
+                    contentId={guide._id}
+                    contentType="guide"
+                    contentTitle={guide.title}
+                    reportedUser={guide.authorId?.alias || 'Usuario desconocido'}
+                    reportedUserId={guide.authorId?._id || null}
+                />
             )}
         </article>
     );

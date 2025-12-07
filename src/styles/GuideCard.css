@@ -1,7 +1,7 @@
 /*
  * ==========================================================
  * GUIDE CARD STYLES - PLAY-ZONE
- * Estilo para la vista previa de cada guía en el listado.
+ * Estilo para la vista previa de cada guï¿½a en el listado.
  * ==========================================================
  */
 
@@ -28,7 +28,7 @@
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 8px rgba(var(--color-primary-rgb), 0.2);
     }
 
-/* === Encabezado y Título === */
+/* === Encabezado y Tï¿½tulo === */
 .guide-header {
     margin-bottom: 20px;
     padding-bottom: 10px;
@@ -38,14 +38,14 @@
 .guide-title {
     font-size: 1.5rem;
     font-weight: 800;
-    color: var(--color-text-light); /* Título en blanco suave */
+    color: var(--color-text-light); /* Tï¿½tulo en blanco suave */
     margin-bottom: 10px;
     line-height: 1.3;
     transition: color 0.2s;
 }
 
 .guide-card:hover .guide-title {
-    color: var(--color-primary); /* Acento al título en hover */
+    color: var(--color-primary); /* Acento al tï¿½tulo en hover */
 }
 
 .guide-game-tag {
@@ -81,7 +81,7 @@
         color: var(--color-primary); /* Iconos de meta-data en acento */
     }
 
-/* === Descripción y Cuerpo === */
+/* === Descripciï¿½n y Cuerpo === */
 .guide-description {
     color: var(--color-text-secondary);
     line-height: 1.6;
@@ -89,7 +89,7 @@
     flex-grow: 1; /* Permite que la tarjeta se estire uniformemente */
 }
 
-/* === Estadísticas y Botones de Interacción === */
+/* === Estadï¿½sticas y Botones de Interacciï¿½n === */
 .guide-stats {
     display: flex;
     justify-content: space-between;
@@ -107,7 +107,7 @@
     font-size: 0.95rem;
 }
 
-/* Botón Útil (Req. 3.8) */
+/* Botï¿½n ï¿½til (Req. 3.8) */
 .btn-useful-toggle {
     display: flex;
     align-items: center;
@@ -127,7 +127,7 @@
         transform: translateY(-2px);
     }
 
-/* Estado Activo (La guía fue marcada como útil) */
+/* Estado Activo (La guï¿½a fue marcada como ï¿½til) */
 .useful-active {
     background-color: var(--color-success) !important;
     color: var(--color-background-primary) !important; /* Texto oscuro sobre verde */
@@ -139,7 +139,7 @@
         background-color: var(--color-success) !important;
     }
 
-/* Botón para Ver Guía Completa */
+/* Botï¿½n para Ver Guï¿½a Completa */
 .btn-details {
     background: none;
     border: none;
@@ -156,3 +156,21 @@
         transform: translateX(5px); /* Efecto sutil de movimiento */
         text-decoration: underline;
     }
+
+/* BotÃ³n de reporte */
+.btn-report {
+    background: none;
+    border: none;
+    color: var(--color-text-secondary);
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    padding: 8px;
+    border-radius: 6px;
+}
+
+.btn-report:hover {
+    color: #ff6b6b;
+    background: rgba(255, 107, 107, 0.1);
+    transform: scale(1.1);
+}

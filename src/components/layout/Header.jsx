@@ -53,6 +53,9 @@ const Header = () => {
 ﻿                        <button onClick={() => navigate('/guides')} className="nav-link-btn" title="Guías del Jugador">
 ﻿                            <FaBookOpen /> Guías
 ﻿                        </button>
+﻿                        <button onClick={() => navigate('/games')} className="nav-link-btn" title="Catálogo de Juegos">
+﻿                            🎮 Juegos
+﻿                        </button>
 ﻿                        <button onClick={() => navigate('/community')} className="nav-link-btn" title="Comunidad y Jugadores Activos">
 ﻿                            <FaTachometerAlt /> Comunidad
 ﻿                        </button>

@@ -4,8 +4,12 @@ import useComments from '../../hooks/useComments';
 import { FaPaperPlane, FaSpinner } from 'react-icons/fa';
 import '../../styles/CommentSection.css';
 
-const CommentSection = ({ guideId }) => {
-    const { comments, isLoading, error, addComment } = useComments(guideId);
+const CommentSection = ({ postId, guideId, postCommentsCount, addComment: parentAddComment }) => {
+    // Determinar el tipo de contenido y el ID
+    const contentType = postId ? 'post' : 'guide';
+    const contentId = postId || guideId;
+    
+    const { comments, isLoading, error, addComment } = useComments(contentId, contentType);
     const [newComment, setNewComment] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState(null);
@@ -19,6 +23,11 @@ const CommentSection = ({ guideId }) => {
         try {
             await addComment(newComment);
             setNewComment('');
+            
+            // Si hay una función parent para agregar comentario (para posts), llamarla también
+            if (parentAddComment && contentType === 'post') {
+                parentAddComment(contentId, newComment);
+            }
         } catch (err) {
             setSubmitError(err.message || 'Fallo al enviar el comentario.');
         } finally {

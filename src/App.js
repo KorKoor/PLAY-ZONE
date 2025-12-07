@@ -8,7 +8,11 @@ import ProfilePage from './pages/ProfilePage';
 import GuidesPage from './pages/GuidesPage';
 import GuideDetailPage from './pages/GuideDetailPage';
 import FavoritesPage from './pages/FavoritesPage';
+import CommunityPage from './pages/CommunityPage';
+import GameCatalogPage from './pages/GameCatalogPage';
+import GameDetailPage from './pages/GameDetailPage';
 import AdminDashboard from './pages/AdminDashboard';
+import PostDetailPage from './pages/PostDetailPage';
 import ProtectedRoute from './components/common/routes/ProtectedRoute';
 import AdminRoute from './components/common/routes/AdminRoute';
 
@@ -35,6 +39,10 @@ function AppContent() {
                 {/* Rutas Protegidas */}
                 <Route element={<ProtectedRoute />}>
                     <Route path="/home" element={<HomePage />} />
+                    <Route path="/community" element={<CommunityPage />} />
+                    <Route path="/games" element={<GameCatalogPage />} />
+                    <Route path="/games/:gameId" element={<GameDetailPage />} />
+                    <Route path="/posts/:postId" element={<PostDetailPage />} />
                     <Route path="/profile/:userId" element={<ProfilePage />} />
                     <Route path="/guides" element={<GuidesPage />} />
                     <Route path="/favorites" element={<FavoritesPage />} />

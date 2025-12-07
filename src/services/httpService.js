@@ -108,6 +108,9 @@ const httpService = async (endpoint, options = {}) => {
                 }
             }
 
+            const error = new Error();
+            error.status = response.status;
+
             let errorData;
             try {
                 errorData = await response.json();
@@ -117,12 +120,20 @@ const httpService = async (endpoint, options = {}) => {
                 if (errorData.errors && Array.isArray(errorData.errors)) {
                     console.error('🚨 ERRORES DE VALIDACIÓN:', errorData.errors);
                     const errorMessages = errorData.errors.map(err => `• ${err.field || 'Campo'}: ${err.message || err}`).join('\n');
-                    throw new Error(`Error de validación:\n${errorMessages}`);
+                    error.message = `Error de validación:\n${errorMessages}`;
+                } else {
+                    error.message = errorData.message || `Error ${response.status}: ${response.statusText}`;
                 }
                 
-                throw new Error(errorData.message || `Error ${response.status}: ${response.statusText}`);
-            } catch {
-                throw new Error(`Error ${response.status}: ${response.statusText}`);
+                throw error;
+            } catch (e) {
+                // Si el error ya fue procesado y lanzado (como el 'error' nuestro), volver a lanzarlo.
+                // Si es un error de JSON.parse, crear un nuevo mensaje.
+                if (e.status) {
+                    throw e;
+                }
+                error.message = `Error ${response.status}: ${response.statusText}`;
+                throw error;
             }
         }
 

@@ -72,6 +72,17 @@
     color: var(--color-danger);
 }
 
+.report-btn {
+    color: var(--color-text-secondary);
+    font-size: 1.1rem;
+    transition: all 0.2s;
+}
+
+.report-btn:hover {
+    color: #ff6b6b;
+    transform: scale(1.1);
+}
+
 /* === Contenido === */
 .game-title {
     font-size: 1.8rem; /* Título más grande */

@@ -1,0 +1,408 @@
+/* src/components/common/ReportModal.css */
+
+.report-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+    backdrop-filter: blur(4px);
+    overflow-y: auto; /* Permitir scroll en el overlay si es necesario */
+}
+
+.report-modal {
+    background: white;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 95vh; /* Aumentar un poco el espacio disponible */
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: modalSlideIn 0.3s ease-out;
+    margin: auto; /* Centrar verticalmente cuando hay scroll */
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.report-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    border-bottom: 2px solid #f1f3f4;
+    background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+    color: white;
+    border-radius: 15px 15px 0 0;
+    flex-shrink: 0; /* No permitir que se comprima */
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.report-modal-header h2 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+}
+
+.close-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.close-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.report-modal-body {
+    padding: 2rem;
+    overflow-y: auto; /* Hacer scrolleable el contenido del cuerpo */
+    flex: 1; /* Tomar todo el espacio disponible */
+    max-height: calc(95vh - 140px); /* Restar altura del header y footer aproximados */
+}
+
+/* Estilo personalizado para el scroll */
+.report-modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.report-modal-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.report-modal-body::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.report-modal-body::-webkit-scrollbar-thumb:hover {
+    background: #a1a1a1;
+}
+
+.content-info {
+    background: #f8f9ff;
+    border: 1px solid #e1e5f0;
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.content-info p {
+    margin: 0.5rem 0;
+    font-size: 0.95rem;
+}
+
+.content-title {
+    font-style: italic;
+    color: #666;
+    font-size: 0.9rem !important;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.report-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #2d3748;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.form-group select,
+.form-group input,
+.form-group textarea {
+    padding: 0.75rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    resize: vertical;
+}
+
+.form-group select:focus,
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #ff6b6b;
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+}
+
+.form-group select:disabled,
+.form-group input:disabled,
+.form-group textarea:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: #f7fafc;
+}
+
+.char-count {
+    text-align: right;
+    font-size: 0.8rem;
+    color: #718096;
+    margin-top: 0.25rem;
+}
+
+.report-warning {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    background: #fff5f5;
+    border: 1px solid #feb2b2;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
+.report-warning svg {
+    color: #e53e3e;
+    margin-top: 0.1rem;
+    flex-shrink: 0;
+}
+
+.report-warning span {
+    font-size: 0.9rem;
+    color: #742a2a;
+    line-height: 1.4;
+}
+
+.report-modal-footer {
+    display: flex;
+    gap: 1rem;
+    padding: 1.5rem 2rem;
+    border-top: 1px solid #f1f3f4;
+    background: #fafafa;
+    border-radius: 0 0 15px 15px;
+    flex-shrink: 0; /* No permitir que se comprima */
+    position: sticky;
+    bottom: 0;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    min-height: 44px;
+}
+
+.btn-secondary {
+    background: #e2e8f0;
+    color: #4a5568;
+    flex: 1;
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: #cbd5e0;
+    transform: translateY(-1px);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+    color: white;
+    flex: 2;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.btn-danger:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Success state */
+.report-success {
+    padding: 3rem 2rem;
+    text-align: center;
+}
+
+.success-icon {
+    font-size: 4rem;
+    color: #48bb78;
+    margin-bottom: 1rem;
+    animation: successPop 0.6s ease-out;
+}
+
+@keyframes successPop {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.report-success h3 {
+    color: #2d3748;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.report-success p {
+    color: #4a5568;
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .report-modal-overlay {
+        padding: 0.5rem;
+    }
+
+    .report-modal {
+        max-height: 96vh; /* Aumentar espacio en móviles */
+    }
+
+    .report-modal-header {
+        padding: 1rem 1.5rem;
+    }
+
+    .report-modal-header h2 {
+        font-size: 1.2rem;
+    }
+
+    .report-modal-body {
+        padding: 1.5rem;
+        max-height: calc(96vh - 140px); /* Ajustar para móviles */
+    }
+
+    .report-modal-footer {
+        padding: 1rem 1.5rem;
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    .content-info {
+        padding: 0.75rem 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .report-modal-overlay {
+        padding: 0.25rem;
+    }
+
+    .report-modal {
+        max-height: 98vh; /* Casi toda la pantalla en móviles pequeños */
+    }
+
+    .report-modal-header {
+        padding: 0.75rem 1rem;
+    }
+
+    .report-modal-body {
+        padding: 1rem;
+        max-height: calc(98vh - 130px); /* Ajustar para móviles pequeños */
+    }
+
+    .report-modal-footer {
+        padding: 0.75rem 1rem;
+    }
+
+    .form-group select,
+    .form-group input,
+    .form-group textarea {
+        padding: 0.5rem 0.75rem;
+    }
+}
+
+/* Custom scrollbar */
+.report-modal::-webkit-scrollbar {
+    width: 6px;
+}
+
+.report-modal::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.report-modal::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 3px;
+}
+
+.report-modal::-webkit-scrollbar-thumb:hover {
+    background: #a0aec0;
+}

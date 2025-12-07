@@ -1,0 +1,30 @@
+<!-- SVG para default-game.jpg placeholder -->
+<svg width="350" height="200" viewBox="0 0 350 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea"/>
+      <stop offset="100%" style="stop-color:#764ba2"/>
+    </linearGradient>
+  </defs>
+  <rect width="350" height="200" fill="url(#bgGrad)"/>
+  
+  <!-- Game controller icon -->
+  <g transform="translate(175, 100)">
+    <!-- Controller body -->
+    <ellipse cx="0" cy="0" rx="40" ry="25" fill="white" opacity="0.3"/>
+    <!-- D-pad -->
+    <rect x="-30" y="-5" width="15" height="3" fill="white" opacity="0.5"/>
+    <rect x="-25" y="-10" width="3" height="15" fill="white" opacity="0.5"/>
+    <!-- Buttons -->
+    <circle cx="20" cy="-8" r="3" fill="white" opacity="0.5"/>
+    <circle cx="28" cy="0" r="3" fill="white" opacity="0.5"/>
+    <circle cx="20" cy="8" r="3" fill="white" opacity="0.5"/>
+    <circle cx="12" cy="0" r="3" fill="white" opacity="0.5"/>
+  </g>
+  
+  <!-- Text -->
+  <text x="175" y="160" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="14" opacity="0.8">
+    Imagen no disponible
+  </text>
+</svg>

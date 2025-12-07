@@ -23,6 +23,10 @@ const postService = {
         return get(`/posts/search?q=${encodeURIComponent(query)}`);
     },
 
+    getPostById: (postId) => {
+        return get(`/posts/${postId}`);
+    },
+
     // ==========================================================
     // GESTIÓN DE PUBLICACIONES
     // ==========================================================

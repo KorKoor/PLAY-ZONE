@@ -207,9 +207,8 @@ const usePosts = (initialPage = 1) => {
 
         try {
             await postService.deletePost(postId);
-            console.log("Publicación eliminada exitosamente");
         } catch (err) {
-            console.error('Error eliminando post:', err);
+            console.error('Error al eliminar publicación:', err);
             setError("Error al eliminar la publicacion.");
             setPosts(originalPosts);
         }

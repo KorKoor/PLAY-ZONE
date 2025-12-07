@@ -1,18 +1,22 @@
-﻿// src/components/guides/GuideCard.jsx
+// src/components/guides/GuideCard.jsx
 
-import React from 'react';
-import { FaUserCircle, FaClock, FaThumbsUp, FaComment, FaAngleRight, FaEdit, FaTrash } from 'react-icons/fa';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FaClock, FaThumbsUp, FaComment, FaAngleRight, FaEdit, FaTrash } from 'react-icons/fa';
 import '../../styles/GuideCard.css';
-import { useAuthContext } from '../../context/AuthContext';
+import CommentSection from '../posts/CommentSection'; // Importar la nueva sección de comentarios
 
-const GuideCard = ({ guide, onToggleUseful, onViewDetails, onDelete, onEdit }) => {
+const GuideCard = ({ guide, currentUser, onToggleUseful, onEdit, onDelete }) => {
+    const navigate = useNavigate();
+    const [showComments, setShowComments] = useState(false); // Estado para mostrar/ocultar comentarios
 
-    // Asumimos que guide.authorId está poblado con { alias, avatarUrl, _id }
-    const { user } = useAuthContext();
-    const isAuthor = user && user.id === guide.authorId._id;
-    const isAdmin = user && user.role === 'admin';
-
+    const isAuthor = currentUser && currentUser.id === guide.authorId._id;
+    const isAdmin = currentUser && currentUser.role === 'admin';
     const isUseful = guide.isUseful || false;
+
+    const handleViewGuide = () => {
+        navigate(`/guides/${guide._id}`);
+    };
 
     const formatDate = (dateString) => {
         if (!dateString) return 'Fecha Desconocida';
@@ -22,14 +26,12 @@ const GuideCard = ({ guide, onToggleUseful, onViewDetails, onDelete, onEdit }) =
     return (
         <article className="guide-card">
             <header className="guide-header">
-                {/* Requisito 3.2: Título y juego */}
                 <h3 className="guide-title">{guide.title}</h3>
                 <span className="guide-game-tag">Juego: {guide.game}</span>
             </header>
 
             <div className="guide-meta">
-                {/* Requisito 3.2: Autor y fecha */}
-                <div className="author-info" onClick={() => console.log(`Navegar a /profile/${guide.authorId._id}`)}>
+                <div className="author-info">
                     <img
                         src={guide.authorId?.avatarUrl || '/default-avatar.png'}
                         alt={guide.authorId?.alias}
@@ -48,7 +50,6 @@ const GuideCard = ({ guide, onToggleUseful, onViewDetails, onDelete, onEdit }) =
             </p>
 
             <div className="guide-stats-footer">
-                {/* Requisito 3.8: Botón Útil */}
                 <button
                     onClick={() => onToggleUseful(guide._id, isUseful)}
                     className={`btn-useful-toggle ${isUseful ? 'useful-active' : ''}`}
@@ -56,20 +57,27 @@ const GuideCard = ({ guide, onToggleUseful, onViewDetails, onDelete, onEdit }) =
                     <FaThumbsUp /> {guide.usefulCount} Útil
                 </button>
 
-                {/* Requisito 3.5: Comentarios */}
-                <span className="stat-item"><FaComment /> {guide.commentsCount}</span>
+                {/* Convertido en un botón para mostrar/ocultar comentarios */}
+                <button onClick={() => setShowComments(!showComments)} className="stat-item-btn">
+                    <FaComment /> {guide.commentsCount} Comentarios
+                </button>
 
-                {/* Botón para ver detalles - FIX: Se corrige el tag de cierre */}
-                <button onClick={() => onViewDetails(guide._id)} className="btn-details">
+                <button onClick={handleViewGuide} className="btn-details">
                     Ver Guía <FaAngleRight />
                 </button>
             </div>
 
-            {/* Opciones de Edición/Eliminación (Req. 3.6, 4.6) */}
             {(isAuthor || isAdmin) && (
                 <div className="guide-admin-options">
-                    {isAuthor && <button onClick={() => onEdit(guide)} className="btn-icon" title="Editar"><FaEdit /></button>}
-                    <button onClick={() => onDelete(guide._id)} className="btn-icon delete-btn" title="Eliminar"><FaTrash /></button>
+                    {isAuthor && <button onClick={onEdit} className="btn-icon" title="Editar"><FaEdit /></button>}
+                    <button onClick={onDelete} className="btn-icon delete-btn" title="Eliminar"><FaTrash /></button>
+                </div>
+            )}
+            
+            {/* Renderizado condicional de la sección de comentarios (Req. 3.5) */}
+            {showComments && (
+                <div className="guide-card-comments-wrapper">
+                    <CommentSection guideId={guide._id} />
                 </div>
             )}
         </article>

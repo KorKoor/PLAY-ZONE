@@ -1,70 +1,76 @@
 // src/components/posts/CommentSection.jsx
+import React, { useState } from 'react';
+import useComments from '../../hooks/useComments';
+import { FaPaperPlane, FaSpinner } from 'react-icons/fa';
+import '../../styles/CommentSection.css';
 
-import React, { useState, useEffect } from 'react';
-import postService from '../../services/postService';
-import CommentForm from './CommentForm';
-import CommentItem from './CommentItem';
-import { FaSpinner, FaComments } from 'react-icons/fa';
-import '../../styles/CommentSection.css'; 
+const CommentSection = ({ guideId }) => {
+    const { comments, isLoading, error, addComment } = useComments(guideId);
+    const [newComment, setNewComment] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState(null);
 
-// Recibe postId y la funcion addComment del hook usePosts
-const CommentSection = ({ postId, postCommentsCount, addComment }) => {
-    const [comments, setComments] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!newComment.trim()) return;
 
-    // Cargar la lista inicial de comentarios
-    const fetchComments = async () => {
-        setIsLoading(true);
-        setError(null);
+        setIsSubmitting(true);
+        setSubmitError(null);
         try {
-            // Llama a GET /api/v1/posts/:postId/comments (Requisito 2.6)
-            const data = await postService.getComments(postId);
-            setComments(data.comments);
+            await addComment(newComment);
+            setNewComment('');
         } catch (err) {
-            setError("Fallo al cargar los comentarios.");
+            setSubmitError(err.message || 'Fallo al enviar el comentario.');
         } finally {
-            setIsLoading(false);
+            setIsSubmitting(false);
         }
     };
 
-    useEffect(() => {
-        fetchComments();
-    }, [postId]);
-
-    // Funcion que se pasa al CommentForm para actualizar el estado local
-    const handleNewComment = async (id, content) => {
-        // Llama a la logica de usePosts para actualizar el contador global
-        const newComment = await addComment(id, content);
-
-        // A�ade el comentario recien creado al array local
-        if (newComment) {
-            setComments(prev => [...prev, newComment]);
-            return true;
-        }
-        return false;
+    const formatDate = (dateString) => {
+        if (!dateString) return 'Fecha Desconocida';
+        return new Date(dateString).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
     };
 
     return (
-        <div className="comments-section-container">
-            <h4 className="section-title-comments">
-                <FaComments /> Comentarios ({postCommentsCount})
-            </h4>
+        <div className="comment-section">
+            <h4>Comentarios</h4>
+            
+            <form onSubmit={handleSubmit} className="comment-form">
+                <textarea
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    placeholder="Escribe un comentario..."
+                    rows="3"
+                    disabled={isSubmitting}
+                />
+                <button type="submit" disabled={isSubmitting || !newComment.trim()}>
+                    {isSubmitting ? <FaSpinner className="spinner" /> : <FaPaperPlane />}
+                    <span>Publicar</span>
+                </button>
+            </form>
+            {submitError && <p className="error-message">{submitError}</p>}
 
-            {/* Formulario de creaci�n (Requisito 2.5) */}
-            <CommentForm postId={postId} onCommentAdded={handleNewComment} />
+            <div className="comment-list">
+                {isLoading && <div className="loading-message">Cargando comentarios...</div>}
+                {error && <div className="error-message">{error}</div>}
 
-            <div className="comments-list">
-                {isLoading && <div className="comments-loading"><FaSpinner className="spinner" /> Cargando...</div>}
-                {error && <p className="error-message">{error}</p>}
-
-                {/* Mapeo de la lista de comentarios */}
                 {!isLoading && comments.length === 0 && (
-                    <p className="no-comments-message">Se el primero en comentar.</p>
+                    <p>No hay comentarios todavía. ¡Sé el primero en comentar!</p>
                 )}
 
                 {comments.map(comment => (
-                    <CommentItem key={comment._id} comment={comment} />
+                    <div key={comment._id} className="comment-item">
+                        <div className="comment-author">
+                            <img
+                                src={comment.author?.avatarUrl || '/default-avatar.png'}
+                                alt={comment.author?.alias}
+                                className="author-avatar-small"
+                            />
+                            <strong>{comment.author?.alias || 'Usuario Anónimo'}</strong>
+                        </div>
+                        <p className="comment-content">{comment.content}</p>
+                        <span className="comment-date">{formatDate(comment.createdAt)}</span>
+                    </div>
                 ))}
             </div>
         </div>

@@ -1,15 +1,17 @@
-﻿// src/pages/GuidesPage.jsx
+// src/pages/GuidesPage.jsx
 
 import React, { useState } from 'react';
-import useGuides from '../hooks/useGuides'; // Hook para la lógica de guias
-import GuideForm from '../components/guides/GuideForm'; // Formulario modal
-import GuideCard from '../components/guides/GuideCard'; // Componente de tarjeta
-import Header from '../components/layout/Header'; // Header ya existente
+import useGuides from '../hooks/useGuides';
+import useAuth from '../hooks/useAuth'; // Importar hook de autenticación
+import guideService from '../services/guideService'; // Importar el servicio
+import GuideForm from '../components/guides/GuideForm';
+import GuideCard from '../components/guides/GuideCard';
+import Header from '../components/layout/Header';
 import '../styles/guideStyles.css';
-import { FaBookOpen, FaFilter, FaPlusCircle, FaSpinner, FaSearch } from 'react-icons/fa'; // Iconos
+import { FaBookOpen, FaFilter, FaPlusCircle, FaSpinner } from 'react-icons/fa';
 
 const GuidesPage = () => {
-    // Extraer lógica y estados del custom hook
+    const { user } = useAuth(); // Obtener el usuario actual
     const {
         guides,
         isLoading,
@@ -17,51 +19,76 @@ const GuidesPage = () => {
         filters,
         applyFilters,
         fetchMore,
-        handleToggleUseful // Funcion para marcar como util (Req. 3.8)
+        handleToggleUseful,
+        addNewGuide,
+        removeGuide,
+        updateGuideInList
     } = useGuides();
 
     const [isFormOpen, setIsFormOpen] = useState(false);
-    const [searchTerm, setSearchTerm] = useState('');
+    const [editingGuide, setEditingGuide] = useState(null); // Estado para la guía en edición
 
-    // Manejadores de Filtro y Ordenamiento
-    const handleSortChange = (e) => {
-        applyFilters({ sortBy: e.target.value });
-    };
-
-    // Maneja la busqueda enviada desde el Header
     const handleSearch = (term) => {
         applyFilters({ search: term });
     };
 
-    // Llama al hook que maneja la inserción de la nueva guia
-    const handleGuideCreated = (newGuide) => {
-        // En una app real, addNewGuide se implementaria en el hook useGuides
-        // Para fines de esta implementacion, forzamos un reset al feed
-        applyFilters({});
+    const handleSortChange = (e) => {
+        applyFilters({ sortBy: e.target.value });
+    };
+
+    // Abre el formulario para crear una nueva guía
+    const handleCreateClick = () => {
+        setEditingGuide(null);
+        setIsFormOpen(true);
+    };
+
+    // Abre el formulario para editar una guía existente
+    const handleEditClick = (guide) => {
+        setEditingGuide(guide);
+        setIsFormOpen(true);
+    };
+
+    // Cierra el formulario
+    const handleCloseForm = () => {
         setIsFormOpen(false);
+        setEditingGuide(null);
     };
 
-    const handleViewDetails = (guideId) => {
-        // Logica para navegar a la pagina de detalle de la guia (Ej: /guides/123)
-        console.log(`Navegar a la guia de detalle: /guides/${guideId}`);
-        // navigate(`/guides/${guideId}`); 
+    // Se llama cuando el formulario se envía con éxito
+    const handleFormSuccess = (guide) => {
+        if (editingGuide) {
+            updateGuideInList(guide); // Actualiza la guía en la lista
+        } else {
+            addNewGuide(guide); // Añade la nueva guía a la lista
+        }
+        handleCloseForm();
     };
-
+    
+    // Manejador para eliminar una guía (Req. 3.6)
+    const handleDeleteClick = async (guideId) => {
+        if (window.confirm('¿Estás seguro de que quieres eliminar esta guía? Esta acción es irreversible.')) {
+            try {
+                await guideService.deleteGuide(guideId);
+                removeGuide(guideId); // Elimina la guía del estado local
+            } catch (err) {
+                alert('Error al eliminar la guía. Por favor, inténtalo de nuevo.');
+                console.error(err);
+            }
+        }
+    };
 
     return (
         <div className="guides-page-container">
-            {/* El Header ya incluye la barra de búsqueda y la navegación */}
             <Header onSearch={handleSearch} />
 
             <main className="guides-main-content">
                 <header className="guides-header">
                     <h1><FaBookOpen /> Guías del Jugador</h1>
-                    <button onClick={() => setIsFormOpen(true)} className="btn btn-primary" disabled={isLoading}>
+                    <button onClick={handleCreateClick} className="btn btn-primary" disabled={isLoading}>
                         <FaPlusCircle /> Crear Guía
                     </button>
                 </header>
 
-                {/* Controles de Filtro y Ordenamiento (Req. 3.7) */}
                 <div className="guides-controls">
                     <div className="sort-controls">
                         <FaFilter />
@@ -71,35 +98,31 @@ const GuidesPage = () => {
                             <option value="popularity">Más Útiles</option>
                         </select>
                     </div>
-                    {/* Placeholder para barra de busqueda local si el Header no es suficiente */}
-                    {/* <div className="local-search-control"><FaSearch /> <input type="text" placeholder="Buscar en guias..." /></div> */}
                 </div>
 
-                {/* Listado de Guías */}
                 <section className="guides-list-section">
                     {isLoading && guides.length === 0 && <div className="loading-message"><FaSpinner className="spinner" /> Cargando guías...</div>}
                     {error && <p className="error-message">{error}</p>}
 
                     <div className="guides-list">
-                        {/* ⚠️ Mapeo de Guías (Req. 3.3) ⚠️ */}
                         {guides.map(guide => (
                             <GuideCard
                                 key={guide._id}
                                 guide={guide}
-                                onToggleUseful={handleToggleUseful} // Pasa la funcion de interaccion
-                                onViewDetails={handleViewDetails} // Pasa la funcion de navegacion
+                                currentUser={user} // Pasar el usuario para verificar la autoría
+                                onToggleUseful={handleToggleUseful}
+                                onEdit={() => handleEditClick(guide)} // Pasar la función de edición
+                                onDelete={() => handleDeleteClick(guide._id)} // Pasar la función de eliminación
                             />
                         ))}
                     </div>
 
-                    {/* Mensaje de No Contenido */}
                     {!isLoading && guides.length === 0 && !error && (
                         <div className="no-guides-message">
                             No se encontraron guías. Sé el primero en compartir tu conocimiento.
                         </div>
                     )}
 
-                    {/* Botón de Cargar Más (Paginación) */}
                     {!isLoading && guides.length > 0 && (
                         <button onClick={fetchMore} className="btn btn-secondary btn-load-more">
                             Cargar Más Guías
@@ -108,10 +131,13 @@ const GuidesPage = () => {
                 </section>
             </main>
 
-            {/* Modal de Creación */}
             {isFormOpen && (
                 <div className="modal-overlay">
-                    <GuideForm onClose={() => setIsFormOpen(false)} onSuccess={handleGuideCreated} />
+                    <GuideForm
+                        guideToEdit={editingGuide}
+                        onClose={handleCloseForm}
+                        onSuccess={handleFormSuccess}
+                    />
                 </div>
             )}
         </div>

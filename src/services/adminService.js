@@ -12,7 +12,6 @@ const adminService = {
             const endpoint = `/admin/reports${params.toString() ? `?${params}` : ''}`;
             return await get(endpoint);
         } catch (error) {
-            console.error('Error al obtener reportes:', error);
             throw error;
         }
     },
@@ -81,7 +80,7 @@ const adminService = {
             });
             if (search) params.append('search', search);
             
-            return await get(`/admin/games?${params}`);
+            return await get(`/games?${params}`);
         } catch (error) {
             console.error('Error al obtener juegos:', error);
             throw error;
@@ -90,16 +89,18 @@ const adminService = {
 
     createGame: async (gameData) => {
         try {
-            return await post('/admin/games', gameData);
+            console.log('Enviando datos del juego al backend:', gameData);
+            return await post('/games', gameData);
         } catch (error) {
             console.error('Error al crear juego:', error);
+            console.error('Datos que causaron el error:', gameData);
             throw error;
         }
     },
 
     updateGame: async (gameId, gameData) => {
         try {
-            return await put(`/admin/games/${gameId}`, gameData);
+            return await put(`/games/${gameId}`, gameData);
         } catch (error) {
             console.error('Error al actualizar juego:', error);
             throw error;
@@ -108,7 +109,7 @@ const adminService = {
 
     deleteGame: async (gameId) => {
         try {
-            return await del(`/admin/games/${gameId}`);
+            return await del(`/games/${gameId}`);
         } catch (error) {
             console.error('Error al eliminar juego:', error);
             throw error;

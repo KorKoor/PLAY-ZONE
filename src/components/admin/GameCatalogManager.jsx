@@ -1,6 +1,6 @@
 // src/components/admin/GameCatalogManager.jsx
 import React, { useState, useEffect } from 'react';
-import { FaPlus, FaEdit, FaTrash, FaSearch, FaGamepad, FaEye, FaSave, FaTimes } from 'react-icons/fa';
+import { FaPlus, FaEdit, FaTrash, FaSearch, FaGamepad, FaSave, FaTimes } from 'react-icons/fa';
 import adminService from '../../services/adminService';
 import './GameCatalogManager.css';
 
@@ -16,39 +16,47 @@ const GameCatalogManager = () => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    genre: '',
+    genre: [],
     developer: '',
     publisher: '',
     releaseDate: '',
+    rating: '',
+    price: '',
     imageUrl: '',
-    platforms: [],
+    trailerUrl: '',
+    platform: [],
     tags: [],
     metacriticScore: '',
-    steamUrl: '',
-    officialUrl: ''
+    featured: false
   });
 
   const gamesPerPage = 10;
   const genres = [
     'Acción', 'Aventura', 'RPG', 'Estrategia', 'Simulación', 'Deportes',
-    'Carreras', 'Puzzle', 'Terror', 'Shooter', 'Plataformas', 'Indie'
+    'Carreras', 'Puzzle', 'Terror', 'Shooter', 'Plataformas', 'Indie', 'Mundo Abierto'
   ];
-  const platforms = ['PC', 'PlayStation', 'Xbox', 'Nintendo Switch', 'Mobile'];
+  const platforms = ['PC', 'PlayStation 5', 'PlayStation 4', 'Xbox Series X/S', 'Xbox One', 'Nintendo Switch', 'Mobile', 'VR'];
+  const ratings = ['E', 'E10+', 'T', 'M', 'AO', 'RP'];
 
   useEffect(() => {
     fetchGames();
-  }, [currentPage, searchTerm]);
+  }, [currentPage, searchTerm]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchGames = async () => {
     try {
       setLoading(true);
       const response = await adminService.getGames(currentPage, gamesPerPage, searchTerm);
-      setGames(Array.isArray(response?.data?.games) ? response.data.games : []);
-      setTotalPages(response?.data?.totalPages || 1);
+      
+      // Asegurar que games sea siempre un array válido
+      const gamesData = response?.data?.games || response?.games || response?.data || response || [];
+      const validGames = Array.isArray(gamesData) ? gamesData.filter(game => game && typeof game === 'object') : [];
+      
+      setGames(validGames);
+      setTotalPages(response?.data?.totalPages || response?.totalPages || 1);
       setError(null);
     } catch (err) {
       setError('Error al cargar los juegos');
-      setGames([]); // Asegurar que games sea siempre un array
+      setGames([]);
       console.error('Error fetching games:', err);
     } finally {
       setLoading(false);
@@ -66,16 +74,18 @@ const GameCatalogManager = () => {
     setFormData({
       title: '',
       description: '',
-      genre: '',
+      genre: [],
       developer: '',
       publisher: '',
       releaseDate: '',
+      rating: '',
+      price: '',
       imageUrl: '',
-      platforms: [],
+      trailerUrl: '',
+      platform: [],
       tags: [],
       metacriticScore: '',
-      steamUrl: '',
-      officialUrl: ''
+      featured: false
     });
     setShowModal(true);
   };
@@ -85,16 +95,18 @@ const GameCatalogManager = () => {
     setFormData({
       title: game.title || '',
       description: game.description || '',
-      genre: game.genre || '',
+      genre: Array.isArray(game.genre) ? game.genre : (game.genre ? [game.genre] : []),
       developer: game.developer || '',
       publisher: game.publisher || '',
       releaseDate: game.releaseDate ? game.releaseDate.split('T')[0] : '',
+      rating: game.rating || '',
+      price: game.price || '',
       imageUrl: game.imageUrl || '',
-      platforms: game.platforms || [],
-      tags: game.tags || [],
-      metacriticScore: game.metacriticScore || '',
-      steamUrl: game.steamUrl || '',
-      officialUrl: game.officialUrl || ''
+      trailerUrl: game.trailerUrl || '',
+      platform: Array.isArray(game.platform) ? game.platform : (game.platforms || []),
+      tags: Array.isArray(game.tags) ? game.tags : [],
+      metacriticScore: game.metacriticScore ? String(game.metacriticScore) : '',
+      featured: Boolean(game.featured)
     });
     setShowModal(true);
   };
@@ -108,7 +120,9 @@ const GameCatalogManager = () => {
       await adminService.deleteGame(gameId);
       setGames((prevGames) => {
         const gamesArray = Array.isArray(prevGames) ? prevGames : [];
-        return gamesArray.filter(game => game._id !== gameId && game.id !== gameId);
+        return gamesArray.filter(game => 
+          game && (game._id !== gameId && game.id !== gameId)
+        );
       });
       alert('Juego eliminado exitosamente');
     } catch (err) {
@@ -121,26 +135,80 @@ const GameCatalogManager = () => {
     e.preventDefault();
 
     try {
+      // Validar campos obligatorios
+      if (!formData.title || !formData.title.trim()) {
+        alert('El título del juego es obligatorio');
+        return;
+      }
+      if (!formData.description || !formData.description.trim()) {
+        alert('La descripción del juego es obligatoria');
+        return;
+      }
+      if (!Array.isArray(formData.genre) || formData.genre.length === 0) {
+        alert('Debe seleccionar al menos un género');
+        return;
+      }
+      if (!Array.isArray(formData.platform) || formData.platform.length === 0) {
+        alert('Debe seleccionar al menos una plataforma');
+        return;
+      }
+      if (!formData.developer || !formData.developer.trim()) {
+        alert('El desarrollador es obligatorio');
+        return;
+      }
+      if (!formData.publisher || !formData.publisher.trim()) {
+        alert('El publicador es obligatorio');
+        return;
+      }
+      if (!formData.releaseDate) {
+        alert('La fecha de lanzamiento es obligatoria');
+        return;
+      }
+      if (!formData.rating) {
+        alert('La clasificación por edad es obligatoria');
+        return;
+      }
+
       const gameData = {
-        ...formData,
-        metacriticScore: formData.metacriticScore ? parseInt(formData.metacriticScore) : null
+        title: formData.title.trim(),
+        description: formData.description.trim(),
+        genre: formData.genre,
+        platform: formData.platform,
+        developer: formData.developer.trim(),
+        publisher: formData.publisher.trim(),
+        releaseDate: formData.releaseDate,
+        rating: formData.rating,
+        ...(formData.price && { price: parseFloat(formData.price) }),
+        ...(formData.imageUrl?.trim() && { imageUrl: formData.imageUrl.trim() }),
+        ...(formData.trailerUrl?.trim() && { trailerUrl: formData.trailerUrl.trim() }),
+        ...(Array.isArray(formData.tags) && formData.tags.length > 0 && { tags: formData.tags }),
+        ...(formData.metacriticScore && { metacriticScore: parseInt(formData.metacriticScore) }),
+        featured: Boolean(formData.featured),
+        isActive: true
       };
+      
+      // Debug: Mostrar datos que se van a enviar
+      console.log('Datos del juego a enviar:', gameData);
 
       if (editingGame) {
         const gameId = editingGame._id || editingGame.id;
         const response = await adminService.updateGame(gameId, gameData);
+        const updatedGame = response?.data || response;
+        
         setGames((prevGames) => {
           const gamesArray = Array.isArray(prevGames) ? prevGames : [];
           return gamesArray.map(game => 
-            (game._id === gameId || game.id === gameId) ? response.data : game
-          );
+            (game && (game._id === gameId || game.id === gameId)) ? updatedGame : game
+          ).filter(game => game && typeof game === 'object');
         });
         alert('Juego actualizado exitosamente');
       } else {
         const response = await adminService.createGame(gameData);
+        const newGame = response?.data || response;
+        
         setGames((prevGames) => {
           const gamesArray = Array.isArray(prevGames) ? prevGames : [];
-          return [response.data, ...gamesArray];
+          return newGame ? [newGame, ...gamesArray] : gamesArray;
         });
         alert('Juego creado exitosamente');
       }
@@ -149,15 +217,23 @@ const GameCatalogManager = () => {
       setEditingGame(null);
     } catch (err) {
       console.error('Error saving game:', err);
-      alert('Error al guardar el juego');
+      console.error('Error details:', err.message);
+      
+      // Mostrar error más específico al usuario
+      let errorMessage = 'Error al guardar el juego';
+      if (err.message.includes('400')) {
+        errorMessage = 'Error de validación: Verifica que todos los campos requeridos estén completos y tengan el formato correcto';
+      }
+      
+      alert(errorMessage + '\n\nDetalles técnicos: ' + err.message);
     }
   };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: type === 'checkbox' ? checked : (value || '')
     }));
   };
 
@@ -238,12 +314,12 @@ const GameCatalogManager = () => {
                 <p>No hay juegos que coincidan con la búsqueda actual.</p>
               </div>
             ) : (
-              games.map(game => (
+              games.filter(game => game && (game._id || game.id)).map((game, index) => (
                 <div key={game._id || game.id} className="game-card">
                   <div className="game-image">
                     <img
                       src={game.imageUrl || '/default-game.jpg'}
-                      alt={game.title}
+                      alt={game.name || game.title || 'Sin título'}
                       onError={(e) => {
                         e.target.src = '/default-game.jpg';
                       }}
@@ -251,16 +327,32 @@ const GameCatalogManager = () => {
                   </div>
                   
                   <div className="game-info">
-                    <h3 className="game-title">{game.title}</h3>
-                    <p className="game-genre">{game.genre}</p>
-                    <p className="game-developer">por {game.developer}</p>
+                    <h3 className="game-title">{game.title || game.name || 'Sin título'}</h3>
+                    <p className="game-genre">{Array.isArray(game.genre) ? game.genre.join(', ') : game.genre || 'Sin género'}</p>
+                    <p className="game-developer">por {game.developer || 'Desarrollador desconocido'}</p>
+                    
+                    {game.price && (
+                      <p className="game-price">
+                        <strong>Precio:</strong> ${game.price}
+                      </p>
+                    )}
+                    
+                    {game.rating && (
+                      <p className="game-rating">
+                        <strong>Clasificación:</strong> {game.rating}
+                      </p>
+                    )}
+                    
+                    {game.featured && (
+                      <span className="featured-badge">⭐ Destacado</span>
+                    )}
                     
                     {game.metacriticScore && (
                       <div className={`score-badge ${
                         game.metacriticScore >= 80 ? 'high' :
                         game.metacriticScore >= 60 ? 'medium' : 'low'
                       }`}>
-                        {game.metacriticScore}
+                        Metacritic: {game.metacriticScore}
                       </div>
                     )}
                   </div>
@@ -282,7 +374,7 @@ const GameCatalogManager = () => {
                     </button>
                   </div>
                 </div>
-              ))
+                ))
             )}
           </div>
 
@@ -336,64 +428,69 @@ const GameCatalogManager = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="genre">Género</label>
-                  <select
-                    id="genre"
-                    name="genre"
-                    value={formData.genre}
-                    onChange={handleInputChange}
-                  >
-                    <option value="">Seleccionar género</option>
+                  <label>Géneros *</label>
+                  <div className="checkbox-group">
                     {genres.map(genre => (
-                      <option key={genre} value={genre}>{genre}</option>
+                      <label key={genre} className="checkbox-label">
+                        <input
+                          type="checkbox"
+                          checked={formData.genre.includes(genre)}
+                          onChange={(e) => handleArrayChange('genre', genre, e.target.checked)}
+                        />
+                        {genre}
+                      </label>
                     ))}
-                  </select>
+                  </div>
                 </div>
               </div>
 
               <div className="form-group">
-                <label htmlFor="description">Descripción</label>
+                <label htmlFor="description">Descripción *</label>
                 <textarea
                   id="description"
                   name="description"
                   value={formData.description}
                   onChange={handleInputChange}
                   rows="3"
+                  required
                 />
               </div>
 
               <div className="form-row">
                 <div className="form-group">
-                  <label htmlFor="developer">Desarrollador</label>
+                  <label htmlFor="developer">Desarrollador *</label>
                   <input
                     type="text"
                     id="developer"
                     name="developer"
                     value={formData.developer}
                     onChange={handleInputChange}
+                    required
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="publisher">Publicador</label>
+                  <label htmlFor="publisher">Publicador *</label>
                   <input
                     type="text"
                     id="publisher"
                     name="publisher"
                     value={formData.publisher}
                     onChange={handleInputChange}
+                    required
                   />
                 </div>
               </div>
 
               <div className="form-row">
                 <div className="form-group">
-                  <label htmlFor="releaseDate">Fecha de Lanzamiento</label>
+                  <label htmlFor="releaseDate">Fecha de Lanzamiento *</label>
                   <input
                     type="date"
                     id="releaseDate"
                     name="releaseDate"
                     value={formData.releaseDate}
                     onChange={handleInputChange}
+                    required
                   />
                 </div>
                 <div className="form-group">
@@ -411,14 +508,44 @@ const GameCatalogManager = () => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="imageUrl">URL de Imagen</label>
-                <input
-                  type="url"
-                  id="imageUrl"
-                  name="imageUrl"
-                  value={formData.imageUrl}
-                  onChange={handleInputChange}
-                />
+                <label>Clasificación por Edad *</label>
+                <div className="radio-group">
+                  {ratings.map(rating => (
+                    <label key={rating} className="radio-label">
+                      <input
+                        type="radio"
+                        name="rating"
+                        value={rating}
+                        checked={formData.rating === rating}
+                        onChange={handleInputChange}
+                      />
+                      {rating}
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="imageUrl">URL de Imagen</label>
+                  <input
+                    type="url"
+                    id="imageUrl"
+                    name="imageUrl"
+                    value={formData.imageUrl}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="trailerUrl">URL del Trailer</label>
+                  <input
+                    type="url"
+                    id="trailerUrl"
+                    name="trailerUrl"
+                    value={formData.trailerUrl}
+                    onChange={handleInputChange}
+                  />
+                </div>
               </div>
 
               <div className="form-group">
@@ -428,8 +555,8 @@ const GameCatalogManager = () => {
                     <label key={platform} className="checkbox-label">
                       <input
                         type="checkbox"
-                        checked={formData.platforms.includes(platform)}
-                        onChange={(e) => handleArrayChange('platforms', platform, e.target.checked)}
+                        checked={formData.platform.includes(platform)}
+                        onChange={(e) => handleArrayChange('platform', platform, e.target.checked)}
                       />
                       {platform}
                     </label>
@@ -446,6 +573,33 @@ const GameCatalogManager = () => {
                   onChange={handleTagsChange}
                   placeholder="multijugador, cooperativo, online..."
                 />
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="price">Precio</label>
+                  <input
+                    type="number"
+                    id="price"
+                    name="price"
+                    value={formData.price}
+                    onChange={handleInputChange}
+                    min="0"
+                    step="0.01"
+                    placeholder="0.00"
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      name="featured"
+                      checked={formData.featured}
+                      onChange={handleInputChange}
+                    />
+                    Juego destacado
+                  </label>
+                </div>
               </div>
 
               <div className="form-row">

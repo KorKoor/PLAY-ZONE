@@ -12,7 +12,7 @@ const useGuides = () => {
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
 
-    // Estados para ordenamiento y búsqueda (Req. 3.4, 3.7)
+    // Estados para ordenamiento y busqueda
     const [filters, setFilters] = useState({
         sortBy: 'date', // 'date' o 'popularity'
         search: ''
@@ -34,43 +34,37 @@ const useGuides = () => {
                 limit: GUIDES_PER_PAGE
             };
 
-            // Llama a guideService.getGuides(params)
-            const data = await guideService.getGuides(params);
+            const data = await guideService.getAllGuides(params);
 
             setGuides(prevGuides => reset ? data.guides : [...prevGuides, ...data.guides]);
             setHasMore(data.guides.length === GUIDES_PER_PAGE);
 
             if (reset) {
-                setPage(2); // Inicia la paginacion en la pagina 2
-            } else if (!reset) {
+                setPage(2);
+            } else {
                 setPage(currentPage + 1);
             }
 
         } catch (err) {
-            setError(err.message || "Fallo al cargar las guías.");
+            setError(err.message || "Fallo al cargar las guias.");
         } finally {
             setIsLoading(false);
         }
     }, [filters, page, hasMore]);
 
 
-    // Efecto principal para cargar la data o aplicar filtros
     useEffect(() => {
-        fetchGuides(true); // Carga inicial o al cambiar filtros
+        fetchGuides(true);
     }, [filters, fetchGuides]);
 
-    // Función para manejar la búsqueda o el ordenamiento (Req. 3.4, 3.7)
     const applyFilters = (newFilters) => {
         setFilters(prev => ({ ...prev, ...newFilters }));
-        // Forzamos el reset de paginación al aplicar nuevos filtros
         setPage(1);
         setGuides([]);
         setHasMore(true);
     };
 
-    // Lógica para marcar/quitar "útil" (Req. 3.8)
     const handleToggleUseful = async (guideId, currentIsUseful) => {
-        // Optimistic UI Update
         setGuides(currentGuides =>
             currentGuides.map(guide =>
                 guide._id === guideId ? {
@@ -81,11 +75,9 @@ const useGuides = () => {
             )
         );
         try {
-            // Llama a POST /api/v1/guides/:guideId/useful
             await guideService.toggleUseful(guideId);
         } catch (err) {
-            setError("Fallo al registrar la marca de útil.");
-            // Revertir el estado si falla
+            setError("Fallo al registrar la marca de util.");
             setGuides(currentGuides =>
                 currentGuides.map(guide =>
                     guide._id === guideId ? {
@@ -98,11 +90,19 @@ const useGuides = () => {
         }
     };
 
-    // Función para insertar la guía recién creada (usada por el GuideForm)
     const addNewGuide = (newGuide) => {
         setGuides(prev => [newGuide, ...prev]);
     };
 
+    const removeGuide = (guideId) => {
+        setGuides(prev => prev.filter(guide => guide._id !== guideId));
+    };
+
+    const updateGuideInList = (updatedGuide) => {
+        setGuides(prev => prev.map(guide => 
+            guide._id === updatedGuide._id ? updatedGuide : guide
+        ));
+    };
 
     return {
         guides,
@@ -113,7 +113,8 @@ const useGuides = () => {
         fetchMore: () => fetchGuides(false),
         handleToggleUseful,
         addNewGuide,
-        // (update, delete y getById irían en otros hooks o servicios)
+        removeGuide,
+        updateGuideInList,
     };
 };
 

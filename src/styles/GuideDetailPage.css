@@ -1,0 +1,120 @@
+/* Estilos para GuideDetailPage */
+
+.guide-detail-header {
+  margin-bottom: 2rem;
+}
+
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.btn-back:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-2px);
+}
+
+.guide-detail-card {
+  background: var(--color-card);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.guide-detail-card .guide-title {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--color-text-primary);
+}
+
+.guide-description {
+  margin: 2rem 0;
+}
+
+.guide-description h2 {
+  color: var(--color-primary);
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--color-primary);
+  padding-bottom: 0.5rem;
+}
+
+.guide-steps {
+  margin: 2rem 0;
+}
+
+.guide-steps h2 {
+  color: var(--color-primary);
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--color-primary);
+  padding-bottom: 0.5rem;
+}
+
+.guide-step {
+  background: #f8f9fa;
+  border-left: 4px solid var(--color-primary);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border-radius: 0 8px 8px 0;
+}
+
+.guide-step h3 {
+  color: var(--color-primary);
+  font-size: 1.2rem;
+  margin-bottom: 0.75rem;
+}
+
+.guide-step p {
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+
+.guide-comments-section {
+  background: var(--color-card);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.loading-message,
+.error-message {
+  text-align: center;
+  padding: 4rem 2rem;
+  font-size: 1.2rem;
+  color: var(--color-text-secondary);
+}
+
+.error-message .btn {
+  margin-top: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .guide-detail-card {
+    padding: 1rem;
+  }
+  
+  .guide-detail-card .guide-title {
+    font-size: 2rem;
+  }
+  
+  .guide-step {
+    padding: 1rem;
+  }
+  
+  .guide-comments-section {
+    padding: 1rem;
+  }
+}

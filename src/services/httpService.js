@@ -111,6 +111,15 @@ const httpService = async (endpoint, options = {}) => {
             let errorData;
             try {
                 errorData = await response.json();
+                console.error('Error del servidor:', errorData);
+                
+                // Mostrar errores de validación detallados si existen
+                if (errorData.errors && Array.isArray(errorData.errors)) {
+                    console.error('🚨 ERRORES DE VALIDACIÓN:', errorData.errors);
+                    const errorMessages = errorData.errors.map(err => `• ${err.field || 'Campo'}: ${err.message || err}`).join('\n');
+                    throw new Error(`Error de validación:\n${errorMessages}`);
+                }
+                
                 throw new Error(errorData.message || `Error ${response.status}: ${response.statusText}`);
             } catch {
                 throw new Error(`Error ${response.status}: ${response.statusText}`);

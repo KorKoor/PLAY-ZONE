@@ -53,14 +53,11 @@ const postService = {
 
     // Requisito 2.11: Marcar/Quitar como Favorita
     toggleFavorite: async (postId) => {
-        console.log('🚀 toggleFavorite called with postId:', postId);
-        
         try {
             const result = await put(`/posts/${postId}/favorite`);
-            console.log('✅ toggleFavorite success:', result);
             return result;
         } catch (error) {
-            console.error('❌ toggleFavorite failed:', error);
+            console.error('Error al alternar favorito:', error);
             throw error;
         }
     },
@@ -71,17 +68,10 @@ const postService = {
         const workingEndpoint = '/favorites';
 
         try {
-            console.log(`🔍 Obteniendo favoritos desde: ${workingEndpoint}`);
             const result = await get(workingEndpoint);
-            console.log(`✅ Favoritos obtenidos exitosamente:`, result);
-            console.log(`📊 Cantidad de favoritos encontrados:`, result?.favorites?.length || result?.length || 0);
-            console.log(`📋 Estructura de datos recibida:`, Object.keys(result || {}));
             return result;
         } catch (error) {
-            console.error(`❌ Error obteniendo favoritos:`, error);
-            
-            // Retornar lista vacía en caso de error
-            console.warn('🚫 Error obteniendo favoritos, retornando lista vacía');
+            console.error('Error obteniendo favoritos:', error);
             return { favorites: [] };
         }
     },

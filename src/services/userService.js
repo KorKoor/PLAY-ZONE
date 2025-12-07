@@ -7,7 +7,6 @@ const userService = {
         try {
             return await post('/auth/register', userData);
         } catch (error) {
-            console.error('Error en registerUser:', error);
             throw error;
         }
     },
@@ -16,7 +15,6 @@ const userService = {
         try {
             return await post('/auth/login', credentials);
         } catch (error) {
-            console.error('Error en loginUser:', error);
             throw error;
         }
     },
@@ -25,7 +23,6 @@ const userService = {
         try {
             return await post('/auth/check-email', { email });
         } catch (error) {
-            console.error('Error en checkEmail:', error);
             throw error;
         }
     },

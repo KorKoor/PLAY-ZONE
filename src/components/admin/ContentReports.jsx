@@ -23,9 +23,8 @@ const ContentReports = () => {
       setReports(Array.isArray(response?.data) ? response.data : []);
       setError(null);
     } catch (err) {
-      setError('Error al cargar los reportes');
-      setReports([]); // Asegurar que reports sea siempre un array
-      console.error('Error fetching reports:', err);
+      setError('Error al cargar reportes');
+      setReports([]);
     } finally {
       setLoading(false);
     }
@@ -43,7 +42,6 @@ const ContentReports = () => {
         );
       });
     } catch (err) {
-      console.error('Error approving report:', err);
       alert('Error al aprobar el reporte');
     }
   };

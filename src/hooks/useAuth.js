@@ -33,7 +33,6 @@ const useAuth = () => {
                 const decoded = jwtDecode(token);
 
                 if (decoded.exp * 1000 < Date.now()) {
-                    console.warn('Token expirado. Sesión cerrada automáticamente.');
                     localStorage.removeItem('authToken');
                     localStorage.removeItem('authUser');
                     return null;
@@ -43,7 +42,6 @@ const useAuth = () => {
                 
                 // Verificar si el usuario está baneado
                 if (userData && userData.isBanned) {
-                    console.warn('Usuario baneado. Cerrando sesión.');
                     localStorage.removeItem('authToken');
                     localStorage.removeItem('authUser');
                     return null;
@@ -70,22 +68,17 @@ const useAuth = () => {
             const updatedUser = response.data || response;
 
             if (updatedUser.isBanned) {
-                console.warn('Usuario baneado detectado');
+                const banMessage = updatedUser.banReason 
+                    ? `🚫 CUENTA SUSPENDIDA\n\nTu cuenta ha sido suspendida.\n\nMotivo: ${updatedUser.banReason}\n\nSerás redirigido al login.`
+                    : '🚫 CUENTA SUSPENDIDA\n\nTu cuenta ha sido suspendida.\n\nSerás redirigido al login.';
                 
-                // TEMPORALMENTE DESHABILITADO para diagnosticar problema de logout en favoritos
-                // const banMessage = updatedUser.banReason 
-                //     ? `🚫 CUENTA SUSPENDIDA\n\nTu cuenta ha sido suspendida.\n\nMotivo: ${updatedUser.banReason}\n\nSerás redirigido al login.`
-                //     : '🚫 CUENTA SUSPENDIDA\n\nTu cuenta ha sido suspendida.\n\nSerás redirigido al login.';
+                alert(banMessage);
                 
-                // // Mostrar mensaje inmediatamente
-                // alert(banMessage);
+                setTimeout(() => {
+                    logout();
+                }, 1000);
                 
-                // // Limpiar sesión después del mensaje
-                // setTimeout(() => {
-                //     logout();
-                // }, 1000);
-                
-                return true; // Retorna true si el usuario fue baneado
+                return true;
             }
 
             // Actualizar usuario si hay cambios

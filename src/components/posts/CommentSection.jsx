@@ -63,8 +63,8 @@ const CommentSection = ({ postId, guideId, postCommentsCount, addComment: parent
                     <p>No hay comentarios todavía. ¡Sé el primero en comentar!</p>
                 )}
 
-                {comments.map(comment => (
-                    <CommentItem key={comment._id} comment={comment} />
+                {comments.map((comment, index) => (
+                    <CommentItem key={comment._id || `temp-${index}-${Math.random()}`} comment={comment} />
                 ))}
             </div>
         </div>

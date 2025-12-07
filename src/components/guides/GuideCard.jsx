@@ -7,7 +7,7 @@ import '../../styles/GuideCard.css';
 import CommentSection from '../posts/CommentSection'; // Importar la nueva sección de comentarios
 import ReportModal from '../common/ReportModal';
 
-const GuideCard = ({ guide, currentUser, onToggleUseful, onEdit, onDelete }) => {
+const GuideCard = ({ guide, currentUser, onToggleUseful, onEdit, onDelete, isUsefulToggleDisabled }) => {
     const navigate = useNavigate();
     const [showComments, setShowComments] = useState(false); // Estado para mostrar/ocultar comentarios
     const [showReportModal, setShowReportModal] = useState(false); // Estado para modal de reporte
@@ -57,13 +57,14 @@ const GuideCard = ({ guide, currentUser, onToggleUseful, onEdit, onDelete }) => 
             </div>
 
             <p className="guide-description">
-                {guide.description.substring(0, 150)}...
+                {guide.description ? `${guide.description.substring(0, 150)}${guide.description.length > 150 ? '...' : ''}` : 'No hay descripción disponible.'}
             </p>
 
             <div className="guide-stats-footer">
                 <button
-                    onClick={() => onToggleUseful(guide._id, isUseful)}
+                    onClick={onToggleUseful ? () => onToggleUseful(guide._id, isUseful) : undefined}
                     className={`btn-useful-toggle ${isUseful ? 'useful-active' : ''}`}
+                    disabled={isUsefulToggleDisabled}
                 >
                     <FaThumbsUp /> {guide.usefulCount} Útil
                 </button>

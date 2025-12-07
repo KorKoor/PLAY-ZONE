@@ -15,11 +15,11 @@
   --color-primary: var(--color-accent-blue);
   --color-primary-rgb: 0, 198, 255;
   --color-accent-hover: #0099CC;
-  --color-text-light: #E0E7FF;
-  --color-text-secondary: #9FAACF;
-  --color-success: #38A169;
-  --color-danger: #E53E3E;
   --color-secondary: #4A5C7F;
+  --button-background-color-secondary: var(--color-secondary);
+  --button-background-color-secondary-hover: #5d7099;
+  --color-text-light: #E0E7FF;
+  --color-text-primary: var(--color-text-light);
 }
 
 

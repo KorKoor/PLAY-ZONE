@@ -9,6 +9,7 @@ const GuideForm = ({ guideToEdit, onClose, onSuccess }) => {
     const [title, setTitle] = useState('');
     const [game, setGame] = useState('');
     const [description, setDescription] = useState('');
+    const [descriptionError, setDescriptionError] = useState(null);
     const [steps, setSteps] = useState([{ stepNumber: 1, content: '' }]);
     
     const [games, setGames] = useState([]);
@@ -62,10 +63,30 @@ const GuideForm = ({ guideToEdit, onClose, onSuccess }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
+        setDescriptionError(null); // Clear description specific error
         setIsLoading(true);
 
-        if (!title.trim() || !game || description.length < 10 || steps.some(step => !step.content.trim())) {
-            setError("Por favor, completa todos los campos requeridos.");
+        let isValid = true;
+        if (!title.trim()) {
+            setError("El título de la guía es obligatorio.");
+            isValid = false;
+        }
+        if (!game) {
+            if (isValid) setError("El juego es obligatorio."); // Solo establece si no hay un error previo
+            else setError(prev => prev + " El juego es obligatorio.");
+            isValid = false;
+        }
+        if (description.length < 30) {
+            setDescriptionError("La descripción debe tener al menos 30 caracteres.");
+            isValid = false;
+        }
+        if (steps.some(step => !step.content.trim())) {
+            if (isValid) setError("Todos los pasos deben tener contenido."); // Solo establece si no hay un error previo
+            else setError(prev => prev + " Todos los pasos deben tener contenido.");
+            isValid = false;
+        }
+
+        if (!isValid) {
             setIsLoading(false);
             return;
         }
@@ -111,7 +132,14 @@ const GuideForm = ({ guideToEdit, onClose, onSuccess }) => {
                     </select>
                 </div>
 
-                <div className="form-group"><label>Introducción/Descripción General</label><textarea value={description} onChange={(e) => setDescription(e.target.value)} rows="4" required /></div>
+                <div className="form-group">
+                    <label>Introducción/Descripción General</label>
+                    <textarea value={description} onChange={(e) => {
+                        setDescription(e.target.value);
+                        if (descriptionError) setDescriptionError(null);
+                    }} rows="4" required />
+                    {descriptionError && <p className="error-message">{descriptionError}</p>}
+                </div>
 
                 <h4 className="steps-title">Pasos ({steps.length})</h4>
                 <div className="steps-list">

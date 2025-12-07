@@ -2,13 +2,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Header from '../components/layout/Header';
-import PostCard from '../components/posts/PostCard';
-import GuideCard from '../components/guides/GuideCard';
 import gameService from '../services/gameService';
-import postService from '../services/postService';
 import guideService from '../services/guideService';
 import useAuth from '../hooks/useAuth';
-import usePosts from '../hooks/usePosts';
+import GuideCard from '../components/guides/GuideCard'; // Import GuideCard
+import reviewService from '../services/reviewService';
+import ReviewCard from '../components/common/ReviewCard';
+import ReviewForm from '../components/common/ReviewForm';
 import { 
     FaArrowLeft,
     FaGamepad, 
@@ -22,29 +22,37 @@ import {
     FaSpinner,
     FaExclamationTriangle,
     FaFilter,
-    FaSearch
+    FaSearch,
+    FaPlusCircle
 } from 'react-icons/fa';
 import '../styles/GameDetailPage.css';
+import '../styles/ReviewsSection.css'; // Asumiendo que crearemos este CSS
 
 const GameDetailPage = () => {
     const { gameId } = useParams();
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const { user, isLoggedIn } = useAuth(); // Usar isLoggedIn
     
     // Estados principales
     const [game, setGame] = useState(null);
     const [posts, setPosts] = useState([]); // TODO: Implementar posts para el juego
-    const [guides, setGuides] = useState({ data: [], total: 0 }); // Inicializar como objeto
+    const [guides, setGuides] = useState({ data: [], total: 0 }); 
+    const [reviews, setReviews] = useState({ data: [], total: 0 }); // Estado para reseñas
+    
     const [isLoadingGame, setIsLoadingGame] = useState(true);
     const [isLoadingPosts, setIsLoadingPosts] = useState(true); // TODO: Implementar posts para el juego
     const [isLoadingGuides, setIsLoadingGuides] = useState(true);
+    const [isLoadingReviews, setIsLoadingReviews] = useState(true); // Estado para carga de reseñas
+    
     const [error, setError] = useState(null);
     
     // Estados de UI
     const [activeTab, setActiveTab] = useState('overview');
     const [postsFilter, setPostsFilter] = useState('all'); // TODO: Implementar filtros para posts
     const [guidesFilter, setGuidesFilter] = useState('all'); // TODO: Implementar filtros para guías
-    
+    const [showReviewForm, setShowReviewForm] = useState(false); // Para mostrar/ocultar formulario de reseña
+    const [editingReview, setEditingReview] = useState(null); // Reseña a editar
+
     // Cargar datos del juego
     useEffect(() => {
         if (gameId) {
@@ -56,6 +64,13 @@ const GameDetailPage = () => {
     useEffect(() => {
         if (gameId && activeTab === 'guides') {
             loadGuidesData();
+        }
+    }, [gameId, activeTab]);
+
+    // Cargar reseñas cuando la pestaña de reseñas está activa
+    useEffect(() => {
+        if (gameId && activeTab === 'reviews') {
+            loadReviewsData();
         }
     }, [gameId, activeTab]);
     
@@ -85,35 +100,132 @@ const GameDetailPage = () => {
             setIsLoadingGuides(false);
         }
     };
-    
+
+    const loadReviewsData = async () => {
+        try {
+            setIsLoadingReviews(true);
+            const response = await reviewService.getGameReviews(gameId);
+            setReviews({ data: response.reviews || [], total: response.pagination?.total || 0 });
+        } catch (error) {
+            console.error('Error loading reviews:', error);
+            // Manejo de error para reseñas
+        } finally {
+            setIsLoadingReviews(false);
+        }
+    };
+
+    const handleReviewSubmitted = (newOrUpdatedReview) => {
+        if (editingReview) {
+            // Actualizar reseña existente en la lista
+            setReviews(prev => ({
+                ...prev,
+                data: prev.data.map(r => r._id === newOrUpdatedReview._id ? newOrUpdatedReview : r)
+            }));
+            setEditingReview(null);
+        } else {
+            // Añadir nueva reseña al principio de la lista
+            setReviews(prev => ({
+                ...prev,
+                data: [newOrUpdatedReview, ...prev.data],
+                total: prev.total + 1
+            }));
+        }
+        setShowReviewForm(false); // Ocultar formulario después de enviar
+    };
+
+    const handleEditReview = (review) => {
+        setEditingReview(review);
+        setShowReviewForm(true);
+    };
+
+    const handleDeleteReview = async (reviewId) => {
+        if (window.confirm('¿Estás seguro de que quieres eliminar esta reseña?')) {
+            try {
+                await reviewService.deleteReview(reviewId);
+                setReviews(prev => ({
+                    ...prev,
+                    data: prev.data.filter(r => r._id !== reviewId),
+                    total: prev.total - 1
+                }));
+            } catch (error) {
+                console.error('Error deleting review:', error);
+                alert('No se pudo eliminar la reseña.');
+            }
+        }
+    };
+
+    const handleToggleUseful = async (reviewId) => {
+        if (!isLoggedIn) {
+            alert('Necesitas iniciar sesión para marcar una reseña como útil.');
+            return;
+        }
+        try {
+            const updatedReview = await reviewService.toggleReviewUseful(reviewId);
+            setReviews(prev => ({
+                ...prev,
+                data: prev.data.map(r => r._id === reviewId ? updatedReview : r)
+            }));
+        } catch (error) {
+            console.error('Error toggling useful status:', error);
+            alert('No se pudo actualizar el estado de utilidad de la reseña.');
+        }
+    };
+
+        // Marcar guía como útil
+        const handleToggleUsefulGuide = async (guideId) => {
+            if (!isLoggedIn) {
+                alert('Necesitas iniciar sesión para marcar una guía como útil.');
+                return;
+            }
+            try {
+                const updatedGuide = await guideService.toggleUseful(guideId);
+                setGuides(prev => ({
+                    ...prev,
+                    data: prev.data.map(g => g._id === guideId ? updatedGuide : g)
+                }));
+            } catch (error) {
+                console.error('Error toggling useful status for guide:', error);
+                alert('No se pudo actualizar el estado de utilidad de la guía.');
+            }
+        };
+
+    // Loading and error states
     if (isLoadingGame) {
         return (
             <div className="game-detail-page">
                 <Header />
-                <div className="game-loading">
-                    <div className="loading-spinner"></div>
+                <div className="loading-container">
+                    <FaSpinner className="loading-spinner" />
                     <p>Cargando información del juego...</p>
                 </div>
             </div>
         );
     }
-    
-    if (error || !game) {
+
+    if (error) {
         return (
             <div className="game-detail-page">
                 <Header />
-                <div className="game-error">
-                    <FaExclamationTriangle size={64} />
-                    <h2>{error || 'Juego no encontrado'}</h2>
-                    <p>El juego que buscas no existe o no está disponible.</p>
-                    <button onClick={() => navigate('/games')} className="back-to-catalog">
-                        <FaArrowLeft /> Volver al Catálogo
-                    </button>
+                <div className="error-container">
+                    <FaExclamationTriangle className="error-icon" />
+                    <p>Error: {error}</p>
                 </div>
             </div>
         );
     }
-    
+
+    if (!game) {
+        return (
+            <div className="game-detail-page">
+                <Header />
+                <div className="error-container">
+                    <FaExclamationTriangle className="error-icon" />
+                    <p>No se pudo cargar la información del juego.</p>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="game-detail-page">
             <Header />
@@ -294,10 +406,52 @@ const GameDetailPage = () => {
                         )}
                         
                         {activeTab === 'reviews' && (
-                            <div className="empty-state">
-                                <FaComments size={48} />
-                                <h3>Reseñas de la Comunidad</h3>
-                                <p>Las reseñas estarán disponibles próximamente</p>
+                            <div className="reviews-section">
+                                <div className="reviews-header">
+                                    <h3><FaComments /> Reseñas de la Comunidad ({reviews.total})</h3>
+                                    {console.log('🐛 [ReviewsSection] isLoggedIn:', isLoggedIn, 'showReviewForm:', showReviewForm, 'editingReview:', editingReview, 'reviews.data.length:', reviews.data.length)}
+                                    {isLoggedIn && !showReviewForm && !editingReview && ( // Usar isLoggedIn
+                                        <button onClick={() => setShowReviewForm(true)} className="add-review-btn">
+                                            <FaPlusCircle /> Escribir Reseña
+                                        </button>
+                                    )}
+                                </div>
+                                
+                                {showReviewForm && (
+                                    <ReviewForm
+                                        gameId={gameId}
+                                        existingReview={editingReview}
+                                        onReviewSubmitted={handleReviewSubmitted}
+                                        onCancel={() => {
+                                            setShowReviewForm(false);
+                                            setEditingReview(null);
+                                        }}
+                                    />
+                                )}
+
+                                {isLoadingReviews ? (
+                                    <div className="loading-state">
+                                        <FaSpinner className="spinner" />
+                                        <p>Cargando reseñas...</p>
+                                    </div>
+                                ) : reviews.data.length > 0 ? (
+                                    <div className="reviews-list">
+                                        {reviews.data.map(review => (
+                                            <ReviewCard 
+                                                key={review._id} 
+                                                review={review} 
+                                                onEdit={handleEditReview} 
+                                                onDelete={handleDeleteReview}
+                                                onToggleUseful={handleToggleUseful}
+                                            />
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="empty-state">
+                                        <FaComments size={48} />
+                                        <p>No hay reseñas disponibles para este juego. ¡Sé el primero en escribir una!</p>
+                                    </div>
+                                )}
                             </div>
                         )}
                         
@@ -312,7 +466,12 @@ const GameDetailPage = () => {
                                 ) : guides.data.length > 0 ? (
                                     <div className="guides-list">
                                         {guides.data.map(guide => (
-                                            <GuideCard key={guide._id || guide.id} guide={guide} />
+                                            <GuideCard 
+                                                key={guide._id || guide.id} 
+                                                guide={guide} 
+                                                onToggleUseful={handleToggleUsefulGuide} 
+                                                isUsefulToggleDisabled={true} 
+                                            />
                                         ))}
                                     </div>
                                 ) : (

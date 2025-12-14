@@ -1,81 +1,132 @@
-/* src/components/admin/AdminNavigation.css */
+﻿/* src/components/admin/AdminNavigation.css */
+
+/* ========================================================= */
+/* === VARIABLES DINÁMICAS (Forzando la resolución a DARK MODE) === */
+:root {
+    /* 🚨 Fondo de la tarjeta (AdminNavigation) - DEBE SER OSCURO 🚨 */
+    --card-bg: var(--color-card, #28374E); /* Usar la variable global o el valor oscuro de fallback */
+
+    --text-color: var(--color-text-primary, #E0E7FF);
+    --text-secondary: var(--color-text-secondary, #90A0C9);
+    --border-color: var(--color-border, #3D4A66);
+    --shadow-color: var(--color-shadow-base, rgba(0, 0, 0, 0.4));
+    /* 🚨 Fondo de Hover - Usamos el color de input o surface oscuro 🚨 */
+    --hover-bg: var(--color-input-bg, #141D2B);
+    /* 🚨 Degradado Activo (Usamos el Cian Neón del tema Gamer) 🚨 */
+    --active-gradient-start: var(--color-primary, #00C6FF);
+    --active-gradient-end: var(--color-accent-hover, #0099CC);
+    /* Degradado de la línea de acento (Puede ser púrpura o un cian más claro) */
+    --active-line-gradient-start: #3DED97; /* Verde Neón para contraste */
+    --active-line-gradient-end: #3DA5ED;
+}
+
+/* ========================================================= */
+/* === NAVEGACIÓN PRINCIPAL === */
 
 .admin-navigation {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  margin-bottom: 2rem;
-  overflow: hidden;
+    /* 🚨 El fondo de la navegación ahora usa la variable forzada 🚨 */
+    background: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: 0 2px 12px var(--shadow-color);
+    margin-bottom: 2rem;
+    overflow: hidden;
 }
 
 .nav-tabs {
-  display: flex;
-  flex-wrap: wrap;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .nav-tab {
-  flex: 1;
-  min-width: 150px;
-  background: none;
-  border: none;
-  padding: 1.2rem 1.5rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  justify-content: center;
-  color: #6b7280;
-  font-weight: 500;
-  position: relative;
+    flex: 1;
+    min-width: 150px;
+    background: none;
+    border: none;
+    padding: 1.2rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: center;
+    color: var(--text-secondary); /* Gris Azulado */
+    font-weight: 500;
+    position: relative;
+    text-shadow: none;
 }
 
-.nav-tab:hover {
-  background-color: #f9fafb;
-  color: #374151;
-}
+    /* Estado al pasar el ratón */
+    .nav-tab:hover {
+        background-color: var(--hover-bg); /* Fondo oscuro sutil */
+        color: var(--color-primary); /* Texto principal (Cian) */
+    }
 
-.nav-tab.active {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-  color: white;
-}
+    /* Estado Activo */
+    .nav-tab.active {
+        /* Degradado Activo (Cian Neón) */
+        background: linear-gradient(135deg, var(--active-gradient-start) 0%, var(--active-gradient-end) 100%);
+        color: var(--color-background-primary, #0F141F); /* Color oscuro para el texto del botón primario */
+        font-weight: 600;
+    }
 
-.nav-tab.active::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #60a5fa, #a78bfa);
-}
+        /* Línea de énfasis inferior para el tab activo (Horizontal) */
+        .nav-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            /* Degradado de acento para la línea */
+            background: linear-gradient(90deg, var(--active-line-gradient-start), var(--active-line-gradient-end));
+        }
 
 .nav-tab-icon {
-  font-size: 1.1rem;
+    font-size: 1.1rem;
 }
 
 .nav-tab-label {
-  font-size: 0.95rem;
+    font-size: 0.95rem;
 }
 
-/* Responsive */
+/* ========================================================= */
+/* === RESPONSIVE / MÓVIL (Menú Vertical) === */
+
 @media (max-width: 768px) {
-  .nav-tabs {
-    flex-direction: column;
-  }
-  
-  .nav-tab {
-    min-width: unset;
-    justify-content: flex-start;
-    padding: 1rem 1.5rem;
-  }
-  
-  .nav-tab.active::after {
-    height: 100%;
-    width: 4px;
-    top: 0;
-    left: 0;
-    right: unset;
-    bottom: unset;
-  }
+    .nav-tabs {
+        flex-direction: column;
+    }
+
+    .nav-tab {
+        min-width: unset;
+        justify-content: flex-start;
+        padding: 1rem 1.5rem;
+        color: var(--text-color); /* Color de texto principal */
+        border-bottom: 1px solid var(--border-color);
+    }
+
+        .nav-tab:last-child {
+            border-bottom: none;
+        }
+
+        /* Ajuste para el color de texto activo en móvil */
+        .nav-tab.active {
+            /* Usar el fondo de hover */
+            background: var(--hover-bg);
+            /* Usar el color primario para el texto */
+            color: var(--color-primary);
+            font-weight: 700;
+        }
+
+            /* Barra lateral de énfasis (Vertical) */
+            .nav-tab.active::after {
+                height: 100%;
+                width: 4px;
+                top: 0;
+                left: 0;
+                right: unset;
+                bottom: unset;
+                /* Degradado de acento para la barra vertical */
+                background: linear-gradient(0deg, var(--active-line-gradient-start), var(--active-line-gradient-end));
+            }
 }

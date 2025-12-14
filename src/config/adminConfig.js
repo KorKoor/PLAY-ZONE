@@ -1,43 +1,45 @@
-// src/config/adminConfig.js
-// Lista de emails que tienen permisos de administrador
-export const ADMIN_EMAILS = [
-    'leonardoposada7777@gmail.com',  // Con 4 sietes
-    'leonardoposada777@gmail.com',   // Con 3 sietes
-    // Agregar más emails admin aquí según sea necesario
-    // 'otro-admin@ejemplo.com',
-];
+/**
+ * Configuración de permisos y roles de administrador para el frontend.
+ * Contiene funciones para verificar el nivel de acceso de un usuario.
+ */
+
+// Roles que tienen acceso al panel de administración o a funciones de moderación.
+const ALLOWED_ADMIN_ROLES = ['admin', 'moderator'];
 
 /**
- * Verifica si un usuario tiene permisos de administrador
- * @param {Object} user - Objeto usuario con email
- * @returns {boolean} - true si es admin, false si no
+ * Verifica si el objeto de usuario tiene un rol de administrador o moderador.
+ * Es la función principal utilizada por useAdmin.
+ *
+ * @param {object} user - El objeto de usuario obtenido de useAuth().
+ * @returns {boolean} True si es admin o moderador.
  */
-export const isUserAdmin = (user) => {
-    // El usuario puede venir envuelto en un objeto {user: {...}}
-    const actualUser = user?.user || user;
-    
-    if (!actualUser || !actualUser.email) {
+exports.isUserAdmin = (user) => {
+    // 1. Verificar si el objeto user y su propiedad role existen
+    if (!user || !user.role) {
         return false;
     }
-    
-    const userEmail = actualUser.email.toLowerCase();
-    const isAdmin = ADMIN_EMAILS.includes(userEmail);
-    
-    return isAdmin;
+
+    // 2. Comparación segura: minúsculas y sin espacios
+    const userRole = user.role.toLowerCase().trim();
+
+    return ALLOWED_ADMIN_ROLES.includes(userRole);
 };
 
 /**
- * Middleware para verificar permisos de admin en componentes
- * @param {Object} user - Usuario actual
- * @param {Function} onUnauthorized - Callback si no es admin
- * @returns {boolean} - true si puede continuar
+ * Función que puede ser utilizada por un Route Guard o un componente
+ * para ejecutar una acción si el usuario NO es un administrador.
+ *
+ * @param {object} user - El objeto de usuario.
+ * @param {function} onUnauthorized - Función a ejecutar si el usuario no es admin (ej. una redirección).
+ * @returns {boolean} El resultado de la verificación isUserAdmin.
  */
-export const requireAdmin = (user, onUnauthorized = null) => {
-    const hasPermission = isUserAdmin(user);
-    
-    if (!hasPermission && onUnauthorized) {
+exports.requireAdmin = (user, onUnauthorized) => {
+    const isAdmin = exports.isUserAdmin(user);
+
+    // Si no es administrador y se proporcionó una función de no autorizado, ejecútala.
+    if (!isAdmin && typeof onUnauthorized === 'function') {
         onUnauthorized();
     }
-    
-    return hasPermission;
+
+    return isAdmin;
 };

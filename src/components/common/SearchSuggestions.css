@@ -1,38 +1,86 @@
 /* SearchSuggestions.css */
 
+/* ========================================================= */
+/* === VARIABLES DINÁMICAS (Usan variables globales) === */
+:root {
+    --card-bg: var(--color-card, #ffffff);
+    --text-color: var(--color-text-base, #374151);
+    --text-secondary: var(--color-text-secondary, #6b7280);
+    --border-color: var(--color-border, #e5e7eb);
+    --shadow-color-light: rgba(0, 0, 0, 0.15);
+    --shadow-color-dark: rgba(0, 0, 0, 0.4);
+    --hover-bg: var(--color-background-hover, #f8fafc);
+    --accent-color: var(--color-accent-blue, #667eea);
+    --accent-hover-bg: var(--color-accent-shadow, #e0e5ff); /* Fondo sutil de acento */
+}
+
+/* Aplicación de las variables en Modo Oscuro */
+.dark-mode {
+    --card-bg: var(--color-card-dark, #1f2937);
+    --text-color: var(--color-text-light, #f3f4f6);
+    --text-secondary: var(--color-text-secondary-dark, #9ca3af);
+    --border-color: var(--color-border-dark, #4b5563);
+    --hover-bg: var(--color-card-darker, #374151);
+}
+
+/* ========================================================= */
+/* === CONTENEDOR PRINCIPAL === */
+
 .search-suggestions {
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
-    background: white;
-    border: 1px solid #e5e7eb;
+    background: var(--card-bg); /* Dinámico */
+    border: 1px solid var(--border-color); /* Dinámico */
     border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    /* Adaptar sombra al tema */
+    box-shadow: 0 10px 30px var(--shadow-color-light);
     z-index: 1000;
     margin-top: 0.5rem;
     overflow: hidden;
     max-height: 400px;
     overflow-y: auto;
+    /* Optimización de Scrollbar (usando la misma lógica que en ReportModal) */
+    padding-right: 5px; /* Espacio para el scrollbar */
 }
+
+.dark-mode .search-suggestions {
+    box-shadow: 0 10px 30px var(--shadow-color-dark);
+}
+
+/* ========================================================= */
+/* === SCROLLBAR PERSONALIZADO === */
+.search-suggestions::-webkit-scrollbar {
+    width: 6px;
+}
+
+.search-suggestions::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.search-suggestions::-webkit-scrollbar-thumb {
+    background: var(--text-secondary); /* Color del thumb dinámico */
+    border-radius: 3px;
+}
+
+    .search-suggestions::-webkit-scrollbar-thumb:hover {
+        background: var(--accent-color);
+    }
+
+/* ========================================================= */
+/* === ESTADOS Y ELEMENTOS BÁSICOS === */
 
 .suggestion-loading {
     display: flex;
     align-items: center;
     gap: 0.75rem;
     padding: 1rem;
-    color: #6b7280;
+    color: var(--text-secondary); /* Dinámico */
     font-size: 0.9rem;
 }
 
-.suggestion-loading .spinner {
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
+/* Animación spin se mantiene */
 
 .suggestions-list {
     display: flex;
@@ -46,152 +94,137 @@
     padding: 0.75rem 1rem;
     cursor: pointer;
     transition: all 0.2s ease;
-    border-bottom: 1px solid #f3f4f6;
+    border-bottom: 1px solid var(--border-color); /* Dinámico */
 }
 
-.suggestion-item:hover,
-.suggestion-item.selected {
-    background: #f8fafc;
-    border-left: 3px solid #667eea;
-    padding-left: calc(1rem - 3px);
-}
+    .suggestion-item:last-child {
+        border-bottom: none;
+    }
 
-.suggestion-item:last-child {
-    border-bottom: none;
+    /* --- Estado Hover y Seleccionado --- */
+
+    .suggestion-item:hover,
+    .suggestion-item.selected {
+        background: var(--hover-bg); /* Dinámico */
+        border-left: 3px solid var(--accent-color); /* Color de acento */
+        padding-left: calc(1rem - 3px);
+    }
+/* En modo oscuro, hacer el fondo de hover un poco más pronunciado */
+.dark-mode .suggestion-item:hover,
+.dark-mode .suggestion-item.selected {
+    background: var(--hover-bg);
 }
 
 .suggestion-icon {
     width: 20px;
     height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #6b7280;
-    flex-shrink: 0;
+    color: var(--text-secondary); /* Dinámico */
 }
 
 .suggestion-item.selected .suggestion-icon {
-    color: #667eea;
+    color: var(--accent-color); /* Color de acento */
 }
 
 .suggestion-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
     flex: 1;
     min-width: 0;
 }
 
 .suggestion-text {
-    color: #374151;
-    font-size: 0.9rem;
-    font-weight: 500;
+    color: var(--text-color); /* Dinámico */
+    font-weight: 600; /* Le damos un poco más de peso al texto principal */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
 .suggestion-type {
-    color: #6b7280;
+    color: var(--text-secondary); /* Dinámico */
     font-size: 0.8rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
+/* --- Search All / Categoría Especial --- */
+
 .search-all {
-    background: #f9fafb;
-    font-weight: 500;
+    background: var(--bg-light-secondary, #f9fafb); /* Usar el gris claro secundario */
+    font-weight: 600;
+}
+
+.dark-mode .search-all {
+    background: var(--color-card-darker, #111827);
 }
 
 .search-all .suggestion-text {
-    color: #667eea;
+    color: var(--accent-color); /* Color de acento */
+    font-weight: 700;
 }
 
 .suggestions-divider {
     height: 1px;
-    background: #e5e7eb;
-    margin: 0.25rem 0;
+    background: var(--border-color); /* Dinámico */
+    margin: 0.5rem 0;
 }
 
 .no-suggestions {
-    padding: 0.5rem;
+    padding: 1rem;
+    color: var(--text-secondary);
+    text-align: center;
+    font-style: italic;
 }
+
+/* ========================================================= */
+/* === ATAJOS DE BÚSQUEDA === */
 
 .search-shortcuts {
     display: flex;
     gap: 1rem;
     justify-content: center;
-    padding: 0.5rem;
-    background: #f9fafb;
-    border-top: 1px solid #e5e7eb;
-    font-size: 0.7rem;
-    color: #6b7280;
+    padding: 0.75rem 1rem; /* Aumentar padding */
+    background: var(--bg-light-secondary, #f9fafb); /* Dinámico */
+    border-top: 1px solid var(--border-color); /* Dinámico */
+    font-size: 0.75rem; /* Aumentar tamaño de fuente */
+    color: var(--text-secondary); /* Dinámico */
 }
+
+.dark-mode .search-shortcuts {
+    background: var(--color-card-darker, #111827);
+}
+
 
 .search-shortcuts span {
-    background: #e5e7eb;
+    /* Fondo del atajo de teclado */
+    background: var(--border-color);
     padding: 0.2rem 0.4rem;
     border-radius: 4px;
-    font-family: monospace;
+    font-family: 'Consolas', monospace; /* Fuente de ancho fijo */
+    font-weight: 700;
+    color: var(--text-color);
 }
 
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-    .search-suggestions {
-        background: #1f2937;
-        border-color: #374151;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    }
-    
-    .suggestion-item {
-        border-bottom-color: #374151;
-    }
-    
-    .suggestion-item:hover,
-    .suggestion-item.selected {
-        background: #374151;
-    }
-    
-    .suggestion-text {
-        color: #f3f4f6;
-    }
-    
-    .suggestion-type {
-        color: #9ca3af;
-    }
-    
-    .search-all {
-        background: #374151;
-    }
-    
-    .suggestions-divider {
-        background: #374151;
-    }
-    
-    .search-shortcuts {
-        background: #374151;
-        border-top-color: #4b5563;
-        color: #9ca3af;
-    }
-    
-    .search-shortcuts span {
-        background: #4b5563;
-    }
+.dark-mode .search-shortcuts span {
+    background: var(--border-color);
+    color: var(--text-color);
 }
 
-/* Responsive */
+
+/* ========================================================= */
+/* === RESPONSIVE === */
+
 @media (max-width: 768px) {
     .search-suggestions {
-        max-height: 300px;
+        max-height: 50vh; /* Usar altura relativa */
         margin-top: 0.25rem;
     }
-    
+
     .suggestion-item {
-        padding: 1rem;
+        padding: 1rem 0.75rem;
     }
-    
+
     .search-shortcuts {
+        /* Ocultar en móvil pequeño para ahorrar espacio */
         display: none;
     }
 }

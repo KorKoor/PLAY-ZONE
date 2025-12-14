@@ -1,79 +1,166 @@
-/* src/pages/AdminDashboard.css */
+/* ========================================================= */
+/* === VARIABLES DINÁMICAS (Dark Theme Elegante) === */
+:root {
+    --color-background: #0F141F;
+    --color-text-light: #E0E7FF;
+    /* Paleta Cobalto/Índigo refinada */
+    --color-admin-primary: #3f51b5;
+    --color-admin-accent: #5c6bc0;
+    --color-admin-shadow: rgba(63, 81, 181, 0.45);
+    /* Alertas con contraste elegante */
+    --alert-danger-bg: #2a0a0a;
+    --alert-danger-text: #fca5a5;
+    --alert-success-bg: #0a2f1f;
+    --alert-success-text: #a7f3d0;
+    --alert-warning-bg: #2f1a0a;
+    --alert-warning-text: #fde68a;
+    --alert-info-bg: #0a1a3f;
+    --alert-info-text: #93c5fd;
+}
 
+/* ========================================================= */
+/* === DASHBOARD BASE === */
 .admin-dashboard {
-  min-height: 100vh;
-  background-color: var(--color-background, #f8f9fa);
-  padding: 2rem 1rem;
+    min-height: 100vh;
+    background: var(--color-background);
+    padding: 3rem 2.5rem;
+    transition: background 0.3s ease;
+    font-family: "Inter", "Segoe UI", sans-serif;
 }
 
+/* === HEADER === */
 .admin-header {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-  color: white;
-  padding: 2rem;
-  border-radius: 12px;
-  margin-bottom: 2rem;
-  box-shadow: 0 4px 20px rgba(79, 70, 229, 0.2);
+    background: linear-gradient(135deg, var(--color-admin-primary), var(--color-admin-accent));
+    color: #fff;
+    padding: 2.5rem 3rem;
+    border-radius: 20px;
+    margin-bottom: 3rem;
+    box-shadow: 0 12px 35px var(--color-admin-shadow);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(8px);
+    transition: transform 0.3s ease;
 }
+
+    .admin-header:hover {
+        transform: translateY(-4px);
+    }
 
 .admin-welcome h1 {
-  margin: 0 0 0.5rem 0;
-  font-size: 2.5rem;
-  font-weight: 700;
+    margin: 0 0 0.5rem;
+    font-size: 2.6rem;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.5);
 }
 
 .admin-welcome p {
-  margin: 0;
-  font-size: 1.1rem;
-  opacity: 0.9;
+    margin: 0;
+    font-size: 1.1rem;
+    opacity: 0.9;
+    font-weight: 400;
 }
 
+/* === CONTENT === */
 .admin-content {
-  max-width: 1400px;
-  margin: 0 auto;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1rem;
 }
 
-.alert {
-  padding: 1rem 1.5rem;
-  border-radius: 8px;
-  margin-bottom: 1rem;
-  border: none;
+/* === Breadcrumbs === */
+.admin-breadcrumbs {
+    color: #90A0C9;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+    display: flex;
+    gap: 0.5rem;
 }
+
+    .admin-breadcrumbs a {
+        color: var(--color-admin-primary);
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+        .admin-breadcrumbs a:hover {
+            color: var(--color-admin-accent);
+        }
+
+    .admin-breadcrumbs span {
+        color: var(--color-text-light);
+        font-weight: 600;
+    }
+
+/* ========================================================= */
+/* === ALERTAS === */
+.alert {
+    padding: 1.2rem 1.8rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+    .alert:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    }
 
 .alert-danger {
-  background-color: #fef2f2;
-  color: #dc2626;
-  border-left: 4px solid #dc2626;
+    background: var(--alert-danger-bg);
+    color: var(--alert-danger-text);
+    border-left: 5px solid var(--alert-danger-text);
 }
 
 .alert-success {
-  background-color: #f0fdf4;
-  color: #16a34a;
-  border-left: 4px solid #16a34a;
+    background: var(--alert-success-bg);
+    color: var(--alert-success-text);
+    border-left: 5px solid var(--alert-success-text);
 }
 
 .alert-warning {
-  background-color: #fffbeb;
-  color: #d97706;
-  border-left: 4px solid #d97706;
+    background: var(--alert-warning-bg);
+    color: var(--alert-warning-text);
+    border-left: 5px solid var(--alert-warning-text);
 }
 
 .alert-info {
-  background-color: #eff6ff;
-  color: #2563eb;
-  border-left: 4px solid #2563eb;
+    background: var(--alert-info-bg);
+    color: var(--alert-info-text);
+    border-left: 5px solid var(--alert-info-text);
 }
 
-/* Responsive */
+/* ========================================================= */
+/* === RESPONSIVE === */
+@media (max-width: 1024px) {
+    .admin-header {
+        padding: 2rem;
+    }
+}
+
 @media (max-width: 768px) {
-  .admin-dashboard {
-    padding: 1rem 0.5rem;
-  }
-  
-  .admin-header {
-    padding: 1.5rem;
-  }
-  
-  .admin-welcome h1 {
-    font-size: 2rem;
-  }
+    .admin-dashboard {
+        padding: 1rem;
+    }
+
+    .admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .admin-welcome h1 {
+        font-size: 2.2rem;
+    }
+
+    .admin-welcome p {
+        font-size: 1rem;
+    }
 }

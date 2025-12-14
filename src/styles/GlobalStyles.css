@@ -8,10 +8,11 @@
     /* Fondos y Superficies (Gamer Dark Mode 2.0) */
     --color-background-primary: #0F141F; /* Fondo principal oscuro (App Body) */
     --color-background-secondary: #1C2738; /* Fondo secundario/App Wrapper */
-    --color-surface: #1A2436; /* Fondo de contenedores/cards */
+    --color-surface: #1A2436; /* Fondo de contenedores/cards (Ej. GameContent) */
     --color-card: #28374E; /* Fondo de Card, ligeramente más claro */
-    --color-input-bg: #141D2B; /* Fondo de Inputs/Sutiles */
+    --color-input-bg: #141D2B; /* Fondo de Inputs/Sutiles (Más oscuro que card) */
     --color-border: #3D4A66; /* Borde sutil oscuro */
+    --color-shadow-base: rgba(0, 0, 0, 0.4); /* Sombra estándar oscura */
     /* Acentos y Branding (Cian Eléctrico Gamer) */
     --color-accent-blue: #00C6FF;
     --color-primary: var(--color-accent-blue);
@@ -26,11 +27,11 @@
     --color-text-secondary: #90A0C9; /* Texto gris azulado para descripciones */
     --color-text-light: var(--color-text-primary); /* Alias para texto principal */
     /* Feedback y Especiales (Gamer Neon) */
-    --color-error: #FF4D6C;
+    --color-error: #FF4D6C; /* Rojo neón */
     --color-danger: var(--color-error);
-    --color-success: #3DED97;
+    --color-success: #3DED97; /* Verde neón */
     --color-success-rgb: 61, 237, 151;
-    --color-warning: #FFC300; /* Color Dorado/Advertencia */
+    --color-warning: #FFC300; /* Amarillo/Naranja Dorado */
 }
 
 
@@ -111,7 +112,7 @@ body {
 }
 
 /* ----------------------------------------------------------
- * NOTIFICACIONES DE FAVORITOS (Ajuste de Gradientes)
+ * NOTIFICACIONES DE FAVORITOS (Ajuste de Gradientes Neon)
  * ---------------------------------------------------------- */
 @keyframes slideIn {
     from {
@@ -160,21 +161,24 @@ body {
 }
 
     .favorite-notification.success {
-        /* Success Neon (Gamer) */
+        /* Success Neon (Gamer) - Usamos var() para el color base */
         background: linear-gradient(135deg, var(--color-success), #45a049);
+        box-shadow: 0 4px 12px rgba(61, 237, 151, 0.5); /* Sombra neon */
     }
 
     .favorite-notification.removed {
-        /* Usar un color de advertencia/warning que funcione */
+        /* Usar color de advertencia (Amarillo/Naranja) */
         background: linear-gradient(135deg, var(--color-warning), #f57c00);
-        color: var(--color-text-primary); /* Texto oscuro para contraste sobre amarillo */
+        color: var(--color-background-primary); /* Texto oscuro para contraste sobre amarillo */
+        box-shadow: 0 4px 12px rgba(255, 195, 0, 0.5); /* Sombra amarilla */
     }
 
     .favorite-notification.fadeout {
         animation: fadeOut 0.3s ease-in;
     }
+
 /* ======================================================= */
-/* 1. ESTRUCTURA GLOBAL (Asegurar que la tarjeta base es oscura) */
+/* 1. ESTRUCTURA GLOBAL Y TARJETAS */
 /* ======================================================= */
 
 /* Asegura que el contenedor principal de contenido sea oscuro */
@@ -183,63 +187,60 @@ body {
     min-height: 60vh;
 }
 
+/* Tarjetas de juego/catálogo */
+.game-catalog-card, .game-card, .result-card.game-card {
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 4px 10px var(--color-shadow-base); /* Sombra gamer oscura */
+    color: var(--color-text-primary);
+}
+
+
 /* ======================================================= */
-/* 2. NAVEGACIÓN SECUNDARIA (Si se reutilizan tabs o navs) */
+/* 2. NAVEGACIÓN SECUNDARIA (Tabs y Navbars Sticky) */
 /* ======================================================= */
 
 .game-nav {
-    /* FIX 1: Fondo de la barra de navegación sticky (debe ser oscuro) */
+    /* Fondo de la barra de navegación sticky */
     background: var(--color-card);
-    border-bottom: 3px solid var(--color-border);
+    border-bottom: 3px solid var(--color-primary); /* Usar Cian para el borde inferior */
     position: sticky;
     top: 0;
     z-index: 10;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 2px 10px var(--color-shadow-base);
 }
 
 .nav-tab {
-    /* FIX 2: Asegurar que el fondo de la pestaña inactiva no sea blanco */
     background: none;
     color: var(--color-text-secondary);
 }
 
     .nav-tab:hover {
-        /* Fondo de hover debe ser sutil y oscuro */
         background: var(--color-input-bg);
         color: var(--color-primary);
     }
 
     .nav-tab.active {
-        /* Fondo activo debe ser sutilmente diferente al card/surface */
+        /* Resaltar la pestaña activa sin fondo (solo con la línea de abajo en el componente) */
         background: var(--color-input-bg);
         color: var(--color-primary);
+        font-weight: 700;
     }
 
-.game-catalog-card, .game-card {
-    /* FIX 3: El fondo de la tarjeta de juego debe ser oscuro */
-    background: var(--color-card);
-    border: 1px solid var(--color-border);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-}
+/* ======================================================= */
+/* 3. INPUTS, FILTROS Y BÚSQUEDA */
+/* ======================================================= */
 
-/* Si reutilizas las clases de la página de búsqueda: */
-.result-card.game-card {
-    /* FIX 4: Asegurar que el fondo del resultado de juego sea oscuro */
-    background: var(--color-card);
-    border: 1px solid var(--color-border);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-}
-/* 1. Contenedor de la barra de búsqueda / Filtro */
-/* Utiliza la clase que envuelve tu formulario de búsqueda (ej. .catalog-search-bar o .filter-header) */
+/* Contenedor de la barra de búsqueda / Filtro */
 .catalog-search-bar,
 .game-filter-container,
 .search-input-wrapper {
-    /* Fondo Oscuro */
+    /* Fondo Oscuro del contenedor */
     background-color: var(--color-card);
     padding: 1.5rem;
     border-radius: 12px;
     border: 1px solid var(--color-border);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 15px var(--color-shadow-base);
 }
 
     /* 2. Campo de Entrada (Input field) */
@@ -256,12 +257,12 @@ body {
         transition: all 0.2s;
     }
 
-        /* 3. Foco y Hover */
+        /* 3. Foco y Hover (Glow Cian) */
         .catalog-search-bar input[type="text"]:focus,
         .game-filter-container select:focus {
             outline: none;
             border-color: var(--color-primary);
-            /* Glow Cian en el foco */
+            /* Glow Cian */
             box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.4);
-            background-color: var(--color-card); /* Ligeramente más claro en foco */
+            background-color: var(--color-surface); /* Ligeramente más claro en foco */
         }

@@ -1,44 +1,83 @@
 /* src/components/admin/UserManagement.module.css */
 
+/*
+   Asegúrate de que estas variables estén definidas globalmente 
+   (ej. en GlobalStyles.css o App.css) y que se actualicen en .dark-mode.
+   
+   Ejemplo de variables globales que se asumen:
+   --color-background-light: #f4f6f8; (Fondo general del contenedor)
+   --color-background-dark: #1f2937;
+   --color-card: #ffffff; (Fondo de la tarjeta/tabla)
+   --color-text-primary: #1f2937;
+   --color-text-secondary: #6b7280;
+   --color-border: #e5e7eb;
+   --color-background-secondary: #f3f4f6; (Fondo del thead)
+   --color-background-hover: #f9fafb;
+   --color-primary: #4f46e5;
+   --color-accent: #7c3aed;
+*/
+
 .userManagementContainer {
-    padding: 2rem;
-    background-color: var(--color-background-light);
+    /* Usar un fondo que se adapte al tema (e.g., el fondo de la página o un color sutil) */
+    background-color: var(--color-background-light, #f4f6f8);
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 12px var(--shadow-color, rgba(0, 0, 0, 0.05));
+    padding: 2rem;
+}
+
+.dark-mode .userManagementContainer {
+    background-color: var(--color-background-dark, #1f2937);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .userManagementContainer h3 {
-    color: var(--color-primary);
+    color: var(--color-primary, #4f46e5);
     margin-bottom: 1.5rem;
-    border-bottom: 2px solid var(--color-accent);
+    border-bottom: 2px solid var(--color-accent, #7c3aed);
     padding-bottom: 0.5rem;
 }
 
 .tableContainer {
-    overflow-x: auto; /* Para responsividad en tablas */
+    overflow-x: auto;
+    /* Fondo de la tabla/contenedor de tabla */
+    background-color: var(--color-card, #ffffff);
+    border-radius: 12px;
+    box-shadow: 0 2px 12px var(--shadow-color, rgba(0, 0, 0, 0.08));
 }
 
 .userTable {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.95em;
+    color: var(--color-text-primary, #1f2937); /* Color del cuerpo de la tabla */
 }
 
-.userTable th,
-.userTable td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid var(--color-border);
-}
+    .userTable th,
+    .userTable td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid var(--color-border, #e5e7eb); /* Dinámico */
+    }
 
-.userTable th {
-    background-color: var(--color-background-secondary);
-    color: var(--color-text-primary);
-    font-weight: 600;
+    .userTable th {
+        background-color: var(--color-background-secondary, #f3f4f6); /* Dinámico */
+        color: var(--color-text-primary, #1f2937); /* Dinámico */
+        font-weight: 600;
+    }
+
+/* Oscuro: Invertir colores del encabezado de la tabla */
+.dark-mode .userTable th {
+    background-color: var(--color-card-darker, #111827); /* Fondo más oscuro que la tarjeta */
+    color: var(--color-text-light, #f3f4f6);
 }
 
 .userTable tbody tr:hover {
-    background-color: var(--color-background-hover);
+    background-color: var(--color-background-hover, #f9fafb); /* Dinámico */
+}
+
+/* Oscuro: Hover más pronunciado */
+.dark-mode .userTable tbody tr:hover {
+    background-color: var(--color-card-darker, #111827);
 }
 
 .avatar {
@@ -48,6 +87,9 @@
     object-fit: cover;
 }
 
+/* ========================================================= */
+/* === BADGES DE ROL === */
+
 .role {
     padding: 4px 8px;
     border-radius: 12px;
@@ -56,15 +98,45 @@
     text-transform: uppercase;
 }
 
-.role.admin {
-    background-color: #ffcdd2; /* Rojo claro */
-    color: #c62828; /* Rojo oscuro */
+    /* Rol Admin: Usar colores de Peligro/Advertencia para llamar la atención */
+    .role.admin {
+        /* Claro */
+        background-color: var(--color-danger-light, #fee2e2);
+        color: var(--color-danger-dark, #991b1b);
+    }
+
+.dark-mode .role.admin {
+    /* Oscuro */
+    background-color: var(--color-danger-darker, #450a0a);
+    color: var(--color-danger-lightest, #fca5a5);
 }
 
+/* Rol User: Usar colores de Éxito/Neutro */
 .role.user {
-    background-color: #c8e6c9; /* Verde claro */
-    color: #2e7d32; /* Verde oscuro */
+    /* Claro */
+    background-color: var(--color-success-light, #d1fae5);
+    color: var(--color-success-dark, #065f46);
 }
+
+.dark-mode .role.user {
+    /* Oscuro */
+    background-color: var(--color-success-darker, #064e3b);
+    color: var(--color-success-lightest, #a7f3d0);
+}
+
+/* Rol Moderator (Asumiendo que existe) */
+/* .role.moderator {
+    background-color: var(--color-warning-light, #fef3c7); 
+    color: var(--color-warning-dark, #92400e);
+}
+.dark-mode .role.moderator {
+    background-color: var(--color-warning-darker, #5b3007);
+    color: var(--color-warning-lightest, #fcd34d);
+} */
+
+
+/* ========================================================= */
+/* === ACCIONES Y ERRORES === */
 
 .actionButton {
     padding: 8px 12px;
@@ -76,21 +148,25 @@
 }
 
 .deleteButton {
-    background-color: #ef5350; /* Rojo */
+    background-color: var(--color-danger, #ef5350); /* Rojo */
     color: white;
 }
 
-.deleteButton:hover {
-    background-color: #d32f2f; /* Rojo más oscuro */
-    transform: translateY(-1px);
-}
+    .deleteButton:hover {
+        background-color: var(--color-danger-dark, #d32f2f);
+        transform: translateY(-1px);
+    }
 
-.deleteButton:disabled {
-    background-color: #9e9e9e;
-    cursor: not-allowed;
-}
+    .deleteButton:disabled {
+        background-color: var(--color-border-dark, #9e9e9e); /* Dinámico */
+        cursor: not-allowed;
+    }
 
 .error {
-    color: #d32f2f;
+    color: var(--color-danger-dark, #d32f2f);
     font-weight: bold;
+}
+
+.dark-mode .error {
+    color: var(--color-danger-lightest, #fca5a5);
 }

@@ -1,348 +1,141 @@
-﻿/* ======================================================= */
-/* 🚀 PALETA DE COLORES PLAY-ZONE (GAMER DARK MODE 2.0) */
-/* ======================================================= */
+﻿/*
+ * ==========================================================
+ * GLOBAL THEME VARIABLES - MODO OSCURO FORZADO
+ * Estas variables definen la paleta Dark Mode Gamer.
+ * ==========================================================
+ */
 :root {
-    /* Fondos */
-    --color-dark-blue: #0A111F; /* **Más oscuro (casi negro) para más contraste** */
-    --color-medium-blue: #1A2436; /* Fondo de contenedores/cards: Contraste suave */
-    --color-input-bg: #111A29; /* Fondo de Input: Ligeramente más oscuro que el card */
-    --color-border-subtle: #2B3A50; /* **Nuevo: Borde sutil y más legible** */
-    /* Acentos y Feedback */
-    --color-accent-blue: #00CCFF; /* **Cian eléctrico: Más vibrante y cyberpunk** */
-    --color-accent-hover: #0099CC; /* Azul de hover */
-    --color-accent-shadow: rgba(0, 204, 255, 0.4); /* **Nuevo: Sombra para efecto glow** */
-    /* Texto */
-    --color-text-light: #E8F0FF; /* Texto principal: Blanco azulado suave */
-    --color-text-secondary: #90A0C9; /* Texto secundario/Placeholder **Ligeramente más claro** */
-    /* Feedback */
-    --color-error: #FF4D6C; /* **Rojo más magenta y agresivo** */
-    --color-success: #3DED97; /* **Verde neón más brillante** */
+    /* Fondos y Superficies (Gamer Dark Mode 2.0) */
+    --color-background-primary: #0A111F; /* Fondo principal oscuro */
+    --color-surface: #1A2436; /* Fondo de contenedores/cards (Card) */
+    --color-card: var(--color-surface);
+    --color-input-bg-base: #111A29; /* Fondo de Input oscuro */
+    --color-border-subtle: #2B3A50; /* Borde sutil oscuro */
+    --color-border: var(--color-border-subtle);
+    --color-background-secondary: #0A111F; /* Base para gradiente */
+    /* Acentos y Branding (Cian Eléctrico Gamer) */
+    --color-accent-blue: #00CCFF;
+    --color-primary: var(--color-accent-blue);
+    --color-primary-rgb: 0, 204, 255;
+    --color-accent-hover: #0099CC;
+    --color-accent-shadow: rgba(0, 204, 255, 0.4);
+    /* Texto (Claro) */
+    --color-text-light: #E8F0FF;
+    --color-text-primary: var(--color-text-light); /* Unificando el texto principal */
+    --color-text-primary-rgb: 232, 240, 255;
+    --color-text-secondary: #90A0C9; /* Texto gris azulado para descripciones */
+    /* Feedback y Especiales (Gamer Neon) */
+    --color-error: #FF4D6C;
+    --color-danger: var(--color-error);
+    --color-danger-rgb: 255, 77, 108;
+    --color-success: #3DED97;
+    --color-success-rgb: 61, 237, 151;
+    --color-secondary: #4A5C7F; /* Secundario para botones/links */
+    --button-secondary-hover: #5d7099;
+    --color-warning: #ffc300;
+}
+
+/* Aplicar transición suave a todos los elementos para un cambio de tema elegante */
+* {
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
 }
 
 /* ======================================================= */
 /* 🌎 ESTILOS BASE Y TIPOGRAFÍA */
 /* ======================================================= */
 body {
-    background-color: var(--color-dark-blue);
-    color: var(--color-text-light);
+    /* Fondo principal forzado a Dark Mode */
+    background-color: var(--color-background-primary);
+    color: var(--color-text-primary);
     font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
-    /* **Animación de fondo sutil para sensación de profundidad** */
-    /* background-image: radial-gradient(circle at 50% 10%, var(--color-medium-blue) 0%, transparent 80%); */
-    /* Puedes usar esta línea si deseas un efecto de gradiente radial sutil */
 }
 
 /* ======================================================= */
 /* 1. CONTENEDOR DE AUTENTICACIÓN */
 /* ======================================================= */
-.auth-page-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: 20px;
-}
-
-/* ======================================================= */
-/* 2. FORMULARIO BASE (CARD) */
-/* ======================================================= */
-.auth-form {
-    background-color: var(--color-medium-blue);
-    padding: 50px 40px;
-    border-radius: 20px; /* **Más redondeado** */
-    width: 100%;
-    max-width: 480px; /* **Ancho aún mayor para mejor UX en inputs** */
-    /* **Sombra más profunda y resplandor más intenso con el nuevo color de acento** */
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 25px var(--color-accent-shadow);
-    border: 2px solid var(--color-border-subtle); /* **Borde más definido pero sutil** */
-    /* **Ligero efecto de perspectiva para pop-out** */
-    transform: perspective(1000px) rotateX(0deg);
-    animation: fadeIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* **Curva de animación más suave** */
-}
-
-    .auth-form h2 {
-        color: var(--color-text-light);
-        margin-bottom: 35px;
-        font-weight: 800; /* **Aún más negrita** */
-        letter-spacing: 1px; /* **Mayor espaciado** */
-        text-align: center;
-        text-transform: uppercase; /* **Toque agresivo/gamer** */
-        /* **Sombra de texto sutil para un ligero glow** */
-        text-shadow: 0 0 5px rgba(0, 204, 255, 0.2);
-    }
-
-/* ======================================================= */
-/* 3. INPUTS Y GRUPOS DE FORMULARIO */
-/* ======================================================= */
-.form-group {
-    margin-bottom: 30px; /* **Más espacio entre grupos** */
-}
-
-    .form-group label {
-        display: block;
-        margin-bottom: 10px; /* **Más espacio entre etiqueta e input** */
-        font-size: 0.9rem;
-        color: var(--color-text-secondary);
-        font-weight: 600; /* **Etiqueta más negrita para mejor legibilidad** */
-        text-transform: uppercase;
-    }
-
-.auth-form input {
-    width: 100%;
-    padding: 16px 15px; /* **Mayor altura y padding horizontal** */
-    background-color: var(--color-input-bg);
-    border: 2px solid var(--color-border-subtle); /* **Borde más grueso** */
-    border-radius: 12px; /* Bordes suaves en inputs */
-    color: var(--color-text-light);
-    font-size: 1.05rem; /* **Texto un poco más grande** */
-    transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
-}
-
-    /* **El efecto focus es ahora un "glow" prominente** */
-    .auth-form input:focus {
-        border-color: var(--color-accent-blue);
-        outline: none;
-        box-shadow: 0 0 10px 2px var(--color-accent-shadow); /* **Glow más grande y marcado** */
-        background-color: #141f30; /* **Ligeramente más oscuro en focus para más pop** */
-    }
-
-    /* Estilo para placeholder */
-    .auth-form input::placeholder {
-        color: var(--color-text-secondary);
-        opacity: 0.6;
-    }
-
-/* ======================================================= */
-/* 4. BOTONES PRINCIPALES (ACCIÓN) */
-/* ======================================================= */
-.btn-primary {
-    width: 100%;
-    padding: 16px; /* **Mayor altura del botón** */
-    background-color: var(--color-accent-blue);
-    color: var(--color-dark-blue); /* Texto oscuro sobre botón brillante */
-    border: none;
-    border-radius: 12px;
-    font-weight: 800; /* **Más negrita** */
-    cursor: pointer;
-    margin-top: 25px; /* **Más espacio antes del botón** */
-    letter-spacing: 1.5px; /* **Mayor espaciado para impacto** */
-    text-transform: uppercase;
-    transition: background-color 0.2s, transform 0.1s, box-shadow 0.3s;
-    /* **Añadir el glow por defecto** */
-    box-shadow: 0 0 10px 0 var(--color-accent-shadow);
-}
-
-    .btn-primary:hover:not(:disabled) {
-        background-color: var(--color-accent-hover);
-        transform: translateY(-3px); /* **Un lift más agresivo** */
-        /* **Sombra/Glow al hacer hover más intenso** */
-        box-shadow: 0 8px 20px var(--color-accent-shadow), 0 0 30px var(--color-accent-shadow);
-    }
-
-    .btn-primary:active:not(:disabled) {
-        transform: translateY(-1px); /* **Efecto de "clic" o pulsación** */
-        box-shadow: 0 3px 10px var(--color-accent-shadow);
-    }
-
-    .btn-primary:disabled {
-        background-color: #445068;
-        color: var(--color-text-secondary);
-        opacity: 0.8;
-        cursor: not-allowed;
-        transform: none;
-        box-shadow: none;
-    }
-
-/* ======================================================= */
-/* 5. FEEDBACK Y LINKS SECUNDARIOS */
-/* ======================================================= */
-.error-message, .success-message {
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 25px;
-    font-weight: 600;
-    font-size: 0.95rem;
-    animation: slideIn 0.3s ease-out; /* **Animación de entrada** */
-}
-
-.error-message {
-    background-color: rgba(255, 77, 108, 0.15);
-    color: var(--color-error);
-    border: 1px solid var(--color-error);
-    border-left: 6px solid var(--color-error); /* **Borde más grueso** */
-}
-
-.success-message {
-    background-color: rgba(61, 237, 151, 0.15);
-    color: var(--color-success);
-    border: 1px solid var(--color-success);
-    border-left: 6px solid var(--color-success); /* **Borde más grueso** */
-}
-
-.form-links {
-    display: flex;
-    flex-direction: column;
-    margin-top: 35px;
-    text-align: center;
-}
-
-.btn-link {
-    background: none;
-    border: none;
-    color: var(--color-text-secondary);
-    cursor: pointer;
-    font-size: 0.95rem;
-    margin-top: 15px;
-    transition: color 0.3s, text-shadow 0.3s; /* **Transición de text-shadow** */
-    text-decoration: none; /* **Quitar underline por defecto** */
-}
-
-    .btn-link:hover {
-        color: var(--color-accent-blue);
-        text-decoration: none;
-        text-shadow: 0 0 8px var(--color-accent-shadow); /* **Pequeño glow al hacer hover** */
-    }
-
-/* **Nueva animación para los mensajes de feedback** */
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-/* Animación de entrada (mejorada) */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* ======================================================= */
-/* 🎮 DISEÑO MODERNO PARA LOGIN/AUTH - PLAY-ZONE */
-/* ======================================================= */
-
+.auth-page-container,
 .modern-auth-container {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    padding: 2rem;
-    background: linear-gradient(135deg, 
-        var(--color-background-primary) 0%, 
-        var(--color-background-secondary) 50%, 
-        var(--color-card) 100%
-    );
+    padding: 20px;
+    background: linear-gradient(135deg, var(--color-background-primary) 0%, var(--color-background-secondary) 50%, var(--color-card) 100% );
     position: relative;
     overflow: hidden;
 }
 
-/* Fondo animado con partículas gaming */
-.modern-auth-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-        radial-gradient(circle at 20% 80%, rgba(var(--color-primary-rgb), 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(var(--color-primary-rgb), 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 40% 40%, rgba(var(--color-primary-rgb), 0.05) 0%, transparent 30%);
-    pointer-events: none;
-    animation: backgroundPulse 8s ease-in-out infinite;
-}
+    /* Fondo animado con partículas gaming */
+    .modern-auth-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        /* Usamos rgba y color-primary-rgb del tema oscuro */
+        background: radial-gradient(circle at 20% 80%, rgba(var(--color-primary-rgb), 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(var(--color-primary-rgb), 0.1) 0%, transparent 50%), radial-gradient(circle at 40% 40%, rgba(var(--color-primary-rgb), 0.05) 0%, transparent 30%);
+        pointer-events: none;
+        animation: backgroundPulse 8s ease-in-out infinite;
+    }
 
-/* Patrón de gaming hexágonos */
-.modern-auth-container::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: 
-        radial-gradient(circle at 25% 25%, rgba(var(--color-primary-rgb), 0.03) 2px, transparent 2px),
-        radial-gradient(circle at 75% 75%, rgba(var(--color-primary-rgb), 0.03) 1px, transparent 1px);
-    background-size: 60px 60px, 40px 40px;
-    pointer-events: none;
-    opacity: 0.3;
-    animation: patternShift 20s linear infinite;
-}
+    /* Patrón de gaming hexágonos */
+    .modern-auth-container::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: radial-gradient(circle at 25% 25%, rgba(var(--color-primary-rgb), 0.03) 2px, transparent 2px), radial-gradient(circle at 75% 75%, rgba(var(--color-primary-rgb), 0.03) 1px, transparent 1px);
+        background-size: 60px 60px, 40px 40px;
+        pointer-events: none;
+        opacity: 0.3;
+        animation: patternShift 20s linear infinite;
+    }
 
-@keyframes backgroundPulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
-}
-
-@keyframes patternShift {
-    0% { transform: translate(0, 0); }
-    100% { transform: translate(60px, 60px); }
-}
-
-.auth-card {
-    background: var(--color-card);
-    border: 1px solid var(--color-border);
-    border-radius: 24px;
-    padding: 3rem;
-    max-width: 440px;
+/* ======================================================= */
+/* 2. FORMULARIO BASE (CARD) */
+/* ======================================================= */
+.auth-form, .auth-card {
+    background-color: var(--color-surface);
+    padding: 50px 40px;
+    border-radius: 20px;
     width: 100%;
-    box-shadow: 
-        0 20px 40px rgba(0, 0, 0, 0.15),
-        0 8px 16px rgba(0, 0, 0, 0.1),
-        0 0 0 1px rgba(var(--color-primary-rgb), 0.1);
+    max-width: 480px;
+    /* Sombra Gamer Forzada */
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 25px var(--color-accent-shadow);
+    border: 2px solid var(--color-border-subtle);
+    transform: perspective(1000px) rotateX(0deg);
+    animation: fadeIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     position: relative;
-    z-index: 1;
-    animation: cardEntrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 10;
     backdrop-filter: blur(10px);
 }
 
-@keyframes cardEntrance {
-    0% {
-        opacity: 0;
-        transform: translateY(30px) scale(0.9);
+    .auth-form h2, .welcome-text {
+        color: var(--color-text-primary);
+        margin-bottom: 35px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        text-align: center;
+        text-transform: uppercase;
+        text-shadow: 0 0 5px rgba(var(--color-primary-rgb), 0.2);
     }
-    100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
 
-/* ===== HEADER SECTION ===== */
+/* ===== HEADER SECTION (modern) ===== */
 .auth-header {
     text-align: center;
     margin-bottom: 2.5rem;
 }
 
-.logo-section {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    margin-bottom: 1rem;
-}
-
 .logo-icon {
     font-size: 2.5rem;
+    color: var(--color-primary);
     filter: drop-shadow(0 0 15px rgba(var(--color-primary-rgb), 0.6));
     animation: logoFloat 3s ease-in-out infinite;
-}
-
-@keyframes logoFloat {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-5px); }
 }
 
 .brand-title {
@@ -357,65 +150,58 @@ body {
     text-shadow: 0 0 30px rgba(var(--color-primary-rgb), 0.3);
 }
 
-.welcome-text {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--color-text-light);
-    margin: 0 0 0.5rem 0;
-}
-
 .subtitle {
     color: var(--color-text-secondary);
     margin: 0;
     font-size: 1rem;
 }
 
-/* ===== FORM STYLES ===== */
-.modern-auth-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+/* ======================================================= */
+/* 3. INPUTS Y GRUPOS DE FORMULARIO */
+/* ======================================================= */
+.form-group {
+    margin-bottom: 30px;
 }
 
-/* Error Alert */
-.error-alert {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 1rem 1.25rem;
-    background: rgba(220, 53, 69, 0.1);
-    border: 1px solid rgba(220, 53, 69, 0.3);
+    .form-group label {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 0.9rem;
+        color: var(--color-text-secondary);
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+.auth-form input, .modern-input {
+    width: 100%;
+    padding: 16px 15px;
+    background-color: var(--color-input-bg-base);
+    border: 2px solid var(--color-border-subtle);
     border-radius: 12px;
-    color: var(--color-danger);
-    font-size: 0.9rem;
-    animation: errorSlide 0.5s ease-out;
+    color: var(--color-text-primary);
+    font-size: 1.05rem;
+    transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
+    box-sizing: border-box; /* Asegurar que padding no aumente el tamaño */
 }
 
-.error-icon {
-    font-size: 1.1rem;
-    filter: drop-shadow(0 0 5px currentColor);
+/* Modern Input Base */
+.modern-input {
+    padding: 1.25rem 1.25rem 1.25rem 3.25rem;
+    border-radius: 16px;
+    font-size: 1rem;
 }
 
-@keyframes errorSlide {
-    0% { 
-        opacity: 0;
-        transform: translateX(-20px);
+    /* Focus: Aplicación unificada para modo oscuro */
+    .auth-form input:focus, .modern-input:focus {
+        border-color: var(--color-accent-blue);
+        outline: none;
+        box-shadow: 0 0 10px 2px rgba(var(--color-primary-rgb), 0.5); /* Sombra más fuerte */
+        background-color: #141f30; /* Fondo ligeramente más claro que el input-bg para distinción */
     }
-    100% { 
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
 
-/* Input Groups */
-.input-group {
-    position: relative;
-}
-
-.input-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
+.auth-form input::placeholder {
+    color: var(--color-text-secondary);
+    opacity: 0.6;
 }
 
 .input-icon {
@@ -423,35 +209,7 @@ body {
     left: 1.25rem;
     font-size: 1.1rem;
     color: var(--color-text-secondary);
-    z-index: 1;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.modern-input {
-    width: 100%;
-    padding: 1.25rem 1.25rem 1.25rem 3.25rem;
-    background: var(--color-input-bg);
-    border: 2px solid var(--color-border);
-    border-radius: 16px;
-    color: var(--color-text-light);
-    font-size: 1rem;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-sizing: border-box;
-}
-
-.modern-input:focus {
-    outline: none;
-    border-color: var(--color-primary);
-    box-shadow: 
-        0 0 0 4px rgba(var(--color-primary-rgb), 0.15),
-        0 8px 20px rgba(var(--color-primary-rgb), 0.1);
-    transform: translateY(-2px);
-}
-
-.modern-input:focus + .floating-label,
-.modern-input:not(:placeholder-shown) + .floating-label {
-    transform: translateY(-2.5rem) scale(0.85);
-    color: var(--color-primary);
 }
 
 .modern-input:focus ~ .input-icon {
@@ -468,120 +226,141 @@ body {
     font-size: 1rem;
     pointer-events: none;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    background: var(--color-input-bg);
+    background: var(--color-input-bg-base);
     padding: 0 0.5rem;
     z-index: 1;
 }
 
-/* Submit Button */
+.modern-input:focus + .floating-label,
+.modern-input:not(:placeholder-shown) + .floating-label {
+    transform: translateY(-2.5rem) scale(0.85);
+    color: var(--color-primary);
+    background: var(--color-surface); /* Hacer el fondo del label ligeramente distinto para que resalte */
+}
+
+/* ======================================================= */
+/* 4. BOTONES PRINCIPALES (ACCIÓN) */
+/* ======================================================= */
+.btn-primary, .modern-submit-btn {
+    width: 100%;
+    padding: 16px;
+    background-color: var(--color-accent-blue);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    margin-top: 25px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    transition: background-color 0.2s, transform 0.1s, box-shadow 0.3s;
+    box-shadow: 0 0 10px 0 rgba(var(--color-primary-rgb), 0.5); /* Sombra Gamer */
+}
+/* Estilos específicos de modern-submit-btn */
 .modern-submit-btn {
     padding: 1.25rem 2rem;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-accent-hover));
-    border: none;
     border-radius: 16px;
-    color: white;
     font-size: 1.1rem;
     font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-    box-shadow: 
-        0 8px 20px rgba(var(--color-primary-rgb), 0.3),
-        0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative; /* Necesario para el efecto ::before */
+    overflow: hidden; /* Necesario para el efecto ::before */
 }
 
-.modern-submit-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.6s;
+    .modern-submit-btn:hover:not(:disabled) {
+        box-shadow: 0 12px 25px rgba(var(--color-primary-rgb), 0.4), 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Hover/Active para ambos */
+    .btn-primary:hover:not(:disabled), .modern-submit-btn:hover:not(:disabled) {
+        background-color: var(--color-accent-hover);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(var(--color-primary-rgb), 0.7), 0 0 30px rgba(var(--color-primary-rgb), 0.5);
+    }
+
+    .btn-primary:active:not(:disabled), .modern-submit-btn:active {
+        transform: translateY(-1px);
+        box-shadow: 0 3px 10px rgba(var(--color-primary-rgb), 0.4);
+    }
+
+    .btn-primary:disabled, .modern-submit-btn:disabled {
+        background-color: var(--color-border-subtle);
+        color: var(--color-text-secondary);
+        opacity: 0.6; /* Menos opaco que 0.8 */
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
+
+    .modern-submit-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        /* Efecto de brillo de izquierda a derecha */
+        background: linear-gradient(90deg, transparent, rgba(var(--color-text-primary-rgb), 0.2), transparent);
+        transition: left 0.6s;
+        pointer-events: none;
+    }
+
+    .modern-submit-btn:hover::before {
+        left: 100%;
+    }
+
+/* ======================================================= */
+/* 5. FEEDBACK Y LINKS SECUNDARIOS */
+/* ======================================================= */
+.error-message, .success-message, .error-alert {
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    animation: slideIn 0.3s ease-out;
 }
 
-.modern-submit-btn:hover::before {
-    left: 100%;
+.error-message, .error-alert {
+    /* Color de error neon */
+    background-color: rgba(var(--color-danger-rgb), 0.15);
+    color: var(--color-error);
+    border: 1px solid var(--color-error);
+    border-left: 6px solid var(--color-error);
 }
 
-.modern-submit-btn:hover:not(:disabled) {
-    transform: translateY(-3px);
-    box-shadow: 
-        0 12px 25px rgba(var(--color-primary-rgb), 0.4),
-        0 6px 12px rgba(0, 0, 0, 0.15);
+.success-message {
+    /* Color de éxito neon */
+    background-color: rgba(61, 237, 151, 0.15);
+    color: var(--color-success);
+    border: 1px solid var(--color-success);
+    border-left: 6px solid var(--color-success);
 }
 
-.modern-submit-btn:active {
-    transform: translateY(-1px);
-}
-
-.modern-submit-btn:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-    transform: none;
-}
-
-.btn-content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    position: relative;
-    z-index: 1;
-}
-
-.btn-icon {
-    font-size: 1.2rem;
-}
-
-.spinner {
-    width: 18px;
-    height: 18px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-top: 2px solid white;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-/* Divider */
-.auth-divider {
-    position: relative;
-    text-align: center;
-    margin: 1.5rem 0;
-}
-
-.auth-divider::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--color-border), transparent);
-}
-
-.auth-divider span {
-    background: var(--color-card);
-    color: var(--color-text-secondary);
-    padding: 0 1rem;
-    font-size: 0.9rem;
-    position: relative;
-    z-index: 1;
-}
-
-/* Auth Links */
-.auth-links {
+.form-links {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    margin-top: 35px;
+    text-align: center;
 }
 
+.btn-link {
+    background: none;
+    border: none;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    font-size: 0.95rem;
+    margin-top: 15px;
+    transition: color 0.3s, text-shadow 0.3s;
+    text-decoration: none;
+}
+
+    .btn-link:hover {
+        color: var(--color-accent-blue);
+        text-decoration: underline; /* Añadir subrayado para accesibilidad */
+        text-shadow: 0 0 8px rgba(var(--color-primary-rgb), 0.5);
+    }
+
+/* Links modernos */
 .link-btn {
     display: flex;
     align-items: center;
@@ -601,28 +380,29 @@ body {
     overflow: hidden;
 }
 
-.link-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(var(--color-primary-rgb), 0.05);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.3s ease;
-}
+    .link-btn:hover {
+        border-color: var(--color-primary);
+        color: var(--color-primary);
+        transform: translateY(-2px);
+    }
 
-.link-btn:hover::before {
-    transform: scaleX(1);
-}
+    .link-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(var(--color-primary-rgb), 0.05);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.3s ease;
+        pointer-events: none;
+    }
 
-.link-btn:hover {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-    transform: translateY(-2px);
-}
+    .link-btn:hover::before {
+        transform: scaleX(1);
+    }
 
 .primary-link {
     border-color: var(--color-primary);
@@ -630,43 +410,132 @@ body {
     background: rgba(var(--color-primary-rgb), 0.08);
 }
 
-.primary-link:hover {
-    background: rgba(var(--color-primary-rgb), 0.15);
+    .primary-link:hover {
+        background: rgba(var(--color-primary-rgb), 0.15);
+    }
+
+/* UTILIDADES Y ANIMACIONES */
+.spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--color-text-secondary);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
 }
 
-.link-icon {
-    font-size: 1rem;
-    position: relative;
-    z-index: 1;
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes backgroundPulse {
+    0%, 100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+}
+
+@keyframes patternShift {
+    0% {
+        transform: translate(0, 0);
+    }
+
+    100% {
+        transform: translate(60px, 60px);
+    }
+}
+
+@keyframes cardEntrance {
+    0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.9);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes logoFloat {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes errorSlide {
+    0% {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 
 /* Responsive */
 @media (max-width: 768px) {
     .modern-auth-container {
         padding: 1rem;
     }
-    
+
     .auth-card {
         padding: 2rem 1.5rem;
         border-radius: 20px;
     }
-    
+
     .brand-title {
         font-size: 1.5rem;
     }
-    
+
     .welcome-text {
         font-size: 1.3rem;
     }
-    
+
     .modern-input {
         padding: 1rem 1rem 1rem 3rem;
     }
-    
+
     .floating-label {
         left: 3rem;
     }
-    
+
     .input-icon {
         left: 1rem;
     }

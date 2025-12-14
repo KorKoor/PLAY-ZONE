@@ -1,9 +1,47 @@
-/* Página de Favoritos - Theme-aware */
+/*
+ * ==========================================================
+ * GLOBAL THEME VARIABLES - MODO OSCURO FORZADO
+ * Estas variables definen la paleta Dark Mode Gamer.
+ * ==========================================================
+ */
+:root {
+    /* Fondos y Superficies (Gamer Dark Mode 2.0) */
+    --color-background-primary: #0A111F; /* Fondo principal oscuro (Gamer) */
+    --color-surface: #1A2436; /* Fondo de tarjetas/Componentes principales */
+    --color-card: var(--color-surface);
+    --color-input-bg: #111A29; /* Fondo de inputs y secciones sutiles */
+    --color-border: #2B3A50; /* Borde sutil oscuro */
+    /* Acentos y Branding (Cian Eléctrico Gamer) */
+    --color-accent-blue: #00CCFF;
+    --color-primary: var(--color-accent-blue);
+    --color-primary-rgb: 0, 204, 255;
+    --color-accent-hover: #0099CC;
+    /* Texto (Claro) */
+    --color-text-primary: #E8F0FF; /* Texto principal (blanco brillante) */
+    --color-text-secondary: #90A0C9; /* Texto gris azulado para descripciones */
+    --color-text-light: var(--color-text-primary);
+    /* Feedback y Especiales (Gamer Neon) */
+    --color-error: #FF4D6C;
+    --color-danger: var(--color-error);
+    --color-danger-rgb: 255, 77, 108;
+    --color-success: #3DED97;
+}
+
+/* Aplicar transición suave a todos los elementos para un cambio de tema elegante */
+* {
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
+}
+
+/* ======================================================= */
+/* ❤️ 1. ESTRUCTURA PRINCIPAL Y HEADER */
+/* ======================================================= */
 .favorites-page {
     min-height: 100vh;
-    background-color: var(--color-background-primary);
+    /* Fondo con gradiente Gamer forzado */
+    background: linear-gradient(135deg, var(--color-background-primary) 0%, #111A29 100%);
     color: var(--color-text-light);
-    padding: 0 1rem 2rem 1rem; /* No top padding */
+    padding: 0 1rem 2rem 1rem;
+    transition: color 0.4s ease, background-color 0.4s ease;
 }
 
 /* Título de la sección "Mis Favoritos" */
@@ -13,20 +51,23 @@
     color: var(--color-text-light);
 }
 
-.favorites-header h1 {
-    font-size: 2.5rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+    .favorites-header h1 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-shadow: 0 0 5px rgba(var(--color-primary-rgb), 0.1);
+    }
 
-.favorites-header h1 svg {
-    color: #ff1744; /* Rojo vibrante para el corazón */
-    margin-right: 0.75rem; /* Espacio entre el icono y el texto */
-    font-size: 2.2rem; /* Ajustar tamaño si es necesario */
-}
+        .favorites-header h1 svg {
+            color: var(--color-danger); /* Corazón siempre color Danger Neon */
+            margin-right: 0.75rem;
+            font-size: 2.2rem;
+            /* Glow intenso de Error/Danger Neon */
+            filter: drop-shadow(0 0 10px rgba(var(--color-danger-rgb), 0.8));
+        }
 
 .favorites-subtitle {
     font-size: 1.1rem;
@@ -35,7 +76,15 @@
     margin: 0 auto;
 }
 
-/* Estado de carga */
+.favorites-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 2rem;
+}
+
+/* ======================================================= */
+/* 2. ESTADOS (CARGA Y ERROR) */
+/* ======================================================= */
 .loading-container {
     display: flex;
     flex-direction: column;
@@ -55,11 +104,6 @@
     margin-bottom: 1rem;
 }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
 /* Estado de error */
 .error-container {
     background: var(--color-card);
@@ -70,6 +114,8 @@
     margin: 2rem auto;
     color: var(--color-text-light);
     border: 1px solid var(--color-danger);
+    /* Sombra de error adaptada */
+    box-shadow: 0 4px 20px rgba(var(--color-danger-rgb), 0.4);
 }
 
 .error-message {
@@ -90,11 +136,14 @@
     transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(var(--color-danger-rgb), 0.5);
 }
 
-.retry-button:hover {
-    filter: brightness(120%);
-}
+    .retry-button:hover {
+        filter: brightness(110%);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(var(--color-danger-rgb), 0.7);
+    }
 
 /* Favoritos vacíos */
 .empty-favorites {
@@ -106,6 +155,7 @@
     margin: 2rem auto;
     color: var(--color-text-secondary);
     border: 1px dashed var(--color-border);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .empty-icon {
@@ -113,24 +163,20 @@
     margin-bottom: 1rem;
     display: block;
     color: var(--color-primary);
+    /* Glow de acento principal */
+    filter: drop-shadow(0 0 15px rgba(var(--color-primary-rgb), 0.5));
 }
 
 .empty-favorites h2 {
     font-size: 1.8rem;
     margin-bottom: 1rem;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--color-text-light);
-}
-
-.empty-favorites p {
-    font-size: 1.1rem;
-    margin-bottom: 2rem;
-    line-height: 1.6;
 }
 
 .browse-posts-button {
     background: var(--color-primary);
-    color: var(--color-background-primary);
+    color: white;
     border: none;
     padding: 15px 30px;
     border-radius: 30px;
@@ -140,28 +186,27 @@
     transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    box-shadow: 0 5px 15px rgba(var(--color-primary-rgb), 0.5);
 }
 
-.browse-posts-button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(var(--color-primary-rgb), 0.3);
-}
+    .browse-posts-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(var(--color-primary-rgb), 0.7);
+    }
 
-/* Container de favoritos */
-.favorites-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding-top: 2rem; /* Added top padding */
-}
+/* ======================================================= */
+/* 3. CONTENIDO Y GRID */
+/* ======================================================= */
 
 /* Contador de favoritos */
 .favorites-stats {
-    background: var(--color-card);
+    background: var(--color-input-bg);
     border-radius: 15px;
     padding: 1rem 2rem;
     margin-bottom: 2rem;
     text-align: center;
     border: 1px solid var(--color-border);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 .favorites-count {
@@ -180,12 +225,24 @@
     padding: 0;
 }
 
-/* === RESPONSIVE === */
+/* ======================================================= */
+/* 4. ANIMACIONES Y RESPONSIVE */
+/* ======================================================= */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 @media (max-width: 768px) {
     .favorites-page {
         padding: 0 0.5rem 1rem 0.5rem;
     }
-    
+
     .favorites-container {
         padding-top: 1rem;
     }
@@ -193,15 +250,15 @@
     .favorites-header h1 {
         font-size: 2rem;
     }
-    
+
     .favorites-subtitle {
         font-size: 1rem;
     }
-    
+
     .empty-favorites {
         padding: 3rem 1.5rem;
     }
-    
+
     .favorites-grid {
         grid-template-columns: 1fr;
         gap: 1.5rem;
@@ -213,8 +270,8 @@
     .favorites-header {
         margin-bottom: 2rem;
     }
-    
-    .favorites-header h1 {
-        font-size: 1.8rem;
-    }
+
+        .favorites-header h1 {
+            font-size: 1.8rem;
+        }
 }

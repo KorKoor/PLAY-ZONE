@@ -330,7 +330,8 @@ const SearchPage = () => {
                                         margin: '10px 0', 
                                         borderRadius: '4px',
                                         fontSize: '13px',
-                                        fontFamily: 'monospace'
+                                        fontFamily: 'monospace',
+                                        display: 'none'
                                     }}>
                                         <strong>🐛 Debug Info:</strong><br/>
                                         <strong>Query:</strong> "{searchQuery}" | <strong>Tab:</strong> {activeTab} | <strong>Loading:</strong> {loading ? 'Sí' : 'No'}<br/>

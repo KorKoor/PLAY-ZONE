@@ -1,13 +1,48 @@
-/* ----------------------------------------------------------
- * 5. GUIDE FORM MODAL (GuideForm.jsx)
- * ---------------------------------------------------------- */
+/*
+ * ==========================================================
+ * GLOBAL THEME VARIABLES - MODO OSCURO FORZADO
+ * Estas variables definen la paleta Dark Mode Gamer.
+ * ==========================================================
+ */
+:root {
+    /* Fondos y Superficies (Gamer Dark Mode 2.0) */
+    --color-background-primary: #0F141F; /* Fondo principal oscuro */
+    --color-surface: #1A2436; /* Fondo de tarjetas/Componentes principales */
+    --color-card: var(--color-surface);
+    --color-input-bg: #111A29; /* Fondo de inputs y pasos de guía */
+    --color-border: #3D4A66; /* Borde sutil oscuro */
+    /* Acentos y Branding (Cian Eléctrico Gamer) */
+    --color-accent-blue: #00CCFF;
+    --color-primary: var(--color-accent-blue);
+    --color-primary-rgb: 0, 204, 255;
+    --color-accent-hover: #0099CC;
+    /* Texto (Claro) */
+    --color-text-primary: #E0E7FF; /* Texto principal (blanco brillante) */
+    --color-text-secondary: #90A0C9; /* Texto gris azulado para descripciones */
+    --color-text-light: var(--color-text-primary);
+    /* Feedback y Especiales (Gamer Neon) */
+    --color-error: #FF4D6C;
+    --color-danger: var(--color-error);
+    --color-danger-rgb: 255, 77, 108;
+    --color-success: #3DED97; /* Usado en archivos anteriores */
+}
+
+/* Aplicar transición suave a todos los elementos para un cambio de tema elegante */
+* {
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
+}
+
+/* ======================================================= */
+/* 1. MODAL Y ESTRUCTURA BASE */
+/* ======================================================= */
 .guide-form-modal {
     background-color: var(--color-card);
     padding: 40px;
     border-radius: 16px;
     width: 90%;
     max-width: 700px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+    /* Sombra Gamer Forzada */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7), 0 0 15px rgba(var(--color-primary-rgb), 0.3);
     position: relative;
     border-top: 4px solid var(--color-primary);
     animation: scaleIn 0.3s ease-out;
@@ -15,21 +50,21 @@
     overflow-y: auto;
 }
 
-.guide-form-modal h2 {
-    font-size: 2rem;
-    font-weight: 800;
-    margin-bottom: 10px;
-    color: var(--color-text-light);
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
+    .guide-form-modal h2 {
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 10px;
+        color: var(--color-text-light);
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
 
-.guide-form-modal .form-subtitle {
-    font-size: 1rem;
-    color: var(--color-text-secondary);
-    margin-bottom: 30px;
-}
+    .guide-form-modal .form-subtitle {
+        font-size: 1rem;
+        color: var(--color-text-secondary);
+        margin-bottom: 30px;
+    }
 
 .btn-close-modal {
     position: absolute;
@@ -43,10 +78,10 @@
     transition: all 0.2s;
 }
 
-.btn-close-modal:hover {
-    color: var(--color-danger);
-    transform: rotate(90deg);
-}
+    .btn-close-modal:hover {
+        color: var(--color-danger);
+        transform: rotate(90deg);
+    }
 
 .guide-form {
     display: flex;
@@ -54,37 +89,43 @@
     gap: 20px;
 }
 
+/* ======================================================= */
+/* 2. FORMULARIO E INPUTS */
+/* ======================================================= */
 .form-group {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.form-group label {
-    font-weight: 600;
-    color: var(--color-text-secondary);
-}
+    .form-group label {
+        font-weight: 600;
+        color: var(--color-text-secondary);
+    }
 
-.form-group input,
-.form-group textarea {
-    width: 100%;
-    padding: 12px 15px;
-    background-color: var(--color-input-bg);
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    color: var(--color-text-light);
-    font-size: 1rem;
-    transition: all 0.2s;
-}
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 12px 15px;
+        background-color: var(--color-input-bg);
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        color: var(--color-text-light);
+        font-size: 1rem;
+        transition: all 0.2s;
+    }
 
-.form-group input:focus,
-.form-group textarea:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.2);
-    outline: none;
-}
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--color-primary);
+            /* Glow de foco Cian */
+            box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.5);
+            outline: none;
+        }
 
-/* Pasos de la guía */
+/* ======================================================= */
+/* 3. PASOS DE LA GUÍA (Dynamic Steps) */
+/* ======================================================= */
 .steps-title {
     font-size: 1.2rem;
     font-weight: 700;
@@ -105,23 +146,27 @@
     align-items: flex-start;
     gap: 10px;
     padding: 15px;
+    /* Usar input-bg como fondo, distinto del fondo principal */
     background-color: var(--color-input-bg);
     border-radius: 8px;
-}
-
-.step-item label {
-    font-weight: 700;
-    color: var(--color-primary);
-    padding-top: 12px;
-}
-
-.step-item textarea {
-    flex-grow: 1;
     border: 1px solid var(--color-border);
-    background-color: var(--color-input-bg); /* Ligeramente diferente para destacar */
 }
+
+    .step-item label {
+        font-weight: 700;
+        color: var(--color-primary);
+        padding-top: 12px;
+    }
+
+    .step-item textarea {
+        flex-grow: 1;
+        border: 1px solid var(--color-border);
+        /* Usar input-bg para que coincida con el contenedor del input/step */
+        background-color: var(--color-input-bg);
+    }
 
 .btn-remove-step {
+    /* Botón de eliminación con color Danger Neon */
     background-color: var(--color-danger);
     color: white;
     border: none;
@@ -133,14 +178,18 @@
     justify-content: center;
     cursor: pointer;
     margin-top: 25px;
-    transition: transform 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
-.btn-remove-step:hover {
-    transform: scale(1.1);
-}
+
+    .btn-remove-step:hover {
+        transform: scale(1.1);
+        /* Glow sutil de error */
+        box-shadow: 0 0 8px rgba(var(--color-danger-rgb), 0.5);
+    }
 
 .btn-add-step {
     background: none;
+    /* Borde temático dashed (Cian/Border) */
     border: 2px dashed var(--color-border);
     color: var(--color-text-secondary);
     padding: 15px;
@@ -154,13 +203,72 @@
     gap: 8px;
 }
 
-.btn-add-step:hover {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-}
+    .btn-add-step:hover {
+        border-color: var(--color-primary);
+        color: var(--color-primary);
+        background: rgba(var(--color-primary-rgb), 0.05);
+    }
 
 .btn-publish {
-    margin-top: 20px;
+    /* Estilo de botón primario (Cian Gamer) */
+    background-color: var(--color-primary);
+    color: white;
     padding: 15px;
     font-size: 1.1rem;
+    font-weight: 700;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: all 0.3s;
+}
+
+    .btn-publish:hover {
+        background-color: var(--color-accent-hover);
+        /* Glow Cian en hover */
+        box-shadow: 0 4px 15px rgba(var(--color-primary-rgb), 0.7);
+        transform: translateY(-2px);
+    }
+
+/* ======================================================= */
+/* 4. ANIMACIONES Y RESPONSIVE */
+/* ======================================================= */
+@keyframes scaleIn {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .guide-form-modal {
+        padding: 20px;
+    }
+
+        .guide-form-modal h2 {
+            font-size: 1.5rem;
+        }
+
+        .guide-form-modal .form-subtitle {
+            margin-bottom: 20px;
+        }
+
+    .step-item {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+        .step-item label {
+            padding-top: 0;
+        }
+
+    .btn-remove-step {
+        margin-top: 10px;
+        align-self: flex-end;
+    }
 }

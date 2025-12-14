@@ -1,30 +1,91 @@
-/* src/styles/Post.css (ADAPTACIÓN FINAL AL TEMA CYBER/PERFIL) */
+/*
+ * ==========================================================
+ * GLOBAL THEME VARIABLES - MODO OSCURO FORZADO
+ * Estas variables definen la paleta Dark Mode Gamer.
+ * ==========================================================
+ */
+:root {
+    /* Fondos y Superficies (Gamer Dark Mode 2.0) */
+    --color-background-primary: #0F141F; /* Fondo principal oscuro */
+    --color-surface: #1A2436; /* Fondo de tarjetas/Componentes principales (Usado para input focus) */
+    --color-card: var(--color-surface);
+    --color-input-bg: #141D2B; /* Fondo de modal/inputs/secciones */
+    --color-border: #3D4A66; /* Borde sutil oscuro */
+    --color-overlay-bg: rgba(0, 0, 0, 0.85); /* Fondo de modal/overlay muy oscuro */
+    /* Acentos y Branding (Cian Eléctrico Gamer) */
+    --color-accent-blue: #00CCFF;
+    --color-primary: var(--color-accent-blue);
+    --color-primary-rgb: 0, 204, 255;
+    --color-accent-hover: #0099CC;
+    /* Texto (Claro) */
+    --color-text-primary: #E0E7FF; /* Texto principal (blanco brillante) */
+    --color-text-secondary: #90A0C9; /* Texto gris azulado para descripciones */
+    --color-text-light: var(--color-text-primary);
+    /* Feedback y Especiales (Gamer Neon) */
+    --color-error: #FF4D6C;
+    --color-danger: var(--color-error);
+    --color-danger-rgb: 255, 77, 108;
+    --color-success: #3DED97;
+    --color-warning-star: #FFC300; /* Dorado para estrellas */
+    --color-secondary: #4A5C7F; /* Color secundario/gris adaptado */
+}
 
-/* === POST FORM CARD (MODAL) === */
+/* Aplicar transición suave a todos los elementos */
+* {
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
+}
+
+/* ======================================================= */
+/* 0. MODAL OVERLAY (SOLUCIÓN CRÍTICA DE CENTRADO) */
+/* ======================================================= */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-overlay-bg);
+    /* Centrado Avanzado y robusto */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    padding: 10px;
+    /* Usamos el fondo principal para el blur ya que el color de overlay ya es muy oscuro */
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    overflow-y: auto;
+}
+
+
+/* ======================================================= */
+/* 1. POST FORM CARD (MODAL) */
+/* ======================================================= */
 .post-form-card {
-    /* Fondo del modal más oscuro para alto contraste */
+    /* El fondo del modal debe ser el input-bg o surface */
     background-color: var(--color-input-bg);
-    padding: 40px; /* Más padding para aire */
-    border-radius: 16px; /* Bordes suaves */
+    padding: 40px;
+    border-radius: 16px;
     width: 95%;
-    max-width: 700px; /* Modal ligeramente más grande */
-    /* Sombra profunda y borde acentuado, coherente con el modal de edicion de perfil */
-    box-shadow: 0 0 50px rgba(0, 0, 0, 0.9), 0 0 10px rgba(var(--color-primary-rgb), 0.3);
+    max-width: 700px;
+    /* Sombra Gamer forzada */
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.9), 0 0 15px rgba(var(--color-primary-rgb), 0.6);
     position: relative;
-    border: 3px solid var(--color-border); /* Borde mas grueso y definido */
-    animation: fadeIn 0.4s ease-out; /* Reutilizar animacion */
+    border: 3px solid var(--color-border);
+    animation: fadeIn 0.4s ease-out;
+    margin: 20px 0;
 }
 
     .post-form-card h2 {
         color: var(--color-primary);
-        font-size: 2.2rem; /* Titulo mas grande */
+        font-size: 2.2rem;
         font-weight: 800;
         margin-bottom: 5px;
     }
 
 .form-subtitle {
     color: var(--color-text-secondary);
-    margin-bottom: 40px; /* Mas separacion del formulario */
+    margin-bottom: 40px;
     font-size: 1rem;
 }
 
@@ -35,46 +96,52 @@
     background: transparent;
     border: none;
     color: var(--color-text-secondary);
-    font-size: 2rem; /* Icono de cerrar mas grande */
+    font-size: 2rem;
     cursor: pointer;
     transition: color 0.3s, transform 0.3s;
 }
 
     .btn-close-modal:hover {
         color: var(--color-danger);
-        transform: rotate(180deg) scale(1.1); /* Animacion de cierre mas notoria */
+        transform: rotate(180deg) scale(1.1);
     }
 
-/* === Formulario General === */
+/* ======================================================= */
+/* 2. FORMULARIO E INPUTS */
+/* ======================================================= */
 .post-form-card .form-group {
-    margin-bottom: 30px; /* Mas espacio entre campos */
+    margin-bottom: 30px;
 }
 
 .post-form-card label {
     color: var(--color-text-light);
-    margin-bottom: 10px; /* Mas separacion de label y input */
+    margin-bottom: 10px;
     font-weight: 600;
     font-size: 1.05rem;
 }
 
 .post-form-card input[type="text"],
 .post-form-card textarea {
-    padding: 15px; /* Input mas comodo */
-    background-color: var(--color-card); /* Coherente con los inputs del perfil */
-    border: 2px solid var(--color-border); /* Borde mas fuerte */
+    padding: 15px;
+    /* Usamos color-card/surface para diferenciar del fondo del modal */
+    background-color: var(--color-card);
+    border: 2px solid var(--color-border);
     color: var(--color-text-light);
-    border-radius: 10px; /* Mas redondeado */
+    border-radius: 10px;
+    transition: all 0.2s;
 }
 
     .post-form-card input:focus,
     .post-form-card textarea:focus {
         border-color: var(--color-primary);
-        /* Glow de foco mas fuerte, coherente con el modal de edicion */
+        /* Glow de foco Cian fuerte */
         box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb), 0.5), 0 0 0 6px rgba(var(--color-primary-rgb), 0.3);
         outline: none;
     }
 
-/* === Boton de Subida de Archivo === */
+/* ======================================================= */
+/* 3. SUBIDA DE ARCHIVO Y RATING */
+/* ======================================================= */
 .btn-upload-file {
     padding: 12px 20px;
     background-color: var(--color-secondary);
@@ -83,10 +150,11 @@
     font-size: 1rem;
     font-weight: 600;
     transition: all 0.3s;
+    color: var(--color-text-light);
 }
 
     .btn-upload-file:hover {
-        background-color: #5d7099;
+        background-color: var(--color-accent-hover);
         transform: translateY(-1px);
     }
 
@@ -97,34 +165,58 @@
     margin-top: 15px;
 }
 
-/* === Estrellas de Calificacion === */
+/* Estrellas de Calificacion */
 .rating-input {
-    font-size: 2.2rem; /* Estrellas mas grandes */
+    font-size: 2.2rem;
     margin-top: 8px;
 }
 
 .star-icon.active {
-    color: #FFC300;
-    text-shadow: 0 0 5px #FFC300; /* Coherente con el glow de PostCard */
+    color: var(--color-warning-star);
+    text-shadow: 0 0 5px var(--color-warning-star);
 }
 
-.star-icon:hover {
-    transform: scale(1.15); /* Efecto mas notorio */
+.star-icon {
+    transition: transform 0.15s ease-out;
 }
 
-/* === Boton de Publicar === */
+    .star-icon:hover {
+        transform: scale(1.15);
+    }
+
+/* ======================================================= */
+/* 4. BOTÓN DE PUBLICAR */
+/* ======================================================= */
 .btn-publish {
     width: 100%;
-    padding: 18px; /* Boton mas alto y prominente */
+    padding: 18px;
     font-size: 1.3rem;
     font-weight: 800;
     border-radius: 12px;
     background-color: var(--color-primary);
+    /* Texto contrastante: Usar el color de fondo principal (el más oscuro) */
     color: var(--color-background-primary);
+    border: none;
+    cursor: pointer;
     transition: all 0.3s;
 }
 
     .btn-publish:hover:not(:disabled) {
-        transform: translateY(-3px); /* Coherente con botones de perfil */
+        background-color: var(--color-accent-hover);
+        transform: translateY(-3px);
+        /* Glow Cian en hover */
         box-shadow: 0 8px 25px rgba(var(--color-primary-rgb), 0.8);
     }
+
+/* ======================================================= */
+/* 5. UTILIDADES Y ANIMACIONES */
+/* ======================================================= */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

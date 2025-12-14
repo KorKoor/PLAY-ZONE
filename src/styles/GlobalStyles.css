@@ -1,25 +1,36 @@
 ﻿/*
  * ==========================================================
- * GLOBAL STYLES - PLAY-ZONE BASE LAYOUT
- * Este archivo establece la paleta de colores y el estilo base del cuerpo.
+ * GLOBAL THEME VARIABLES - MODO OSCURO FORZADO
+ * Estas variables definen la paleta Dark Mode Gamer.
  * ==========================================================
  */
-
 :root {
-  --color-background-primary: #0F141F;
-  --color-background-secondary: #1C2738;
-  --color-card: #28374E;
-  --color-input-bg: #141D2B;
-  --color-border: #3D4A66;
-  --color-accent-blue: #00C6FF;
-  --color-primary: var(--color-accent-blue);
-  --color-primary-rgb: 0, 198, 255;
-  --color-accent-hover: #0099CC;
-  --color-secondary: #4A5C7F;
-  --button-background-color-secondary: var(--color-secondary);
-  --button-background-color-secondary-hover: #5d7099;
-  --color-text-light: #E0E7FF;
-  --color-text-primary: var(--color-text-light);
+    /* Fondos y Superficies (Gamer Dark Mode 2.0) */
+    --color-background-primary: #0F141F; /* Fondo principal oscuro (App Body) */
+    --color-background-secondary: #1C2738; /* Fondo secundario/App Wrapper */
+    --color-surface: #1A2436; /* Fondo de contenedores/cards */
+    --color-card: #28374E; /* Fondo de Card, ligeramente más claro */
+    --color-input-bg: #141D2B; /* Fondo de Inputs/Sutiles */
+    --color-border: #3D4A66; /* Borde sutil oscuro */
+    /* Acentos y Branding (Cian Eléctrico Gamer) */
+    --color-accent-blue: #00C6FF;
+    --color-primary: var(--color-accent-blue);
+    --color-primary-rgb: 0, 198, 255;
+    --color-accent-hover: #0099CC;
+    /* Colores Secundarios/Grises */
+    --color-secondary: #4A5C7F;
+    --button-background-color-secondary: var(--color-secondary);
+    --button-background-color-secondary-hover: #5d7099;
+    /* Texto (Claro) */
+    --color-text-primary: #E0E7FF; /* Texto principal (blanco brillante) */
+    --color-text-secondary: #90A0C9; /* Texto gris azulado para descripciones */
+    --color-text-light: var(--color-text-primary); /* Alias para texto principal */
+    /* Feedback y Especiales (Gamer Neon) */
+    --color-error: #FF4D6C;
+    --color-danger: var(--color-error);
+    --color-success: #3DED97;
+    --color-success-rgb: 61, 237, 151;
+    --color-warning: #FFC300; /* Color Dorado/Advertencia */
 }
 
 
@@ -30,19 +41,22 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    /* Transición para un cambio de tema elegante */
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
 }
 
 body {
-    /* Aplicar el fondo principal del tema oscuro */
+    /* Fondo principal forzado a Dark Mode */
     background-color: var(--color-background-primary);
-    color: var(--color-text-light); /* Aplicar el texto claro a todo el cuerpo */
+    color: var(--color-text-light);
     font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
-    overflow-x: hidden; /* Evitar scroll horizontal */
+    overflow-x: hidden;
 }
 
 /* Estilo para el contenedor principal de React */
 .App {
+    /* Usar el fondo secundario, ligeramente más claro que el body */
     background-color: var(--color-background-secondary);
     min-height: 100vh;
 }
@@ -65,13 +79,17 @@ body {
 
 .btn-primary {
     background-color: var(--color-primary);
-    color: var(--color-background-primary); /* Texto oscuro sobre el acento brillante */
+    /* Color de texto contrastante: Usar el color de fondo principal (el más oscuro) */
+    color: var(--color-background-primary);
+    /* Glow Cian Forzado */
     box-shadow: 0 4px 15px rgba(var(--color-primary-rgb), 0.5);
 }
 
     .btn-primary:hover:not(:disabled) {
         background-color: var(--color-accent-hover);
         transform: translateY(-2px);
+        /* Glow más intenso en hover */
+        box-shadow: 0 6px 20px rgba(var(--color-primary-rgb), 0.8);
     }
 
 .btn-secondary {
@@ -81,7 +99,7 @@ body {
 }
 
     .btn-secondary:hover:not(:disabled) {
-        background-color: #5d7099;
+        background-color: var(--button-background-color-secondary-hover);
         transform: translateY(-1px);
     }
 
@@ -93,13 +111,14 @@ body {
 }
 
 /* ----------------------------------------------------------
- * NOTIFICACIONES DE FAVORITOS
+ * NOTIFICACIONES DE FAVORITOS (Ajuste de Gradientes)
  * ---------------------------------------------------------- */
 @keyframes slideIn {
     from {
         transform: translateX(100%);
         opacity: 0;
     }
+
     to {
         transform: translateX(0);
         opacity: 1;
@@ -110,10 +129,22 @@ body {
     from {
         opacity: 1;
     }
+
     to {
         opacity: 0;
     }
 }
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 
 .favorite-notification {
     position: fixed;
@@ -121,21 +152,116 @@ body {
     right: 20px;
     padding: 15px 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
     z-index: 10000;
     font-weight: 600;
-    color: white;
+    color: var(--color-background-primary); /* Texto oscuro para contraste en notificaciones brillantes */
     animation: slideIn 0.3s ease-out;
 }
 
-.favorite-notification.success {
-    background: linear-gradient(135deg, #4CAF50, #45a049);
+    .favorite-notification.success {
+        /* Success Neon (Gamer) */
+        background: linear-gradient(135deg, var(--color-success), #45a049);
+    }
+
+    .favorite-notification.removed {
+        /* Usar un color de advertencia/warning que funcione */
+        background: linear-gradient(135deg, var(--color-warning), #f57c00);
+        color: var(--color-text-primary); /* Texto oscuro para contraste sobre amarillo */
+    }
+
+    .favorite-notification.fadeout {
+        animation: fadeOut 0.3s ease-in;
+    }
+/* ======================================================= */
+/* 1. ESTRUCTURA GLOBAL (Asegurar que la tarjeta base es oscura) */
+/* ======================================================= */
+
+/* Asegura que el contenedor principal de contenido sea oscuro */
+.game-content {
+    background: var(--color-surface);
+    min-height: 60vh;
 }
 
-.favorite-notification.removed {
-    background: linear-gradient(135deg, #FF9800, #f57c00);
+/* ======================================================= */
+/* 2. NAVEGACIÓN SECUNDARIA (Si se reutilizan tabs o navs) */
+/* ======================================================= */
+
+.game-nav {
+    /* FIX 1: Fondo de la barra de navegación sticky (debe ser oscuro) */
+    background: var(--color-card);
+    border-bottom: 3px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
 }
 
-.favorite-notification.fadeout {
-    animation: fadeOut 0.3s ease-in;
+.nav-tab {
+    /* FIX 2: Asegurar que el fondo de la pestaña inactiva no sea blanco */
+    background: none;
+    color: var(--color-text-secondary);
 }
+
+    .nav-tab:hover {
+        /* Fondo de hover debe ser sutil y oscuro */
+        background: var(--color-input-bg);
+        color: var(--color-primary);
+    }
+
+    .nav-tab.active {
+        /* Fondo activo debe ser sutilmente diferente al card/surface */
+        background: var(--color-input-bg);
+        color: var(--color-primary);
+    }
+
+.game-catalog-card, .game-card {
+    /* FIX 3: El fondo de la tarjeta de juego debe ser oscuro */
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* Si reutilizas las clases de la página de búsqueda: */
+.result-card.game-card {
+    /* FIX 4: Asegurar que el fondo del resultado de juego sea oscuro */
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+/* 1. Contenedor de la barra de búsqueda / Filtro */
+/* Utiliza la clase que envuelve tu formulario de búsqueda (ej. .catalog-search-bar o .filter-header) */
+.catalog-search-bar,
+.game-filter-container,
+.search-input-wrapper {
+    /* Fondo Oscuro */
+    background-color: var(--color-card);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+    /* 2. Campo de Entrada (Input field) */
+    .catalog-search-bar input[type="text"],
+    .game-filter-container select,
+    .game-filter-container input {
+        /* Fondo Oscuro para input */
+        background-color: var(--color-input-bg);
+        color: var(--color-text-primary);
+        border: 2px solid var(--color-border);
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.2s;
+    }
+
+        /* 3. Foco y Hover */
+        .catalog-search-bar input[type="text"]:focus,
+        .game-filter-container select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            /* Glow Cian en el foco */
+            box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.4);
+            background-color: var(--color-card); /* Ligeramente más claro en foco */
+        }

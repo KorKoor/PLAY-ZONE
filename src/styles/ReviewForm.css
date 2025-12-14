@@ -1,38 +1,85 @@
-/* src/styles/ReviewForm.css */
+/*
+ * ==========================================================
+ * GLOBAL THEME VARIABLES - MODO OSCURO FORZADO
+ * Estas variables definen la paleta Dark Mode Gamer.
+ * ==========================================================
+ */
+:root {
+    /* Fondos y Superficies (Gamer Dark Mode 2.0) */
+    --card-background-color: #1A2436; /* Fondo de la tarjeta */
+    --input-background-color: #141D2B; /* Fondo de inputs/formularios */
+    --border-color: #3D4A66; /* Borde sutil oscuro */
+    --shadow-sm: 0 4px 10px rgba(0, 0, 0, 0.4); /* Sombra base oscura */
+    /* Acentos y Branding (Cian Eléctrico Gamer) */
+    --primary-color: #00CCFF;
+    --primary-color-hover: #0099CC;
+    --primary-color-rgb: 0, 204, 255;
+    /* Texto (Claro) */
+    --text-color-primary: #E0E7FF; /* Texto principal (claro) */
+    --text-color-secondary: #90A0C9; /* Texto gris azulado para descripciones/vacío */
+    --text-color-light: var(--text-color-secondary); /* Alias para texto sutil */
+    /* Feedback y Especiales (Gamer Neon) */
+    --color-success: #3DED97;
+    --danger-color: #FF4D6C;
+    --star-color-filled: #FFC300; /* Dorado para estrellas */
+    /* Botones Secundarios */
+    --button-background-color-secondary: #4A5C7F;
+    --button-background-color-secondary-hover: #5d7099;
+    /* Dimensiones */
+    --border-radius: 12px;
+    --border-radius-sm: 6px;
+}
 
+/* Aplicar transición suave a todos los elementos */
+* {
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* ======================================================= */
+/* 1. CONTENEDOR DEL FORMULARIO */
+/* ======================================================= */
 .review-form-container {
-    background-color: var(--color-card);
+    background-color: var(--card-background-color);
     border-radius: var(--border-radius);
     padding: 1.5rem;
     margin-bottom: 1rem;
     box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
 }
 
-.review-form-container h3 {
-    color: var(--text-color-primary);
-    margin-bottom: 1rem;
-    font-size: 1.2rem;
-}
+    .review-form-container h3 {
+        color: var(--text-color-primary);
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+        font-weight: 700;
+    }
 
+/* ======================================================= */
+/* 2. RATING Y TEXTAREA */
+/* ======================================================= */
 .review-form .rating-input {
     display: flex;
     margin-bottom: 1rem;
     font-size: 1.5rem;
 }
 
-.review-form .rating-input .star {
-    cursor: pointer;
-    color: var(--text-color-light); /* Color para estrellas vacías */
-    transition: color 0.2s ease;
-}
+    .review-form .rating-input .star {
+        cursor: pointer;
+        /* Color para estrellas vacías sutil */
+        color: var(--text-color-light);
+        transition: color 0.2s ease;
+    }
 
-.review-form .rating-input .star.filled {
-    color: gold; /* Color para estrellas llenas */
-}
+        .review-form .rating-input .star.filled {
+            /* Color de estrella lleno (Dorado Neon) */
+            color: var(--star-color-filled);
+            text-shadow: 0 0 5px rgba(255, 195, 0, 0.5);
+        }
 
-.review-form .rating-input .star:hover {
-    color: var(--primary-color);
-}
+        .review-form .rating-input .star:hover {
+            /* Color de acento Cian al hacer hover */
+            color: var(--primary-color);
+        }
 
 .review-form textarea {
     width: 100%;
@@ -47,11 +94,12 @@
     font-size: 0.9rem;
 }
 
-.review-form textarea:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.2);
-}
+    .review-form textarea:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        /* Glow de foco Cian */
+        box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.4);
+    }
 
 .review-form .error-message {
     color: var(--danger-color);
@@ -59,54 +107,78 @@
     margin-bottom: 1rem;
 }
 
+/* ======================================================= */
+/* 3. ACCIONES Y BOTONES */
+/* ======================================================= */
 .review-form .form-actions {
     display: flex;
     justify-content: flex-end;
     gap: 0.8rem;
 }
 
-.review-form .form-actions button {
-    padding: 0.7rem 1.2rem;
-    border: none;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.2s ease;
-}
+    .review-form .form-actions button {
+        padding: 0.7rem 1.2rem;
+        border: none;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        font-weight: 600;
+        transition: background-color 0.2s ease, transform 0.2s, box-shadow 0.2s;
+    }
 
-.review-form .form-actions button[type="submit"] {
-    background-color: var(--color-success);
-    color: white;
-}
+        .review-form .form-actions button[type="submit"] {
+            /* Botón de éxito/primario (Success Neon) */
+            background-color: var(--color-success);
+            color: white; /* Texto blanco para alto contraste */
+        }
 
-.review-form .form-actions button[type="submit"]:hover:not(:disabled) {
-    background-color: var(--primary-color-hover);
-}
+            .review-form .form-actions button[type="submit"]:hover:not(:disabled) {
+                /* Usar un color más oscuro o glow para el hover */
+                filter: brightness(110%);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 10px rgba(61, 237, 151, 0.6);
+            }
 
-.review-form .form-actions button.cancel-btn {
-    background-color: var(--button-background-color-secondary);
-    color: var(--text-color-primary);
-}
+        .review-form .form-actions button.cancel-btn {
+            /* Botón secundario/neutro */
+            background-color: var(--button-background-color-secondary);
+            color: var(--text-color-primary);
+        }
 
-.review-form .form-actions button.cancel-btn:hover:not(:disabled) {
-    background-color: var(--button-background-color-secondary-hover);
-}
+            .review-form .form-actions button.cancel-btn:hover:not(:disabled) {
+                background-color: var(--button-background-color-secondary-hover);
+                transform: translateY(-1px);
+            }
 
-.review-form .form-actions button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
+        .review-form .form-actions button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
 
-.review-form .form-actions .spinner {
-    animation: spin 1s linear infinite;
-}
+    .review-form .form-actions .spinner {
+        /* Asegurar que el spinner se adapte */
+        border: 2px solid rgba(var(--primary-color-rgb), 0.3);
+        border-top: 2px solid var(--text-color-primary);
+        border-radius: 50%;
+        width: 1em;
+        height: 1em;
+        animation: spin 1s linear infinite;
+    }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
-/* Responsive adjustments */
+/* ======================================================= */
+/* 4. RESPONSIVE */
+/* ======================================================= */
 @media (max-width: 768px) {
     .review-form-container {
         padding: 1rem;
@@ -117,7 +189,7 @@
         gap: 0.5rem;
     }
 
-    .review-form .form-actions button {
-        width: 100%;
-    }
+        .review-form .form-actions button {
+            width: 100%;
+        }
 }

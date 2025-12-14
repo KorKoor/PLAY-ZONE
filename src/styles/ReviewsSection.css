@@ -1,17 +1,49 @@
-/* src/styles/ReviewsSection.css */
+﻿/*
+ * ==========================================================
+ * GLOBAL THEME VARIABLES - MODO OSCURO FORZADO
+ * Estas variables definen la paleta Dark Mode Gamer.
+ * ==========================================================
+ */
+:root {
+    /* Fondos y Superficies (Gamer Dark Mode 2.0) */
+    --card-background-color: #1A2436; /* Fondo de la tarjeta/Empty State */
+    --border-color: #3D4A66; /* Borde sutil oscuro */
+    /* Acentos y Branding (Cian Eléctrico Gamer) */
+    --primary-color: #00CCFF;
+    --primary-color-hover: #0099CC;
+    --primary-color-rgb: 0, 204, 255;
+    /* Texto (Claro) */
+    --text-color-primary: #E0E7FF; /* Texto principal (claro) */
+    --text-color-secondary: #90A0C9; /* Texto gris azulado */
+    --text-color-light: var(--text-color-primary); /* Alias para texto en estados vacíos */
+    /* Dimensiones */
+    --border-radius: 12px;
+}
 
+/* Aplicar transición suave a todos los elementos */
+* {
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
+}
+
+/* ======================================================= */
+/* 1. SECCIÓN PRINCIPAL Y HEADER */
+/* ======================================================= */
 .reviews-section {
     margin-top: 2rem;
 }
 
-.reviews-section h3 {
-    color: var(--text-color-primary);
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-}
+    .reviews-section h3 {
+        color: var(--text-color-primary);
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        /* Línea de acento Cian debajo del título */
+        border-bottom: 2px solid var(--primary-color);
+        padding-bottom: 0.5rem;
+    }
 
 .reviews-header {
     display: flex;
@@ -20,55 +52,72 @@
     margin-bottom: 1.5rem;
 }
 
-.reviews-header .add-review-btn {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 0.7rem 1.2rem;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: background-color 0.2s ease;
-}
+    .reviews-header .add-review-btn {
+        background-color: var(--primary-color);
+        color: var(--card-background-color); /* Texto oscuro para contraste sobre Cian */
+        border: none;
+        padding: 0.7rem 1.2rem;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.2s ease;
+        /* Sombra de acento Cian */
+        box-shadow: 0 4px 10px rgba(var(--primary-color-rgb), 0.5);
+    }
 
-.reviews-header .add-review-btn:hover {
-    background-color: var(--primary-color-hover);
-}
+        .reviews-header .add-review-btn:hover {
+            background-color: var(--primary-color-hover);
+            transform: translateY(-2px);
+            /* Glow Cian más intenso */
+            box-shadow: 0 6px 15px rgba(var(--primary-color-rgb), 0.8);
+        }
 
+/* ======================================================= */
+/* 2. LISTADO DE RESEÑAS */
+/* ======================================================= */
 .reviews-list {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
 
+/* ======================================================= */
+/* 3. ESTADO VACÍO (EMPTY STATE) */
+/* ======================================================= */
 .empty-state {
     text-align: center;
-    padding: 2rem;
+    padding: 2.5rem;
     background-color: var(--card-background-color);
     border-radius: var(--border-radius);
-    color: var(--text-color-light);
-    margin-top: 1rem;
-}
-
-.empty-state svg {
     color: var(--text-color-secondary);
-    margin-bottom: 1rem;
+    margin-top: 1rem;
+    border: 1px dashed var(--border-color); /* Borde punteado adaptado */
 }
 
-.empty-state h3 {
-    color: var(--text-color-primary);
-    font-size: 1.3rem;
-    margin-bottom: 0.5rem;
-}
+    .empty-state svg {
+        /* Usar el color secundario/gris para el icono, que ya se adapta */
+        color: var(--text-color-secondary);
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
 
-.empty-state p {
-    font-size: 0.9rem;
-}
+    .empty-state h3 {
+        color: var(--text-color-primary);
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
 
-/* Responsive adjustments */
+    .empty-state p {
+        font-size: 0.95rem;
+    }
+
+/* ======================================================= */
+/* 4. RESPONSIVE */
+/* ======================================================= */
 @media (max-width: 768px) {
     .reviews-header {
         flex-direction: column;
@@ -76,12 +125,15 @@
         gap: 1rem;
     }
 
-    .reviews-header h3 {
-        font-size: 1.3rem;
-    }
+        .reviews-header h3 {
+            font-size: 1.3rem;
+            padding-bottom: 0;
+            border-bottom: none;
+            width: 100%;
+        }
 
-    .reviews-header .add-review-btn {
-        width: 100%;
-        justify-content: center;
-    }
+        .reviews-header .add-review-btn {
+            width: 100%;
+            justify-content: center;
+        }
 }

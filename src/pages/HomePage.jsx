@@ -64,30 +64,13 @@ const HomePage = () => {
                         >
                             <FaPlusCircle /> Crear Publicación
                         </button>
-
-                        {/* 🚀 ENLACES DE NAVEGACIÓN PRINCIPALES 🚀 */}
-                        <div className="nav-links-group">
-                            <button className="nav-link-item" onClick={() => navigate('/home')}>
-                                <FaHomeIcon /> Feed Principal
-                            </button>
-                            {/* ⚠️ CORRECCIÓN AQUÍ: Ruta de navegación a /guides ⚠️ */}
-                            <button className="nav-link-item" onClick={() => navigate('/guides')}>
-                                <FaBookOpen /> Ver Guías
-                            </button>
-                            <button className="nav-link-item" onClick={() => navigate(`/profile/${user.id}`)}>
-                                <FaUserCircle /> Mi Perfil
-                            </button>
-                            <button className="nav-link-item" onClick={() => navigate('/favorites')}>
-                                <FaHeart /> Mis Favoritos
-                            </button>
-                        </div>
                     </nav>
                 </aside>
 
                 {/* 2b. Columna Central: Muro de Publicaciones (FEED) */}
                 <section className="feed-center-column">
                     <h1 className="feed-title">Bienvenido, {user?.alias || user?.email || 'Usuario'}</h1>
-                    <p className="feed-subtitle">Feed de tus jugadores seguidos (Requisito 4.3).</p>
+                    <p className="feed-subtitle">Feed de tus jugadores seguidos.</p>
 
                     {error && <p className="error-message">Error cargando el feed: {error}</p>}
 

@@ -1,12 +1,45 @@
-﻿ /*
+﻿/*
  * ==========================================================
- * PROFILE STYLES - PLAY-ZONE DARK THEME (FINAL BUILD)
- * Arquitectura: Modulos y Detalle Extremo
+ * GLOBAL THEME VARIABLES - MODO OSCURO FORZADO
+ * Estas variables definen la paleta Dark Mode Gamer.
  * ==========================================================
  */
-/* ----------------------------------------------------------
- * 1. LAYOUT PRINCIPAL Y CONTENEDOR
- * ---------------------------------------------------------- */
+:root {
+    /* Fondos y Superficies (Gamer Dark Mode 2.0) */
+    --color-background-primary: #0F141F; /* Fondo principal oscuro (Gamer) */
+    --color-surface: #28374E; /* Fondo de la tarjeta (Post Detail Card) */
+    --color-card: var(--color-surface);
+    --color-input-bg: #141D2B; /* Fondo de inputs/Modal/hover sutil */
+    --color-border: #3D4A66; /* Borde sutil oscuro */
+    /* Acentos y Branding (Cian Eléctrico Gamer) */
+    --color-accent-blue: #00C6FF;
+    --color-primary: var(--color-accent-blue);
+    --color-primary-rgb: 0, 198, 255;
+    --color-accent-hover: #0099CC;
+    /* Texto (Claro) */
+    --color-text-primary: #E0E7FF; /* Texto principal (blanco brillante) */
+    --color-text-secondary: #90A0C9; /* Texto gris azulado para descripciones */
+    --color-text-light: var(--color-text-primary);
+    /* Feedback y Especiales (Gamer Neon) */
+    --color-error: #FF4D6C;
+    --color-danger: var(--color-error);
+    --color-danger-rgb: 255, 77, 108;
+    --color-warning-yellow: #FFC300; /* Dorado para warnings/géneros */
+    --color-favorite-icon: #f06; /* Rosa vibrante */
+    --color-favorite-icon-rgb: 255, 0, 102;
+    --color-secondary: #4A5C7F; /* Color secundario/gris adaptado */
+    --color-background-app: var(--color-background-primary); /* Alias de fondo */
+    --color-overlay-dark: rgba(0, 0, 0, 0.98);
+}
+
+/* Aplicar transición suave a todos los elementos */
+* {
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
+}
+
+/* ======================================================= */
+/* 1. LAYOUT PRINCIPAL Y CONTENEDOR */
+/* ======================================================= */
 .profile-page-container {
     max-width: 1350px;
     margin: 50px auto;
@@ -24,50 +57,39 @@
     padding: 55px;
     border-radius: 25px;
     margin-bottom: 50px;
+    /* Sombra base Gamer Forzada */
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), inset 0 0 10px rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(var(--color-primary-rgb), 0.1);
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), inset 0 0 10px rgba(0, 0, 0, 0.1);
     position: relative;
     overflow: hidden;
     animation: fadeIn 0.8s ease-out;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
+    /* Detalle sutil de acento en las esquinas */
+    .profile-details-card::before, .profile-details-card::after {
+        content: '';
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        border-color: var(--color-primary);
+        border-style: solid;
+        border-width: 0;
+        opacity: 0.6;
     }
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
+    .profile-details-card::before {
+        top: 20px;
+        right: 20px;
+        border-top-width: 3px;
+        border-right-width: 3px;
     }
-}
 
-/* Detalle sutil de acento en las esquinas */
-.profile-details-card::before, .profile-details-card::after {
-    content: '';
-    position: absolute;
-    width: 60px;
-    height: 60px;
-    border-color: var(--color-primary);
-    border-style: solid;
-    border-width: 0;
-    opacity: 0.6;
-}
-
-.profile-details-card::before {
-    top: 20px;
-    right: 20px;
-    border-top-width: 3px;
-    border-right-width: 3px;
-}
-
-.profile-details-card::after {
-    bottom: 20px;
-    left: 20px;
-    border-bottom-width: 3px;
-    border-left-width: 3px;
-}
+    .profile-details-card::after {
+        bottom: 20px;
+        left: 20px;
+        border-bottom-width: 3px;
+        border-left-width: 3px;
+    }
 
 /* === Encabezado === */
 .profile-header {
@@ -85,25 +107,23 @@
     border-radius: 50%;
     object-fit: cover;
     border: 7px solid var(--color-primary);
-    box-shadow: 0 0 40px rgba(var(--color-primary-rgb), 0.9);
+    /* Glow de acento Cian Forzado */
+    box-shadow: 0 0 40px rgba(var(--color-primary-rgb), 0.7);
     transition: transform 0.3s ease, box-shadow 0.5s ease;
 }
 
     .profile-avatar:hover {
         transform: scale(1.05);
+        /* Glow Cian más intenso en hover */
         box-shadow: 0 0 60px rgba(var(--color-primary-rgb), 1.0);
     }
-
-.header-info {
-    flex-grow: 1;
-}
 
 .profile-alias {
     font-size: 3.8rem;
     font-weight: 900;
     color: var(--color-primary);
     letter-spacing: 2px;
-    text-shadow: 0 0 10px rgba(var(--color-primary-rgb), 0.3);
+    text-shadow: 0 0 10px rgba(var(--color-primary-rgb), 0.5);
     margin-bottom: 5px;
 }
 
@@ -171,25 +191,29 @@
 }
 
 .edit-btn {
+    /* Botón Secundario adaptado */
     background-color: var(--color-secondary);
     color: var(--color-text-light);
     border: 2px solid var(--color-border);
 }
 
     .edit-btn:hover {
+        /* Valor fijo de hover secundario adaptado */
         background-color: #5d7099;
         transform: translateY(-3px) scale(1.02);
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
     }
 
 .btn-primary {
+    /* Botón Principal Cian Forzado */
     background-color: var(--color-primary);
-    color: var(--color-background-primary);
+    color: var(--color-background-app); /* Color de fondo principal para alto contraste */
     box-shadow: 0 6px 20px rgba(var(--color-primary-rgb), 0.7);
 }
 
     .btn-primary:hover {
         transform: translateY(-3px) scale(1.02);
+        /* Glow Cian más intenso */
         box-shadow: 0 10px 30px rgba(var(--color-primary-rgb), 1.0);
     }
 
@@ -239,6 +263,7 @@
 
     .tag:hover {
         border-color: var(--color-primary);
+        /* Glow Cian sutil */
         box-shadow: 0 0 8px rgba(var(--color-primary-rgb), 0.6);
         background-color: var(--color-card);
     }
@@ -250,19 +275,27 @@
 }
 
 .tag-genre {
-    color: #ffcc00; /* Amarillo/Dorado para Generos */
+    color: var(--color-warning-yellow);
     background-color: rgba(255, 204, 0, 0.15);
-    border: 1px solid #ffcc00;
+    border: 1px solid var(--color-warning-yellow);
 }
 
 /* Tags de Favoritos */
 .tag-favorite {
-    color: #f06; /* Rosa vibrante para corazon/favoritos */
-    background-color: rgba(255, 0, 102, 0.15);
-    border: 1px solid #f06;
+    color: var(--color-favorite-icon);
+    background-color: rgba(var(--color-favorite-icon-rgb), 0.15);
+    border: 1px solid var(--color-favorite-icon);
+    transition: all 0.3s;
 }
 
+    .tag-favorite:hover {
+        /* Glow Rosa intenso en hover */
+        box-shadow: 0 0 10px rgba(var(--color-favorite-icon-rgb), 0.8);
+        transform: translateY(-1px);
+    }
+
     .tag-favorite svg {
+        color: var(--color-favorite-icon);
         margin-right: 5px;
     }
 
@@ -274,7 +307,8 @@
     background-color: var(--color-card);
     border-radius: 20px;
     border: 1px solid var(--color-border);
-    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.4);
+    /* Sombra oscura forzada */
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.6);
 }
 
 .section-title {
@@ -308,11 +342,20 @@
  * 5. MODAL DE EDICIÓN (ProfileEditModal)
  * ---------------------------------------------------------- */
 .modal-overlay {
-    background: rgba(0, 0, 0, 0.98);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /* Fondo de overlay oscuro forzado */
+    background: var(--color-overlay-dark);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     z-index: 10000;
-    transition: all 0.4s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto; /* Para que el modal sea usable en móviles */
 }
 
 .profile-edit-modal-card {
@@ -322,31 +365,21 @@
     max-width: 750px;
     width: 90%;
     border: 3px solid var(--color-primary);
+    /* Glow Cian intenso forzado */
     box-shadow: 0 0 120px rgba(var(--color-primary-rgb), 0.8);
     position: relative;
     animation: modalPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    margin: 20px 0; /* Asegurar espacio para el scroll */
 }
 
-@keyframes modalPop {
-    from {
-        transform: scale(0.8) translateY(-10%);
-        opacity: 0;
-    }
-
-    to {
-        transform: scale(1) translateY(0);
-        opacity: 1;
-    }
-}
-
-/* === FIX: Boton Cerrar (TACHA) === */
+/* Boton Cerrar */
 .btn-close-modal {
     position: absolute;
     top: 25px;
     right: 25px;
-    background: transparent; /* Fondo Transparente */
+    background: transparent;
     border: none;
-    color: var(--color-text-secondary); /* Color coherente con el tema */
+    color: var(--color-text-secondary);
     font-size: 2.2rem;
     cursor: pointer;
     line-height: 1;
@@ -365,16 +398,16 @@
     font-weight: 800;
 }
 
-/* === FIX: Tabs de Navegacion Interna === */
+/* Tabs de Navegacion Interna */
 .modal-tabs {
     display: flex;
     justify-content: space-around;
-    background-color: var(--color-card); /* Fondo oscuro de la tarjeta */
+    background-color: var(--color-card);
     border-radius: 15px;
     overflow: hidden;
     margin-bottom: 40px;
     padding: 5px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Sombra oscura forzada */
 }
 
     .modal-tabs button {
@@ -384,7 +417,7 @@
         font-size: 1.1rem;
         font-weight: 700;
         cursor: pointer;
-        background-color: transparent; /* Fondo transparente por defecto */
+        background-color: transparent;
         border: none;
         border-bottom: 4px solid transparent;
         color: var(--color-text-secondary);
@@ -397,57 +430,53 @@
 
         .modal-tabs button.active {
             color: var(--color-primary);
-            background-color: var(--color-input-bg); /* Fondo mas oscuro para la activa */
+            background-color: var(--color-input-bg);
             border-bottom: 4px solid var(--color-primary);
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(var(--color-primary-rgb), 0.2);
+            box-shadow: 0 0 10px rgba(var(--color-primary-rgb), 0.3);
         }
 
 /* Formularios dentro del Modal */
-.edit-form {
-    padding: 10px 0;
+.edit-form .form-group label {
+    display: block;
+    color: var(--color-text-light);
+    margin-bottom: 8px;
+    font-size: 1rem;
+    font-weight: 600;
 }
 
-    .edit-form .form-group {
-        margin-bottom: 25px;
+.edit-form .form-group input,
+.edit-form .form-group textarea {
+    width: 100%;
+    /* Usar input-bg, que es el color base del modal */
+    background-color: var(--color-input-bg);
+    border: 2px solid var(--color-border);
+    padding: 15px;
+    color: var(--color-text-light);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+    .edit-form .form-group input:focus,
+    .edit-form .form-group textarea:focus {
+        border-color: var(--color-primary);
+        /* Glow Cian fuerte */
+        box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb), 0.5), 0 0 0 6px rgba(var(--color-primary-rgb), 0.3);
+        outline: none;
     }
 
-        .edit-form .form-group label {
-            display: block;
-            color: var(--color-text-light);
-            margin-bottom: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-        }
-
-        .edit-form .form-group input,
-        .edit-form .form-group textarea {
-            width: 100%;
-            background-color: var(--color-secondary);
-            border: 2px solid var(--color-border);
-            padding: 15px;
-            color: var(--color-text-light);
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.3s;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6);
-        }
-
-            .edit-form .form-group input:focus,
-            .edit-form .form-group textarea:focus {
-                border-color: var(--color-primary);
-                box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb), 0.5), 0 0 0 6px rgba(var(--color-primary-rgb), 0.3);
-                outline: none;
-            }
-
-    /* Botones de Guardar */
-    .edit-form .btn-primary {
-        width: 100%;
-        margin-top: 20px;
-        padding: 15px 0;
-        font-size: 1.2rem;
-        font-weight: 700;
-    }
+/* Botones de Guardar */
+.edit-form .btn-primary {
+    width: 100%;
+    margin-top: 20px;
+    padding: 15px 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    background-color: var(--color-primary);
+    color: var(--color-background-app); /* Contraste */
+}
 
 /* Avatar Preview */
 .avatar-preview-container {
@@ -464,10 +493,10 @@
     box-shadow: 0 0 20px rgba(var(--color-primary-rgb), 0.7);
 }
 
-/* Mensajes de feedback (error/success) */
+/* Mensajes de feedback */
 .error-message {
     color: var(--color-danger);
-    background-color: rgba(229, 62, 62, 0.15);
+    background-color: rgba(var(--color-danger-rgb), 0.25);
     border: 1px solid var(--color-danger);
     padding: 15px;
     border-radius: 8px;
@@ -476,7 +505,7 @@
 
 .success-message {
     color: var(--color-primary);
-    background-color: rgba(var(--color-primary-rgb), 0.15);
+    background-color: rgba(var(--color-primary-rgb), 0.25);
     border: 1px solid var(--color-primary);
     padding: 15px;
     border-radius: 8px;
@@ -502,7 +531,7 @@
     text-align: center;
     display: block;
     width: 100%;
-    opacity: 0.7;
+    opacity: 0.8;
     transition: opacity 0.3s;
 }
 
@@ -511,107 +540,7 @@
         text-decoration: underline;
     }
 
-/* Spinners */
-.spinner {
-    animation: spin 1s linear infinite;
-    margin-right: 10px;
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-.profile-header {
-    position: relative;
-}
-
-.btn-home-top-right {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: #007bff;
-    color: white;
-    border: none;
-    padding: 6px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-
-    .btn-home-top-right:hover {
-        background: #0056b3;
-    }
-
-/* src/styles/ProfileStyles.css (Fragmento de corrección/adición) */
-
-/* === Variables de Color === */
-:root {
-    /* ... (asegúrate de que estas variables de color existan para el efecto) ... */
-    --color-primary: #00C6FF;
-    --color-secondary: #4A5C7F;
-    --color-danger: #E53E3E;
-    --color-favorite-icon: #F06; /* Nuevo color vibrante para el corazon/favoritos */
-    --color-warning-yellow: #FFC300; /* Color para tags/advertencia */
-}
-
-/* ----------------------------------------------------------
- * 1. ENCABEZADO Y ESTADÍSTICAS (ProfileDetails.jsx)
- * ---------------------------------------------------------- */
-
-.profile-stats {
-    /* ... (otros estilos de gap/color/font) ... */
-}
-
-    /* Micro-ajuste: Asegurar que los iconos en las estadísticas sean de acento */
-    .profile-stats span svg {
-        color: var(--color-primary); /* Base de los iconos de estadísticas */
-        font-size: 1.1em;
-    }
-
-/* ----------------------------------------------------------
- * 2. PREFERENCIAS E INTERACCIONES (Tags)
- * ---------------------------------------------------------- */
-
-.profile-prefs {
-    /* ... (estilos de contenedor) ... */
-}
-
-.tag-list {
-    /* ... (estilos de contenedor) ... */
-}
-
-/* Tags Genericos */
-.tag {
-    /* ... (estilos de padding, border-radius) ... */
-    border: 1px solid var(--color-border);
-}
-
-/* Estilo para el Tag de Posts Favoritos (Interacciones) */
-.tag-favorite {
-    /* Usar un color vibrante para el corazón */
-    background-color: rgba(240, 0, 102, 0.15); /* Fondo semitransparente rosa/rojo */
-    color: var(--color-favorite-icon); /* El texto del tag es rosa vibrante */
-    border: 1px solid var(--color-favorite-icon);
-    transition: all 0.3s;
-}
-
-    .tag-favorite:hover {
-        box-shadow: 0 0 10px rgba(var(--color-favorite-icon-rgb), 0.8);
-        transform: translateY(-1px);
-    }
-
-    .tag-favorite svg {
-        color: var(--color-favorite-icon); /* Color del corazón dentro del tag */
-        margin-right: 5px;
-    }
-
-/* ----------------------------------------------------------
- * 3. BOTÓN DE NAVEGACIÓN (btn-home-top-right)
- * ---------------------------------------------------------- */
+/* Boton de Navegación */
 .btn-home-top-right {
     position: absolute;
     top: 40px;
@@ -619,5 +548,41 @@
     background-color: var(--color-input-bg);
     color: var(--color-text-secondary);
     border: 1px solid var(--color-border);
-    /* ... (otros estilos) ... */
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.95rem;
+}
+
+    .btn-home-top-right:hover {
+        background: var(--color-card);
+        color: var(--color-primary);
+    }
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes modalPop {
+    from {
+        transform: scale(0.8) translateY(-10%);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
 }

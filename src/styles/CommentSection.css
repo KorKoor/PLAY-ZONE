@@ -1,13 +1,48 @@
-/* src/styles/CommentSection.css (ADAPTACIÓN FINAL AL TEMA CYBER/PLAY-ZONE) */
-/* ----------------------------------------------------------
- * 1. CONTENEDOR PRINCIPAL (COMENTARIOS)
- * ---------------------------------------------------------- */
+/*
+ * ==========================================================
+ * GLOBAL THEME VARIABLES - MODO OSCURO FORZADO
+ * Estas variables definen la paleta Dark Mode Gamer.
+ * ==========================================================
+ */
+:root {
+    /* Fondos y Superficies (Gamer Dark Mode 2.0) */
+    --color-background-primary: #0A111F; /* Fondo principal oscuro */
+    --color-surface: #1A2436; /* Fondo de tarjetas/Componentes principales */
+    --color-card: var(--color-surface);
+    --color-input-bg: #111A29; /* Fondo de la sección de comentarios */
+    --color-border: #2B3A50; /* Borde sutil oscuro */
+    --color-overlay: rgba(0, 0, 0, 0.85);
+    /* Acentos y Branding (Cian Eléctrico Gamer) */
+    --color-accent-blue: #00CCFF;
+    --color-primary: var(--color-accent-blue);
+    --color-primary-rgb: 0, 204, 255;
+    --color-accent-hover: #0099CC;
+    /* Texto (Claro) */
+    --color-text-primary: #E8F0FF; /* Texto principal (blanco brillante) */
+    --color-text-secondary: #90A0C9; /* Texto gris azulado para descripciones */
+    --color-text-light: var(--color-text-primary);
+    /* Feedback y Especiales (Gamer Neon) */
+    --color-error: #FF4D6C;
+    --color-danger: var(--color-error);
+    --color-success: #3DED97;
+}
+
+/* Aplicar transición a todos los elementos para un cambio de tema suave */
+* {
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* ======================================================= */
+/* 1. CONTENEDOR PRINCIPAL (COMENTARIOS) */
+/* ======================================================= */
 .comments-section-container {
-    margin-top: 25px; /* Más margen */
-    padding: 25px; /* Más padding */
-    background-color: var(--color-input-bg); /* Fondo muy oscuro */
-    border-radius: 15px; /* Bordes suaves */
-    border: 2px solid var(--color-border); /* Borde más definido */
+    margin-top: 25px;
+    padding: 25px;
+    /* Usar input-bg, que es un fondo ligeramente más claro que el primary */
+    background-color: var(--color-input-bg);
+    border-radius: 15px;
+    border: 2px solid var(--color-border);
+    /* Sombra Gamer Forzada */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
     transition: all 0.3s ease;
 }
@@ -16,16 +51,17 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    font-size: 1.35rem; /* Título más prominente */
+    font-size: 1.35rem;
     font-weight: 800;
-    color: var(--color-text-light);
-    border-bottom: 3px solid var(--color-secondary); /* Separador más grueso */
+    color: var(--color-text-primary);
+    /* Usar el acento principal para el separador */
+    border-bottom: 3px solid var(--color-primary);
     padding-bottom: 12px;
     margin-bottom: 25px;
 }
 
     .section-title-comments svg {
-        color: var(--color-primary); /* Icono vibrante */
+        color: var(--color-primary);
         font-size: 1.4rem;
     }
 
@@ -46,41 +82,51 @@
 
     .comment-form textarea {
         flex-grow: 1;
-        min-height: 60px; /* Más alto */
+        min-height: 60px;
         padding: 15px;
-        background-color: var(--color-card); /* Coherente con otros inputs */
-        border: 2px solid var(--color-border); /* Borde más fuerte */
+        /* Usar card/surface para que el input sea visualmente distinto al contenedor (.comments-section-container) */
+        background-color: var(--color-card);
+        border: 2px solid var(--color-border);
         border-radius: 10px;
-        color: var(--color-text-light);
+        color: var(--color-text-primary);
         font-size: 1rem;
         resize: none;
+        transition: all 0.3s;
     }
 
         .comment-form textarea:focus {
             border-color: var(--color-primary);
-            box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb), 0.3); /* Glow de foco coherente */
+            /* Glow de foco coherente */
+            box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb), 0.3);
             outline: none;
         }
 
     .comment-form button {
         padding: 12px 20px;
         background-color: var(--color-primary);
-        color: var(--color-background-primary);
+        color: white; /* Texto blanco para alto contraste universal */
+        border: none;
         border-radius: 10px;
-        font-size: 1.2rem; /* Icono más grande */
+        font-size: 1rem;
         font-weight: 700;
         transition: all 0.2s;
         box-shadow: 0 4px 10px rgba(var(--color-primary-rgb), 0.5);
+        cursor: pointer;
     }
 
         .comment-form button:hover:not(:disabled) {
-            opacity: 0.95;
-            transform: translateY(-1px);
+            background-color: var(--color-accent-hover);
+            opacity: 1;
+            transform: translateY(-2px);
         }
 
         .comment-form button:disabled {
-            background-color: var(--color-secondary);
-            opacity: 0.6;
+            background-color: var(--color-border); /* Color neutro para deshabilitado */
+            color: var(--color-text-secondary);
+            opacity: 0.8;
+            transform: none;
+            cursor: not-allowed;
+            box-shadow: none;
         }
 
 /* ----------------------------------------------------------
@@ -89,29 +135,34 @@
 .comments-list {
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Más espacio entre comentarios */
+    gap: 20px;
 }
 
 .comment-item {
     display: flex;
-    gap: 15px; /* Más espacio */
+    gap: 15px;
     align-items: flex-start;
     padding: 15px;
     border-radius: 10px;
+    /* Usar card, que es ligeramente más claro que el fondo (.comments-section-container) */
     background-color: var(--color-card);
     transition: background-color 0.2s;
-    position: relative; /* Para posicionar elementos hijos */
+    position: relative;
+    border: 1px solid var(--color-border);
 }
 
     .comment-item:hover {
-        background-color: rgba(var(--color-primary-rgb), 0.05); /* Ligero acento al hacer hover */
+        /* Hover sutil, usando el color primario transparente */
+        background-color: rgba(var(--color-primary-rgb), 0.05);
     }
 
 .comment-author-avatar {
-    width: 32px; /* Avatar más grande */
+    width: 32px;
     height: 32px;
     border-radius: 50%;
-    border: 2px solid var(--color-primary); /* Borde primario para el autor */
+    border: 2px solid var(--color-primary);
+    flex-shrink: 0;
+    object-fit: cover;
 }
 
 .comment-body {
@@ -121,13 +172,13 @@
 
 .comment-author-alias {
     font-weight: 700;
-    color: var(--color-primary); /* Alias del autor resaltado */
+    color: var(--color-primary);
     margin-right: 10px;
     font-size: 1.05rem;
 }
 
 .comment-content {
-    color: var(--color-text-light);
+    color: var(--color-text-primary);
     margin: 8px 0;
     line-height: 1.5;
 }
@@ -142,8 +193,10 @@
     color: var(--color-text-secondary);
     padding: 30px;
     font-size: 1.1rem;
+    /* Usar card/surface */
     background-color: var(--color-card);
     border-radius: 10px;
+    border: 1px solid var(--color-border);
 }
 
 /* ----------------------------------------------------------
@@ -162,8 +215,23 @@
     cursor: pointer;
     font-size: 0.9rem;
     padding: 5px;
+    transition: color 0.2s;
 }
 
     .report-button:hover {
-        color: var(--color-danger); /* Color rojo para reportes */
+        /* Usar color de peligro neon */
+        color: var(--color-danger);
     }
+
+/* UTILITIES Y ANIMACIONES */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}

@@ -1,0 +1,31 @@
+/*
+ * ==========================================================
+ * GLOBAL THEME VARIABLES - MODO OSCURO FORZADO
+ * Estas variables definen la paleta Dark Mode Gamer.
+ * ==========================================================
+ */
+:root {
+    /* Fondos y Superficies (Gamer Dark Mode 2.0) */
+    --color-background-primary: #0F141F; /* Fondo principal oscuro */
+    --color-surface: #1A2436; /* Fondo de tarjetas/Componentes principales */
+    --color-card: var(--color-surface);
+    --color-input-bg: #141D2B; /* Fondo de inputs y secciones sutiles */
+    --color-border: #3D4A66; /* Borde sutil oscuro */
+    --color-overlay: rgba(0, 0, 0, 0.85); /* Fondo de modal/overlay muy oscuro */
+    /* Acentos y Branding (Cian Eléctrico Gamer) */
+    --color-accent-blue: #00CCFF;
+    --color-primary: var(--color-accent-blue);
+    --color-primary-rgb: 0, 204, 255;
+    --color-accent-hover: #0099CC;
+    /* Texto (Claro) */
+    --color-text-primary: #E0E7FF; /* Texto principal (blanco brillante) */
+    --color-text-secondary: #90A0C9; /* Texto gris azulado para descripciones */
+    --color-text-light: var(--color-text-primary); /* Alias para texto principal */
+    /* Feedback y Especiales (Gamer Neon) */
+    --color-success: #3DED97;
+    --color-error: #FF4D6C;
+    --color-danger: var(--color-error);
+    --color-danger-rgb: 255, 77, 108;
+    --color-warning-star: #FFC300;
+    --color-secondary: #4A5C7F; /* Color secundario/gris adaptado */
+}

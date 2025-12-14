@@ -1,18 +1,60 @@
-/* src/styles/ReviewCard.css */
+﻿/*
+ * ==========================================================
+ * GLOBAL THEME VARIABLES - MODO OSCURO FORZADO
+ * Estas variables definen la paleta Dark Mode Gamer.
+ * ==========================================================
+ */
+:root {
+    /* Fondos y Superficies (Gamer Dark Mode 2.0) */
+    --card-background-color: #1A2436; /* Fondo de la tarjeta */
+    --border-color: #3D4A66; /* Borde sutil oscuro */
+    --shadow-sm: 0 4px 10px rgba(0, 0, 0, 0.5); /* Sombra base oscura */
+    /* Acentos y Branding (Cian Eléctrico Gamer) */
+    --primary-color: #00CCFF;
+    --primary-color-hover: #0099CC;
+    --primary-color-rgb: 0, 204, 255;
+    /* Texto (Claro) */
+    --text-color-primary: #E0E7FF; /* Texto principal (claro) */
+    --text-color-secondary: #90A0C9; /* Texto gris azulado para metadatos */
+    --text-color-light: var(--text-color-primary); /* Alias para texto principal */
+    --star-color: #FFC300; /* Dorado para estrellas */
+    /* Botones y Acciones */
+    --button-background-color: var(--primary-color);
+    --button-text-color: #1A2436; /* Texto oscuro para alto contraste sobre cian */
+    --danger-color: #FF4D6C; /* Neon Red */
+    --danger-color-hover: #d13a5a;
+    /* Dimensiones */
+    --border-radius: 12px;
+    --border-radius-sm: 6px;
+}
 
+/* Aplicar transición suave a todos los elementos */
+* {
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
+}
+
+/* ======================================================= */
+/* 1. TARJETA DE RESEÑA (REVIEW CARD) */
+/* ======================================================= */
 .review-card {
-    background-color: var(--card-background-color); /* Usar variable CSS global */
+    background-color: var(--card-background-color);
     border-radius: var(--border-radius);
     padding: 1.5rem;
     margin-bottom: 1rem;
     box-shadow: var(--shadow-sm);
-    transition: transform 0.2s ease-in-out;
+    border: 1px solid var(--border-color);
+    transition: transform 0.2s ease-in-out, box-shadow 0.3s;
 }
 
-.review-card:hover {
-    transform: translateY(-3px);
-}
+    .review-card:hover {
+        transform: translateY(-3px);
+        /* Glow Cian más visible en hover */
+        box-shadow: 0 6px 15px rgba(var(--primary-color-rgb), 0.5);
+    }
 
+/* ---------------------------------------------------------- */
+/* 2. HEADER Y AUTOR */
+/* ---------------------------------------------------------- */
 .review-header {
     display: flex;
     justify-content: space-between;
@@ -33,11 +75,11 @@
     border-radius: 50%;
     margin-right: 0.8rem;
     object-fit: cover;
-    border: 1px solid var(--primary-color);
+    border: 3px solid var(--primary-color); /* Borde acentuado Cian */
 }
 
 .reviewer-name {
-    font-weight: bold;
+    font-weight: 700;
     color: var(--text-color-primary);
     font-size: 1rem;
 }
@@ -45,19 +87,23 @@
 .review-rating {
     display: flex;
     align-items: center;
-    color: gold; /* Color para las estrellas */
 }
 
-.review-rating .star-filled {
-    color: gold;
-    margin-left: 2px;
-}
+    .review-rating .star-filled {
+        color: var(--star-color);
+        /* Sombra para el efecto Neon Gold */
+        text-shadow: 0 0 5px rgba(255, 195, 0, 0.7);
+        margin-left: 2px;
+    }
 
-.review-rating .star-empty {
-    color: var(--text-color-secondary);
-    margin-left: 2px;
-}
+    .review-rating .star-empty {
+        color: var(--border-color);
+        margin-left: 2px;
+    }
 
+/* ---------------------------------------------------------- */
+/* 3. BODY Y METADATA */
+/* ---------------------------------------------------------- */
 .review-body {
     font-size: 0.95rem;
     color: var(--text-color-secondary);
@@ -66,6 +112,7 @@
 .review-comment {
     margin-bottom: 0.8rem;
     line-height: 1.5;
+    color: var(--text-color-primary); /* Asegurar que el comentario principal sea claro */
 }
 
 .review-meta {
@@ -73,17 +120,20 @@
     justify-content: space-between;
     align-items: center;
     font-size: 0.8rem;
-    color: var(--text-color-light);
+    color: var(--text-color-secondary);
     border-top: 1px solid var(--border-color);
     padding-top: 0.5rem;
     margin-top: 0.8rem;
 }
 
-.review-meta svg {
-    margin-right: 5px;
-    color: var(--text-color-light);
-}
+    .review-meta svg {
+        margin-right: 5px;
+        color: var(--text-color-secondary);
+    }
 
+/* ---------------------------------------------------------- */
+/* 4. ACCIONES */
+/* ---------------------------------------------------------- */
 .review-actions button {
     background-color: var(--button-background-color);
     color: var(--button-text-color);
@@ -93,22 +143,35 @@
     cursor: pointer;
     margin-left: 0.5rem;
     font-size: 0.8rem;
-    transition: background-color 0.2s ease;
+    font-weight: 600;
+    transition: all 0.2s ease;
 }
 
-.review-actions button.edit-review-btn:hover {
-    background-color: var(--primary-color-hover);
-}
+    .review-actions button.edit-review-btn {
+        /* Glow base Cian */
+        box-shadow: 0 0 5px rgba(var(--primary-color-rgb), 0.5);
+    }
 
-.review-actions button.delete-review-btn {
-    background-color: var(--danger-color);
-}
+        .review-actions button.edit-review-btn:hover {
+            background-color: var(--primary-color-hover);
+            transform: translateY(-1px);
+        }
 
-.review-actions button.delete-review-btn:hover {
-    background-color: var(--danger-color-hover);
-}
+    .review-actions button.delete-review-btn {
+        background-color: var(--danger-color);
+        color: white; /* Texto blanco para alto contraste sobre Danger Neon */
+    }
 
-/* Responsive adjustments */
+        .review-actions button.delete-review-btn:hover {
+            background-color: var(--danger-color-hover);
+            transform: translateY(-2px);
+            /* Glow de Danger Neon en hover */
+            box-shadow: 0 4px 10px rgba(255, 77, 108, 0.5);
+        }
+
+/* ---------------------------------------------------------- */
+/* 5. RESPONSIVE */
+/* ---------------------------------------------------------- */
 @media (max-width: 768px) {
     .review-card {
         padding: 1rem;
@@ -121,6 +184,12 @@
 
     .review-rating {
         margin-top: 0.5rem;
+        align-self: flex-end;
+    }
+
+    .reviewer-info {
+        width: 100%;
+        justify-content: space-between;
     }
 
     .review-meta {
@@ -129,14 +198,14 @@
     }
 
     .review-actions {
-        margin-top: 0.5rem;
+        margin-top: 0.8rem;
         width: 100%;
         display: flex;
         justify-content: flex-end;
     }
 
-    .review-actions button {
-        margin-left: 0;
-        margin-right: 0.5rem;
-    }
+        .review-actions button {
+            margin-left: 0;
+            margin-right: 0.5rem;
+        }
 }

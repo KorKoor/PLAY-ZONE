@@ -108,12 +108,6 @@ const Header = () => {
 ﻿
                 {/* Perfil e Interacciones (Derecha) */}
                 <div className="header-right">
-
-                    <button className="icon-btn" title="Notificaciones"><FaBell /></button>
-
-                    <button onClick={toggleTheme} className="icon-btn theme-toggle-btn" title="Cambiar tema">
-                        {theme === 'light' ? <FaMoon /> : <FaSun />}
-                    </button>﻿                    {/* Contenedor del Menú de Usuario (con Dropdown) */}
 ﻿                    <div className="user-menu-container">
                         <button
                             className="user-profile-btn"

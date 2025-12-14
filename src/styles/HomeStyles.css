@@ -1,51 +1,100 @@
-/* ======================================================= */
-/* HOME PAGE LAYOUT STYLES                                 */
-/* ======================================================= */
+/*
+ * ==========================================================
+ * GLOBAL THEME VARIABLES - MODO OSCURO FORZADO
+ * Estas variables definen la paleta Dark Mode Gamer.
+ * ==========================================================
+ */
+:root {
+    /* Fondos y Superficies (Gamer Dark Mode 2.0) */
+    --color-background-primary: #0F141F; /* Fondo principal oscuro */
+    --color-surface: #1A2436; /* Fondo de tarjetas/Componentes principales */
+    --color-card: var(--color-surface);
+    --color-input-bg: #141D2B; /* Fondo de inputs/mensajes/botones secundarios */
+    --color-border: #3D4A66; /* Borde sutil oscuro */
+    --color-overlay: rgba(0, 0, 0, 0.85); /* Overlay de modal muy oscuro */
+    /* Acentos y Branding (Cian Eléctrico Gamer) */
+    --color-accent-blue: #00CCFF;
+    --color-primary: var(--color-accent-blue);
+    --color-primary-rgb: 0, 204, 255;
+    --color-accent-hover: #0099CC;
+    /* Texto (Claro) */
+    --color-text-primary: #E0E7FF; /* Texto principal (blanco brillante) */
+    --color-text-secondary: #90A0C9; /* Texto gris azulado para descripciones */
+    --color-text-light: var(--color-text-primary);
+    /* Feedback y Especiales (Gamer Neon) */
+    --color-success: #3DED97; /* Verde Neon */
+    --color-success-rgb: 61, 237, 151;
+    --color-error: #FF4D6C; /* Usado en archivos anteriores */
+    --color-danger-rgb: 255, 77, 108; /* Usado en archivos anteriores */
+}
 
+/* Aplicar transición suave a todos los elementos */
+* {
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
+}
+
+/* ======================================================= */
+/* 1. LAYOUT PRINCIPAL Y GRID */
+/* ======================================================= */
 .home-layout-container {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background-color: var(--color-background-primary); /* Fondo principal */
+    background-color: var(--color-background-primary);
 }
 
 .main-content-wrapper {
     display: grid;
-    /* Define 3 columnas: 1. Navegación, 2. Contenido (Feed), 3. Sidebar */
     grid-template-columns: 200px 1fr 300px;
-    gap: 30px; /* Espaciado entre columnas */
+    gap: 30px;
     width: 100%;
-    max-width: 1400px; /* Limitar el ancho máximo para evitar que se estire demasiado */
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 20px 0;
+    padding: 30px 20px;
+    min-height: calc(100vh - 80px);
 }
 
+/* ---------------------------------------------------------- */
 /* 2a. Columna de Navegación (Sidebar Izquierda) */
+/* ---------------------------------------------------------- */
 .nav-sidebar {
-    padding: 20px 0 20px 20px;
-    position: sticky; /* Fija la navegación mientras se hace scroll en el centro */
-    top: 0;
+    padding: 20px 0 20px 0;
+    position: sticky;
+    top: 20px;
     height: 100%;
+    align-self: start;
 }
 
 .btn-create-post {
     width: 100%;
     padding: 14px;
     margin-bottom: 20px;
-    background-color: var(--color-success); /* Usamos el verde para CTA (Call to Action) */
-    color: var(--color-background-primary);
+    /* Botón principal usando color Success Neon */
+    background-color: var(--color-success);
+    color: var(--color-background-primary); /* Texto oscuro para contraste */
     font-weight: 700;
     border-radius: 10px;
     border: none;
     cursor: pointer;
     transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 1.05em;
+    /* Glow de éxito Neon */
+    box-shadow: 0 4px 15px rgba(var(--color-success-rgb), 0.6);
 }
 
     .btn-create-post:hover {
-        filter: brightness(90%);
+        filter: brightness(110%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(var(--color-success-rgb), 0.9);
     }
 
-/* 2b. Columna Central (FEED) */
+/* ---------------------------------------------------------- */
+/* 2b. Columna Central (FEED) y 2c. Sidebar Derecha */
+/* ---------------------------------------------------------- */
 .feed-center-column {
     padding: 20px;
 }
@@ -63,94 +112,48 @@
     font-size: 1em;
 }
 
-.loading-feed-message {
-    text-align: center;
-    color: var(--color-accent-blue);
-    margin-top: 50px;
-}
-
-/* 2c. Columna Derecha (Sidebar de Comunidad) */
-/* El estilo del sidebar se definirá en el componente SidebarCommunity */
-
-/* ======================================================= */
-/* RESPONSIVIDAD (Ajuste para móviles y tabletas)         */
-/* ======================================================= */
-@media (max-width: 1024px) {
-    .main-content-wrapper {
-        /* En pantallas más pequeñas, ocultamos la navegación izquierda y ponemos el sidebar debajo */
-        grid-template-columns: 1fr 300px;
-    }
-
-    .nav-sidebar {
-        display: none; /* Ocultar sidebar izquierda en tabletas/móviles */
-    }
-}
-
-@media (max-width: 768px) {
-    .main-content-wrapper {
-        /* En móviles, todo se convierte en una sola columna */
-        grid-template-columns: 1fr;
-        padding: 10px;
-    }
-
-    .sidebar-community {
-        display: none; /* Ocultar sidebar de comunidad en móviles para priorizar el contenido */
-    }
-}
-
-/* src/styles/HomeStyles.css (Añadir o mejorar) */
-
-/* Layout: Asegurar la rejilla y el centrado */
-.main-content-wrapper {
-    /* ... (Mantener la configuración de grid-template-columns: 200px 1fr 300px;) */
-    padding: 30px 20px; /* Más padding para que respire */
-    min-height: calc(100vh - 80px); /* Asegurar que ocupe todo el espacio */
-}
-
-/* Header: Diseño Limpio */
-
-/* Sidebar: Diseño Fijo y Limpio */
-.sidebar-card {
-    background-color: var(--color-card);
-    border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-}
-
-.no-content-message, .loading-feed-message {
+.loading-feed-message, .no-content-message {
     padding: 30px;
     text-align: center;
     color: var(--color-text-secondary);
     background-color: var(--color-input-bg);
     border-radius: 8px;
+    border: 1px solid var(--color-border);
 }
 
     .no-content-message h2 {
-        color: var(--color-accent-blue);
+        color: var(--color-primary);
     }
 
-/* Botones CTA */
-.btn-create-post {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-size: 1.05em;
+.sidebar-card {
+    background-color: var(--color-card);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    /* Sombra oscura forzada */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--color-border);
 }
 
-/* Modal Overlay: Diseño profesional para el PostForm */
+
+/* ======================================================= */
+/* 3. MODAL (PostForm) - SOLUCIÓN DE CENTRADO FORZADO */
+/* ======================================================= */
 .modal-overlay {
+    /* Mantenemos FIXED y dimensiones 100% */
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: var(--color-overlay); /* Fondo semitransparente oscuro */
+    background-color: var(--color-overlay);
+    /* Usamos flexbox como fallback, pero confiamos en las propiedades de scroll y padding */
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 10000;
+    overflow-y: auto; /* Permite scroll dentro del overlay */
+    padding: 20px 10px;
 }
 
 .post-form-card {
@@ -159,20 +162,73 @@
     border-radius: 12px;
     width: 90%;
     max-width: 600px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-    position: relative;
+    /* Sombra oscura forzada */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+    /* SOLUCIÓN DE CENTRADO ROBUSTA: */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* CLAVE: Centrado preciso independientemente de su tamaño */
+    /* Animación */
     animation: scaleIn 0.3s ease-out;
+    border: 1px solid var(--color-border);
+    /* Aseguramos que el contenido del modal no interfiera con el centrado */
+    max-height: calc(100% - 40px); /* Deja espacio para el padding del overlay */
+    overflow-y: auto;
 }
 
-/* Animación de entrada para el modal */
+/* ======================================================= */
+/* 4. RESPONSIVIDAD */
+/* ======================================================= */
+@media (max-width: 1024px) {
+    .main-content-wrapper {
+        /* Ocultar la navegación de 200px */
+        grid-template-columns: 1fr 300px;
+    }
+
+    .nav-sidebar {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-content-wrapper {
+        grid-template-columns: 1fr;
+        padding: 10px;
+    }
+
+    .feed-center-column {
+        order: 2;
+        padding: 10px;
+    }
+
+    .sidebar-community {
+        order: 1;
+        margin-bottom: 20px;
+        width: 95%;
+        margin: 0 auto 20px auto;
+        display: block;
+    }
+
+    /* El modal en móvil */
+    .post-form-card {
+        top: 50%; /* Mantener el centrado forzado */
+        left: 50%;
+        width: 95%;
+    }
+}
+
+/* ======================================================= */
+/* 5. UTILIDADES Y ANIMACIONES */
+/* ======================================================= */
 @keyframes scaleIn {
     from {
-        transform: scale(0.9);
+        transform: scale(0.9) translate(-50%, -50%); /* Ajuste para el centrado */
         opacity: 0;
     }
 
     to {
-        transform: scale(1);
+        transform: scale(1) translate(-50%, -50%); /* Ajuste para el centrado */
         opacity: 1;
     }
 }

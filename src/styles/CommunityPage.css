@@ -1,34 +1,96 @@
-/* src/styles/CommunityPage.css */
+/* ======================================================= */
+/* 🚀 0. PALETA DE COLORES BASE (Modo Claro - Default) */
+/* ======================================================= */
+:root {
+    /* Fondos y Superficies */
+    --color-background-primary: #f8f9fa; /* Fondo muy claro */
+    --color-surface: #ffffff; /* Fondo de tarjetas */
+    --color-input-bg: #f1f3f5; /* Fondo de inputs y hover */
+    --color-border: #dee2e6; /* Borde sutil */
+    /* Acentos y Branding */
+    --color-accent-blue: #0070c0; /* Azul más vibrante */
+    --color-accent-hover: #004d8c;
+    --color-accent-shadow-rgb: 0, 112, 192;
+    /* Texto */
+    --color-text-primary: #212529; /* Texto principal (casi negro) */
+    --color-text-secondary: #6c757d; /* Texto secundario (gris medio) */
+    /* Feedback */
+    --color-error: #dc3545;
+    --color-success: #28a745;
+    /* Alias y utilidades */
+    --color-primary: var(--color-accent-blue);
+    --color-primary-rgb: var(--color-accent-shadow-rgb);
+    --color-card: var(--color-surface);
+    --color-danger: var(--color-error);
+    --color-danger-rgb: 220, 53, 69;
+}
+
+/* ======================================================= */
+/* 🌙 MODO OSCURO (Play-Zone Gamer Dark Mode 2.0) */
+/* ======================================================= */
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* Fondos (Originales del modo oscuro) */
+        --color-background-primary: #0A111F;
+        --color-surface: #1A2436; /* Fondo de tarjetas */
+        --color-input-bg: #111A29; /* Fondo de inputs y hover */
+        --color-border: #2B3A50; /* Borde */
+        /* Acentos (Cian Eléctrico Gamer) */
+        --color-accent-blue: #00CCFF;
+        --color-accent-hover: #0099CC;
+        --color-accent-shadow-rgb: 0, 204, 255;
+        /* Texto */
+        --color-text-primary: #E8F0FF; /* Texto principal (blanco brillante) */
+        --color-text-secondary: #90A0C9; /* Texto secundario (gris azulado) */
+        /* Feedback (Gamer Neon) */
+        --color-error: #FF4D6C;
+        --color-success: #3DED97;
+        --color-danger-rgb: 255, 77, 108;
+    }
+}
+
+/* Aplicar transición suave a todos los elementos */
+* {
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
+}
+
+/* ======================================================= */
+/* 1. ESTRUCTURA Y ESTADOS DE CARGA */
+/* ======================================================= */
+.loading-page, .community-page {
+    min-height: 100vh;
+    background-color: var(--color-background-primary);
+}
+
+/* Aplicar gradiente oscuro para la estética gamer */
+@media (prefers-color-scheme: dark) {
+    .community-page, .loading-page {
+        background: linear-gradient(135deg, #0A111F 0%, #111A29 100%);
+    }
+}
 
 .loading-page {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    color: var(--color-text-primary);
 }
 
-.loading-page .loading-spinner {
-    width: 60px;
-    height: 60px;
-    border: 4px solid rgba(255, 255, 255, 0.3);
-    border-top: 4px solid white;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 1rem;
-}
+    .loading-page .loading-spinner {
+        width: 60px;
+        height: 60px;
+        border: 4px solid var(--color-border);
+        border-top: 4px solid var(--color-primary);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 1rem;
+    }
 
-.loading-page p {
-    font-size: 1.2rem;
-    font-weight: 600;
-}
-
-.community-page {
-    min-height: 100vh;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
+    .loading-page p {
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
 
 .community-container {
     max-width: 1400px;
@@ -41,14 +103,20 @@
     text-align: center;
     margin-bottom: 3rem;
     padding: 2rem;
-    background: rgba(255, 255, 255, 0.95);
+    background: var(--color-surface);
     border-radius: 20px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
 }
 
+@media (prefers-color-scheme: dark) {
+    .community-header {
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+}
+
 .community-header h1 {
-    color: #2d3748;
+    color: var(--color-text-primary);
     font-size: 3rem;
     font-weight: 800;
     margin-bottom: 1rem;
@@ -59,7 +127,7 @@
 }
 
 .community-header p {
-    color: #4a5568;
+    color: var(--color-text-secondary);
     font-size: 1.2rem;
     margin: 0;
 }
@@ -70,7 +138,7 @@
     justify-content: center;
     gap: 1rem;
     margin-bottom: 3rem;
-    background: rgba(255, 255, 255, 0.9);
+    background: var(--color-surface);
     padding: 1rem;
     border-radius: 15px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -83,7 +151,7 @@
     padding: 1rem 2rem;
     border: none;
     background: transparent;
-    color: #4a5568;
+    color: var(--color-text-secondary);
     font-weight: 600;
     border-radius: 10px;
     cursor: pointer;
@@ -91,28 +159,30 @@
     font-size: 1rem;
 }
 
-.tab-button:hover {
-    background: rgba(102, 126, 234, 0.1);
-    color: #667eea;
-    transform: translateY(-2px);
-}
+    .tab-button:hover {
+        background: rgba(var(--color-primary-rgb), 0.1);
+        color: var(--color-primary);
+        transform: translateY(-2px);
+    }
 
-.tab-button.active {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-}
+    .tab-button.active {
+        background: linear-gradient(135deg, var(--color-primary), var(--color-accent-hover));
+        color: white;
+        box-shadow: 0 4px 15px rgba(var(--color-primary-rgb), 0.4);
+    }
 
 /* Community Content */
 .community-content {
-    background: rgba(255, 255, 255, 0.95);
+    background: var(--color-surface);
     border-radius: 20px;
     padding: 2rem;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
 }
 
-/* Stats Overview */
+/* ======================================================= */
+/* 2. ESTADÍSTICAS Y CONTROLES */
+/* ======================================================= */
 .community-stats {
     margin-bottom: 2rem;
 }
@@ -130,46 +200,62 @@
     border-radius: 15px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.stat-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-}
-
-.stat-card.users {
-    background: linear-gradient(135deg, #4fd1c7, #38b2ac);
     color: white;
 }
 
-.stat-card.games {
-    background: linear-gradient(135deg, #9f7aea, #805ad5);
-    color: white;
-}
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    }
 
-.stat-card.posts {
-    background: linear-gradient(135deg, #63b3ed, #4299e1);
-    color: white;
-}
+    /* Fondos de Estadísticas (Base) */
+    .stat-card.users {
+        background: var(--color-success);
+    }
 
-.stat-card.guides {
-    background: linear-gradient(135deg, #68d391, #48bb78);
-    color: white;
-}
+    .stat-card.games {
+        background: var(--color-primary);
+    }
 
-.stat-card.active {
-    background: linear-gradient(135deg, #f6ad55, #ed8936);
-    color: white;
+    .stat-card.posts {
+        background: var(--color-accent-hover);
+    }
+
+    .stat-card.guides {
+        background: #68d391;
+    }
+
+    .stat-card.active {
+        background: var(--color-error);
+    }
+
+/* Regradientes en Modo Oscuro (Mantiene la estética gamer original) */
+@media (prefers-color-scheme: dark) {
+    .stat-card.users {
+        background: linear-gradient(135deg, var(--color-success), #38b2ac);
+    }
+
+    .stat-card.games {
+        background: linear-gradient(135deg, var(--color-primary), #805ad5);
+    }
+
+    .stat-card.posts {
+        background: linear-gradient(135deg, var(--color-accent-hover), #4299e1);
+    }
+
+    .stat-card.guides {
+        background: linear-gradient(135deg, #68d391, var(--color-success));
+    }
+
+    .stat-card.active {
+        background: linear-gradient(135deg, var(--color-error), #ed8936);
+    }
 }
 
 .stat-icon {
     font-size: 2.5rem;
     margin-right: 1rem;
     opacity: 0.8;
-}
-
-.stat-content {
-    flex: 1;
 }
 
 .stat-number {
@@ -195,119 +281,103 @@
     gap: 1rem;
 }
 
-.section-header h3 {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: #2d3748;
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin: 0;
-}
+    .section-header h3 {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--color-text-primary);
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0;
+    }
 
-.search-box {
-    position: relative;
-    display: flex;
-    align-items: center;
-    min-width: 300px;
-}
+/* ======================================================= */
+/* SEARCH AND FILTERS (CORREGIDO) */
+/* ======================================================= */
 
-.search-box svg {
-    position: absolute;
-    left: 1rem;
-    color: #a0aec0;
-    z-index: 1;
-}
-
-.search-box input {
+.search-box input, .filter-select select {
     width: 100%;
     padding: 0.75rem 1rem 0.75rem 2.5rem;
-    border: 2px solid #e2e8f0;
+    border: 2px solid var(--color-border);
+    background: var(--color-input-bg);
+    color: var(--color-text-primary);
     border-radius: 10px;
     font-size: 1rem;
     transition: all 0.3s ease;
 }
 
-.search-box input:focus {
-    outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-/* Games Filters */
-.games-filters {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-.filter-select {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.filter-select svg {
-    position: absolute;
-    left: 1rem;
-    color: #a0aec0;
-    z-index: 1;
-}
+    .search-box input:focus, .filter-select select:focus {
+        outline: none;
+        /* FIX 1: Mantener el fondo oscuro para evitar el parpadeo/transparencia */
+        background-color: var(--color-input-bg);
+        border-color: var(--color-primary); /* Borde Cian */
+        /* FIX 2: Aumentar la opacidad del glow Cian para un efecto Neon real */
+        box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb), 0.5);
+    }
 
 .filter-select select {
-    padding: 0.75rem 1rem 0.75rem 2.5rem;
-    border: 2px solid #e2e8f0;
+    width: 100%;
+    padding: 0.75rem 1rem; /* Reducimos el padding para este FIX */
+    border: 2px solid var(--color-border);
+    /* FIX CRÍTICO 1: Fondo Oscuro Forzado */
+    background: var(--color-input-bg) !important;
+    color: var(--color-text-primary) !important;
+    /* FIX CRÍTICO 2: ANULAR LA APARIENCIA NATIVA DEL NAVEGADOR */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    /* Nota: Si haces esto, la flecha nativa desaparecerá y deberás añadir una con CSS (background-image o ::after) */
+
     border-radius: 10px;
-    background: white;
     font-size: 1rem;
-    cursor: pointer;
     transition: all 0.3s ease;
 }
 
-.filter-select select:focus {
-    outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    .filter-select select:focus {
+        outline: none;
+        background-color: var(--color-input-bg);
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb), 0.5);
+    }
+
+    /* FIX CRÍTICO 3: Asegurar que las OPCIONES desplegables sean oscuras */
+    .filter-select select option {
+        background-color: var(--color-input-bg) !important;
+        color: var(--color-text-primary) !important;
+    }
+
+/* ----------------------------------------------------------------- */
+/* (Opcional, pero recomendado: Añadir flecha de despliegue con CSS) */
+/* ----------------------------------------------------------------- */
+/* Si usaste 'appearance: none', debes añadir una flecha personalizada: */
+.filter-select {
+    position: relative; /* Necesario para posicionar la flecha */
 }
 
-/* Loading and Error States */
-.loading-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    .filter-select::after {
+        content: '\25BC'; /* Icono de flecha (▼) */
+        position: absolute;
+        top: 50%;
+        right: 15px;
+        transform: translateY(-50%);
+        pointer-events: none; /* Asegura que se pueda hacer clic en el select */
+        color: var(--color-text-secondary); /* Color de la flecha */
+        font-size: 0.8rem;
+    }
+/* ======================================================= */
+/* 3. LISTADOS Y TARJETAS (CORRECCIÓN FINAL DE CONTRASTE) */
+/* ======================================================= */
+
+/* Estados de Contenido */
+.loading-state, .error-state, .empty-state {
     padding: 3rem;
-    color: #4a5568;
-}
-
-.loading-spinner {
-    width: 50px;
-    height: 50px;
-    border: 4px solid #e2e8f0;
-    border-top: 4px solid #667eea;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 1rem;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    text-align: center;
+    color: var(--color-text-secondary);
 }
 
 .error-state {
-    text-align: center;
-    padding: 3rem;
-    color: #e53e3e;
+    color: var(--color-danger);
     font-weight: 600;
-}
-
-.empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 3rem;
-    color: #a0aec0;
 }
 
 .empty-state svg {
@@ -315,157 +385,141 @@
     opacity: 0.5;
 }
 
-/* Users Grid */
+.error-state h3, .empty-state h3 {
+    color: var(--color-text-primary);
+    margin-bottom: 0.5rem;
+}
+
+/* Tarjetas Base */
+.user-card, .game-card {
+    background: var(--color-card);
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border: 1px solid var(--color-border);
+}
+
+    .user-card:hover, .game-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        border-color: var(--color-primary);
+    }
+
+/* Tarjetas de Usuario */
 .users-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 1.5rem;
 }
 
-.user-card {
-    background: white;
-    border-radius: 15px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
-    border: 1px solid #e2e8f0;
-}
-
-.user-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-    border-color: #667eea;
-}
-
-.user-avatar-container {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    margin-bottom: 1rem;
-}
-
-.user-avatar {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #e2e8f0;
-}
-
-.admin-badge {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background: linear-gradient(135deg, #f6ad55, #ed8936);
-    color: white;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.8rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-.user-info {
-    text-align: center;
-    margin-bottom: 1rem;
-}
-
 .user-alias {
-    color: #2d3748;
-    font-size: 1.2rem;
-    font-weight: 700;
-    margin: 0 0 0.25rem 0;
+    color: var(--color-text-primary);
 }
 
-.user-name {
-    color: #4a5568;
-    font-size: 0.9rem;
-    margin: 0 0 0.75rem 0;
+.user-name, .user-stats span {
+    color: var(--color-text-secondary);
 }
-
-.user-stats {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 0.75rem;
-}
-
-.user-stats span {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    font-size: 0.8rem;
-    color: #4a5568;
-    font-weight: 600;
-}
-
 .user-bio {
-    color: #718096;
-    font-size: 0.85rem;
-    line-height: 1.4;
-    margin: 0;
+    /* Fondo transparente */
+    background-color: transparent !important;
+    /* Usar color primario de texto para asegurar la visibilidad */
+    color: var(--color-text-primary) !important;
+    line-height: 1.6;
+    font-size: 0.95rem;
+    opacity: 1;
+    /* Espacio interno y borde */
+    padding-bottom: 0; /* No necesitamos padding inferior aquí */
+    /* FIX 1: AJUSTAR MARGEN SUPERIOR e INFERIOR DENTRO DEL BLOQUE DE DETALLES */
+    /* Empujar la biografía hacia abajo del nombre de usuario y dar espacio abajo */
+    margin-bottom: 0; /* <-- CLAVE: Dejar que el contenedor decida el espacio final */
+    /* Usar el borde sutil de la paleta */
+    border-top: 1px dashed var(--color-border);
+    /* FIX 2: ELIMINAR CUALQUIER RESTRICCIÓN DE TRUNCADO PARA QUE TODO EL TEXTO QUEPA */
+    display: block; /* Volver a display normal */
+    -webkit-line-clamp: unset; /* Deshabilitar line-clamp */
+    -webkit-box-orient: unset;
+    overflow: visible; /* Asegurar que fluya */
+    height: auto;
 }
 
-.user-actions {
+/* ======================================================= */
+/* FIX CRÍTICO DEL SOLAPAMIENTO: Ajustar el contenedor padre */
+/* ======================================================= */
+
+/* Buscamos el contenedor del texto que envuelve al bio (.user-details)
+   o el elemento de la lista (.suggested-user-item) */
+
+.user-details {
+    /* Aseguramos que el contenido fluya libremente y tenga un margen inferior si es el último elemento */
+    margin-bottom: 15px; /* Esto empuja al botón, si existe */
+}
+
+/* Opcional: Si `.user-bio` es el último elemento en su tarjeta, asegúrate de que el contenedor de la lista tenga suficiente espacio: */
+.suggested-users-list {
+    /* Asegurar que la lista de tarjetas tiene suficiente separación */
+    gap: 20px; /* Si sigue solapando, aumenta este valor */
+}
+.user-info {
+    /* Contenedor principal del texto, ocupa el espacio restante en la fila */
+    flex-grow: 1;
     display: flex;
-    justify-content: center;
+    flex-direction: column; /* Apila los elementos verticalmente (nombre, bio, stats) */
+    justify-content: center; /* Centra verticalmente si hay espacio */
+    margin-left: 15px; /* Separación respecto al avatar */
 }
 
-/* Games Grid */
+    /* Nombre de Usuario */
+    .user-info h4, .user-info .user-name {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 800; /* Destaca el nombre */
+        color: var(--color-text-primary);
+        line-height: 1.2;
+    }
+
+    /* Correo Electrónico o Alias Secundario */
+    .user-info .user-email {
+        margin: 2px 0 0 0;
+        font-size: 0.85rem;
+        color: var(--color-text-secondary); /* Color sutil */
+    }
+
+    /* FIX: Las estadísticas deben ir después de la biografía (si existe) */
+    .user-info .user-stats {
+        /* Espacio para separarse del .user-bio o del email */
+        margin-top: 15px;
+        display: flex;
+        gap: 15px; /* Separación entre las estadísticas (seguidores, posts) */
+        font-size: 0.8rem;
+        color: var(--color-text-secondary);
+        opacity: 0.8;
+    }
+
+        .user-info .user-stats span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .user-info .user-stats svg {
+            color: var(--color-primary); /* Iconos Cian */
+        }
+.user-avatar-container {
+    align-items: center;
+    justify-items: center;
+    align-content: center;
+    align-self: center;
+}
+
+/* Tarjetas de Juego */
 .games-grid {
-    display: grid;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 1.5rem;
 }
 
 .game-card {
-    background: white;
-    border-radius: 15px;
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
-    border: 1px solid #e2e8f0;
-}
-
-.game-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-    border-color: #667eea;
-}
-
-.game-image {
-    position: relative;
-    height: 200px;
-    overflow: hidden;
-}
-
-.game-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-}
-
-.game-card:hover .game-image img {
-    transform: scale(1.05);
-}
-
-.featured-badge {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: linear-gradient(135deg, #f6ad55, #ed8936);
-    color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    padding: 0;
 }
 
 .game-info {
@@ -473,194 +527,70 @@
 }
 
 .game-title {
-    color: #2d3748;
-    font-size: 1.2rem;
-    font-weight: 700;
-    margin: 0 0 0.5rem 0;
-    line-height: 1.3;
+    color: var(--color-text-primary);
 }
 
 .game-genres {
-    color: #667eea;
-    font-size: 0.85rem;
-    font-weight: 600;
-    margin-bottom: 0.75rem;
+    color: var(--color-primary);
 }
 
+/* --- CORRECCIÓN CRÍTICA FINAL: Descripción (Máximo Contraste) --- */
 .game-description {
-    color: #4a5568;
-    font-size: 0.9rem;
-    line-height: 1.4;
-    margin-bottom: 1rem;
+    /* Usar color primario de texto para legibilidad */
+    color: var(--color-text-primary);
+    line-height: 1.5;
+    font-size: 0.95rem;
+    opacity: 0.9;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
-
-.game-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    font-size: 0.85rem;
-    color: #718096;
-}
-
-.developer {
-    font-weight: 600;
-}
+/* ----------------------------------------------------------------- */
 
 .release-date {
-    background: #e2e8f0;
-    padding: 0.25rem 0.5rem;
-    border-radius: 6px;
-    font-weight: 600;
+    background: var(--color-input-bg);
+    color: var(--color-text-primary);
+    padding: 5px 10px;
+    border-radius: 5px;
 }
 
-.score-badge {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-}
-
+/* Score Badges */
 .score-badge.high {
-    background: linear-gradient(135deg, #68d391, #48bb78);
+    background: linear-gradient(135deg, var(--color-success), #48bb78);
     color: white;
 }
 
 .score-badge.medium {
-    background: linear-gradient(135deg, #f6ad55, #ed8936);
+    background: linear-gradient(135deg, var(--color-error), #ed8936);
     color: white;
 }
 
 .score-badge.low {
-    background: linear-gradient(135deg, #fc8181, #e53e3e);
+    background: linear-gradient(135deg, var(--color-danger), #e53e3e);
     color: white;
 }
 
-.game-actions {
-    padding: 0 1.5rem 1.5rem;
-}
-
-/* Buttons */
-.btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    justify-content: center;
-    min-width: 120px;
-}
-
+/* Buttons General */
 .btn-primary {
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent-hover));
     color: white;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 4px 15px rgba(var(--color-primary-rgb), 0.3);
 }
 
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-}
 
-/* Responsive Design */
-@media (max-width: 1200px) {
-    .community-container {
-        padding: 1rem;
-    }
-    
-    .community-header h1 {
-        font-size: 2.5rem;
-    }
-}
+/* ======================================================= */
+/* 4. MODAL DE COMENTARIOS Y UTILIDADES */
+/* ======================================================= */
+/* Manteniendo los estilos modales para no romper el resto del componente */
 
-@media (max-width: 768px) {
-    .community-header h1 {
-        font-size: 2rem;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    
-    .community-tabs {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    
-    .tab-button {
-        padding: 0.75rem 1rem;
-    }
-    
-    .section-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .search-box {
-        min-width: unset;
-        width: 100%;
-    }
-    
-    .games-filters {
-        width: 100%;
-        justify-content: space-between;
-    }
-    
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .users-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .games-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .game-card {
-        max-width: 100%;
-    }
-}
-
-@media (max-width: 480px) {
-    .community-container {
-        padding: 0.5rem;
-    }
-    
-    .community-header {
-        padding: 1rem;
-        margin-bottom: 1.5rem;
-    }
-    
-    .community-header h1 {
-        font-size: 1.5rem;
-    }
-    
-    .community-content {
-        padding: 1rem;
-    }
-    
-    .user-card,
-    .game-card {
-        margin: 0;
-    }
-}
-
-/* Estilos para el modal de comentarios específicos */
 .comment-modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(var(--color-text-primary-rgb), 0.7);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -669,352 +599,86 @@
     animation: fadeIn 0.3s ease-out;
 }
 
+@media (prefers-color-scheme: dark) {
+    .comment-modal-overlay {
+        background: rgba(0, 0, 0, 0.7);
+    }
+}
+
 .comment-modal {
-    background: white;
+    background: var(--color-card);
     border-radius: 12px;
     max-width: 600px;
     width: 100%;
-    max-height: 80vh;
-    overflow: hidden;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     animation: slideUp 0.3s ease-out;
-}
-
-.comment-modal-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 1rem 1.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.comment-modal-header h3 {
-    margin: 0;
-    font-size: 1.2rem;
-    font-weight: 600;
-}
-
-.comment-modal-header .close-btn {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.2rem;
-    cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-}
-
-.comment-modal-header .close-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-.comment-modal-body {
-    padding: 1.5rem;
-    max-height: 60vh;
+    max-height: 80vh;
     overflow-y: auto;
 }
 
-.loading-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem;
-}
-
-.loading-state .spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid #f3f3f3;
-    border-top: 3px solid #667eea;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 1rem;
-}
-
-.loading-state p {
-    color: #666;
-    margin: 0;
-}
-
-.error-state {
-    text-align: center;
-    padding: 1rem;
-}
-
-.error-state .error-icon {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-}
-
-.error-state h4 {
-    color: #e74c3c;
-    margin-bottom: 0.5rem;
-}
-
-.error-state p {
-    color: #666;
-    margin-bottom: 1rem;
-}
-
-.error-help {
-    background: #f8f9fa;
-    border-radius: 8px;
-    padding: 1rem;
-    text-align: left;
-    margin-top: 1rem;
-}
-
-.error-help p {
-    margin: 0 0 0.5rem 0;
-    font-weight: 600;
-    color: #333;
-}
-
-.error-help ul {
-    margin: 0;
-    padding-left: 1.2rem;
-    color: #666;
-}
-
-.error-help li {
-    margin-bottom: 0.3rem;
-}
-
-.comment-display {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.comment-info {
-    border-bottom: 1px solid #eee;
-    padding-bottom: 1rem;
-}
-
-.comment-author {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-}
-
-.comment-author .user-avatar {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #667eea;
-    background: #f8f9fa;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.comment-author .user-avatar:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
-}
-
-.comment-author .user-avatar-fallback {
-    color: #667eea;
-    font-size: 48px;
-    width: 48px;
-    height: 48px;
-}
-
-.comment-author .user-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-}
-
-.comment-author .user-name {
-    font-weight: 600;
-    color: #333;
-    font-size: 1.1rem;
-}
-
-.comment-author svg {
-    color: #667eea;
-    font-size: 1.5rem;
-}
-
-.comment-date {
-    color: #666;
-    font-size: 0.9rem;
-    background: #f8f9fa;
-    padding: 0.3rem 0.8rem;
-    border-radius: 15px;
-}
-
-.comment-content h4 {
-    margin: 0 0 0.8rem 0;
-    color: #333;
-    font-size: 1rem;
-    font-weight: 600;
-}
-
 .comment-text {
-    background: #f8f9fa;
-    border-radius: 8px;
-    padding: 1rem;
-    border-left: 4px solid #667eea;
-    line-height: 1.6;
-    color: #333;
-    white-space: pre-wrap;
-}
-
-.limited-info {
-    background: #fff3cd;
-    border-left: 4px solid #ffc107;
-    padding: 1rem;
-    border-radius: 8px;
-}
-
-.limited-info p {
-    margin: 0.5rem 0;
-    color: #856404;
-}
-
-.limited-info code {
-    background: #f8f9fa;
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
-    font-family: monospace;
-    color: #e74c3c;
-    border: 1px solid #dee2e6;
-}
-
-.backend-limitation-notice {
-    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    border: 1px solid #ffc107;
-    display: flex;
-    gap: 1rem;
-    align-items: flex-start;
-}
-
-.notice-icon {
-    font-size: 1.5rem;
-    flex-shrink: 0;
-}
-
-.notice-content h4 {
-    margin: 0 0 0.5rem 0;
-    color: #856404;
-    font-size: 1rem;
-    font-weight: 600;
-}
-
-.notice-content p {
-    margin: 0.5rem 0;
-    color: #856404;
-    font-size: 0.9rem;
-    line-height: 1.4;
-}
-
-.comment-context {
-    border-top: 1px solid #eee;
-    padding-top: 1rem;
-}
-
-.comment-context h4 {
-    margin: 0 0 0.8rem 0;
-    color: #333;
-    font-size: 1rem;
-    font-weight: 600;
-}
-
-.context-info {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    background: #e8f4fd;
-    padding: 0.8rem;
-    border-radius: 8px;
-    color: #2c5282;
-}
-
-.context-info svg {
-    color: #3182ce;
-    font-size: 1.1rem;
-}
-
-.comment-actions {
-    display: flex;
-    justify-content: flex-end;
-    padding-top: 1rem;
-    border-top: 1px solid #eee;
-}
-
-.comment-actions .btn {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.7rem 1.2rem;
-    border-radius: 8px;
-    border: none;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-decoration: none;
+    background: var(--color-input-bg);
+    border-left: 4px solid var(--color-primary);
+    color: var(--color-text-primary);
 }
 
 .comment-actions .btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent-hover));
     color: white;
 }
 
-.comment-actions .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+
+/* Animaciones */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes slideUp {
-    from { 
+    from {
         opacity: 0;
         transform: translateY(30px);
     }
-    to { 
+
+    to {
         opacity: 1;
         transform: translateY(0);
     }
 }
 
-/* Responsive para el modal */
+/* Responsive Design */
 @media (max-width: 768px) {
-    .comment-modal {
-        max-width: 95%;
-        max-height: 90vh;
-    }
-    
-    .comment-modal-header {
-        padding: 1rem;
-    }
-    
-    .comment-modal-body {
-        padding: 1rem;
-    }
-    
-    .comment-author {
+    .reviews-header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 0.5rem;
+        gap: 1rem;
     }
-    
-    .comment-date {
-        font-size: 0.8rem;
+
+        .reviews-header .add-review-btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+    .comment-modal {
+        max-width: 95%;
+    }
+
+    .comment-modal-body {
+        padding: 1rem;
     }
 }

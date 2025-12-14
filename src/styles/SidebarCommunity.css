@@ -1,233 +1,371 @@
+/*
+ * ==========================================================
+ * GLOBAL THEME VARIABLES - MODO OSCURO FORZADO
+ * ==========================================================
+ */
 :root {
-    --color-dark-blue: #0A111F;
-    --color-medium-blue: #1A2436; /* Reemplaza --color-card-bg */
---color-input-bg: #111A29;
---color-border-subtle: #2B3A50;
---color-accent-blue: #00CCFF;
---color-accent-shadow: rgba(0, 204, 255, 0.4);
---color-text-primary: #E8F0FF;
---color-text-secondary: #90A0C9;
---border-radius-card: 16px;
+    /* Fondos y Superficies (Gamer Dark Mode 2.0) */
+    --color-background-primary: #0A111F; /* Fondo principal oscuro */
+    --color-medium-blue: #1A2436; /* Fondo de card (Módulo) */
+    --color-input-bg: #111A29; /* Fondo de hover/scroll track */
+    --color-border-subtle: #2B3A50; /* Borde sutil */
+    /* Acentos y Branding (Cian Eléctrico Gamer) */
+    --color-accent-blue: #00CCFF;
+    --color-accent-hover: #0099CC;
+    --color-accent-shadow: rgba(0, 204, 255, 0.7); /* Glow más fuerte */
+    --color-accent-shadow-rgb: 0, 204, 255;
+    /* Texto (Claro) */
+    --color-text-primary: #E8F0FF;
+    --color-text-secondary: #90A0C9;
+    /* Feedback */
+    --color-error: #FF4D6C;
+    --color-error-rgb: 255, 77, 108;
+    /* Dimensiones */
+    --border-radius-card: 16px;
+    --header-height: 70px;
+}
+
+/* Aplicar transición suave a todos los elementos */
+* {
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
 }
 
 /* ----------------------------------------------------------
- * 1. CONTENEDOR PRINCIPAL (FIJO Y SCROLLABLE)
+ * 1. CONTENEDOR PRINCIPAL (Efecto Glass y Glow)
  * ---------------------------------------------------------- */
 .sidebar-community {
-    @extend .custom-scroll;
-    @extend .no-visible-scroll;
     padding-top: 10px;
     padding-bottom: 20px;
     position: sticky;
-    /* Usar top dinámico del layout principal (e.g., top: 80px;) */
     top: calc(var(--header-height) + 20px);
     height: calc(100vh - var(--header-height) - 40px);
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 30px; /* **Mayor espacio entre módulos** */
+    gap: 25px; /* Más espaciado */
     padding-right: 10px;
+    /* Scrollbar Minimalista Cian */
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-accent-hover) var(--color-input-bg);
 }
 
+    .sidebar-community::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .sidebar-community::-webkit-scrollbar-thumb {
+        background-color: var(--color-accent-hover);
+        border-radius: 10px;
+    }
+
+    .sidebar-community::-webkit-scrollbar-track {
+        background-color: var(--color-input-bg);
+    }
+
 .sidebar-community-module {
-    background-color: var(--color-medium-blue); /* Usar el color del card */
-    padding: 25px; /* **Mayor padding interno** */
-    border-radius: var(--border-radius-card); /* 16px */
-    border: 2px solid var(--color-border-subtle); /* **Borde más grueso** */
-    /* Sombra profunda + sutil glow azul */
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5), 0 0 8px var(--color-accent-shadow);
+    /* Fondo translúcido con blur */
+    background-color: rgba(var(--color-accent-shadow-rgb), 0.05); /* Cian muy sutil */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 25px;
+    border-radius: var(--border-radius-card);
+    /* Borde Cian Fino */
+    border: 1px solid rgba(var(--color-accent-shadow-rgb), 0.3);
+    /* Sombra profunda y glow principal */
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.9), 0 0 15px rgba(var(--color-accent-shadow-rgb), 0.5);
     animation: fadeIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
     .sidebar-community-module h3 {
-        font-size: 1.25rem; /* **Título más grande** */
-        font-weight: 800;
+        font-size: 1.3rem;
+        font-weight: 900;
         color: var(--color-text-primary);
         margin-bottom: 20px;
         padding-bottom: 15px;
-        /* Línea de división más notoria */
-        border-bottom: 1px solid var(--color-border-subtle);
+        /* Línea divisoria Cian */
+        border-bottom: 2px solid var(--color-border-subtle);
         display: flex;
         align-items: center;
         gap: 10px;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 1.5px; /* Más espaciado */
     }
 
         .sidebar-community-module h3 svg {
             color: var(--color-accent-blue);
-            font-size: 1.5rem; /* **Icono más grande y visible** */
-            /* Añadir un glow sutil al icono del título */
-            filter: drop-shadow(0 0 3px var(--color-accent-shadow));
+            font-size: 1.6rem;
+            /* Glow Cian Fuerte */
+            filter: drop-shadow(0 0 8px var(--color-accent-shadow));
         }
 
 /* ----------------------------------------------------------
- * 2. MÓDULO DE TENDENCIAS (TRENDS MODULE)
+ * 2. MÓDULO DE TENDENCIAS (TRENDS MODULE) - (Potenciado)
  * ---------------------------------------------------------- */
 .trends-list {
     display: flex;
     flex-direction: column;
-    gap: 12px; /* Mayor espacio entre ítems */
+    gap: 8px;
 }
 
 .trend-item {
-    @extend .u-interactive-item;
-    padding: 12px; /* Mayor área de clic */
+    padding: 10px;
     cursor: pointer;
-    border-radius: 8px;
-    transition: background-color 0.2s, transform 0.1s;
+    border-radius: 6px;
+    transition: background-color 0.2s, transform 0.2s, border-color 0.2s;
+    border-left: 3px solid transparent;
 }
 
     .trend-item:hover {
-        background-color: var(--color-input-bg); /* Fondo más oscuro en hover */
-        transform: translateX(5px); /* **Efecto de deslizamiento hacia la derecha** */
+        /* Fondo hover sutil y borde de acento */
+        background-color: var(--color-input-bg);
+        transform: translateX(10px);
+        border-left: 3px solid var(--color-accent-blue);
     }
 
-/* Nombre o Hashtag de la Tendencia */
 .trend-topic {
-    font-size: 1rem;
-    font-weight: 700;
+    font-size: 1.05rem;
+    font-weight: 800;
     color: var(--color-text-primary);
+    line-height: 1.2;
 }
 
 .trend-item:hover .trend-topic {
     color: var(--color-accent-blue);
-    text-shadow: 0 0 5px rgba(0, 204, 255, 0.2); /* Sutil glow en el texto */
+    text-shadow: 0 0 8px rgba(var(--color-accent-shadow-rgb), 0.5);
 }
 
-/* Metadatos */
 .trend-meta {
     font-size: 0.85rem;
     color: var(--color-text-secondary);
 }
 
 /* ----------------------------------------------------------
- * 3. MÓDULO DE USUARIOS SUGERIDOS (SUGGESTED MODULE)
+ * 3. MÓDULO DE USUARIOS SUGERIDOS (SUGGESTED MODULE) - (Potenciado)
  * ---------------------------------------------------------- */
 .suggested-users-list {
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Mayor espacio entre usuarios */
+    gap: 20px;
 }
 
 .suggested-user-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 5px 0;
 }
 
-/* **CLASE CRÍTICA: Hace que toda la información sea clicable** */
 .user-clickable-area {
     display: flex;
     align-items: center;
-    gap: 15px; /* Más espacio */
+    gap: 15px;
     cursor: pointer;
-    text-decoration: none; /* Asegurar que no tenga subrayado por defecto si es un <a> */
-    transition: opacity 0.2s;
-    flex-grow: 1; /* Permite que el área de clic se extienda */
+    text-decoration: none;
+    transition: transform 0.2s;
+    flex-grow: 1;
 }
 
     .user-clickable-area:hover {
-        opacity: 0.8;
+        transform: translateX(3px);
     }
 
 /* Avatar Sugerido */
 .suggested-avatar {
-    /* Mantenemos el extend pero aseguramos un borde eléctrico */
-    border: 2px solid var(--color-accent-blue);
-    box-shadow: 0 0 5px var(--color-accent-shadow);
-    transition: box-shadow 0.2s;
+    width: 50px; /* Más grande */
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--color-accent-blue);
+    /* Glow Cian Fuerte */
+    box-shadow: 0 0 15px rgba(var(--color-accent-shadow-rgb), 0.8);
 }
 
 /* Detalles de Texto */
 .user-details h4 {
-    margin: 0;
-    font-size: 1rem; /* Un poco más grande */
-    font-weight: 800;
+    font-size: 1.1rem; /* Más grande */
+    font-weight: 900;
     color: var(--color-text-primary);
-    transition: color 0.2s;
 }
 
-/* **El hover del perfil se aplica al user-clickable-area para que sea más intuitivo** */
 .user-clickable-area:hover .user-details h4 {
     color: var(--color-accent-blue);
-    text-shadow: 0 0 5px rgba(0, 204, 255, 0.2);
+    text-shadow: 0 0 5px rgba(var(--color-accent-shadow-rgb), 0.3);
 }
 
 .user-details p {
-    margin: 0;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--color-text-secondary);
 }
 
 /* Botones de Seguir */
 .btn-follow-user {
-    /* Botón de seguir cian brillante (CTA) */
-    background-color: var(--color-accent-blue);
-    color: var(--color-dark-blue);
+    background-color: var(--color-input-bg);
+    color: var(--color-background-primary);
     font-weight: 700;
-    padding: 8px 15px; /* Mayor padding */
-    border-radius: 8px;
-    font-size: 0.9rem;
+    padding: 10px 20px; /* Más grandes */
+    border-radius: 12px;
+    font-size: 1rem;
     text-transform: uppercase;
-    transition: transform 0.1s, box-shadow 0.2s;
-    box-shadow: 0 0 5px var(--color-accent-shadow);
+    box-shadow: 0 5px 15px var(--color-accent-shadow);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Springy hover */
+}
+li.player-item::marker{
+    justify-content:center;
+    align-self:center;
+    color:darkgray;
+}
+li.player-item {
+    /* Estilo del contenedor del elemento de lista */
+    background: var(--color-surface); /* Fondo principal de tarjeta */
+    border: 1px solid var(--color-border); /* Borde sutil */
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 10px; /* Separación de otros jugadores en la lista */
+    /* Usar Flexbox para alinear el avatar y la información */
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Espacio entre el avatar y el texto */
+
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden; /* Necesario para efectos de hover */
 }
 
-    .btn-follow-user:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 3px 10px var(--color-accent-shadow);
+    /* Efecto de Hover (Glow Cian en el borde) */
+    li.player-item:hover {
+        border-color: var(--color-primary);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(var(--color-primary-rgb), 0.3);
     }
 
+    /* Opcional: Indicador de estado (Online/Offline) */
+    li.player-item::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 5px;
+        height: 100%;
+        /* Por defecto, un color sutil o el color de la tarjeta */
+        background: var(--color-input-bg);
+    }
+
+    /* Ejemplo: Estado Online (Si añades una clase .online en el HTML) */
+    li.player-item.online::before {
+        background: var(--color-success); /* Barra vertical Neon Green */
+    }
+
+    /* Ejemplo: Estado Offline/Away */
+    li.player-item.away::before {
+        background: var(--color-text-secondary); /* Barra gris */
+    }
+
+    /* Asegura que el texto interno (nombre, etc.) sea claro */
+    li.player-item * {
+        color: var(--color-text-primary);
+    }
+button.btn-follow.follow-btn {
+    background-color: #28374E;
+    color: darkgrey;
+}
+.btn-follow-user:hover {
+    background-color: var(--color-input-bg);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 20px var(--color-accent-shadow);
+}
+
 .btn-following-user {
-    /* Botón siguiendo (inactivo) */
-    background-color: transparent;
+    background-color: var(--color-input-bg);
     color: var(--color-text-secondary);
     border: 2px solid var(--color-border-subtle);
-    padding: 7px 15px;
-    border-radius: 8px;
-    font-size: 0.9rem;
+    padding: 9px 19px;
+    border-radius: 12px;
+    font-size: 1rem;
+    cursor: default;
+    transition: all 0.2s;
 }
 
     .btn-following-user:hover {
-        background-color: var(--color-error); /* Rojo gamer (magenta) */
-        color: var(--color-text-primary);
+        /* Estado de unfollow: Cambiar a Danger Neon */
+        background-color: var(--color-error);
+        color: white;
         border-color: var(--color-error);
-        content: "Dejar de Seguir"; /* **Usar JavaScript/React para cambiar el texto** */
+        box-shadow: 0 0 10px rgba(var(--color-error-rgb), 0.8);
     }
 
 /* ----------------------------------------------------------
- * 4. MÓDULO DE ESTADÍSTICAS O INFORMACIÓN CLAVE
+ * 4. MÓDULO DE ESTADÍSTICAS O INFORMACIÓN CLAVE (Circuit Board Look)
  * ---------------------------------------------------------- */
 .stats-grid {
-    gap: 10px;
-    margin-top: 15px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 5px;
 }
 
 .stat-item {
     background-color: var(--color-input-bg);
-    padding: 15px; /* Mayor padding */
-    border-radius: 10px;
-    border: 1px solid transparent;
-    transition: all 0.2s;
+    padding: 20px;
+    border-radius: 12px;
+    /* Borde más definido y sutilmente cian */
+    border: 1px solid rgba(var(--color-accent-shadow-rgb), 0.1);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
 }
+
+    /* Patrón de circuitos sutil en el fondo (Gamer Look) */
+    .stat-item::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: radial-gradient(circle, rgba(var(--color-accent-shadow-rgb), 0.05) 1px, transparent 1px);
+        background-size: 20px 20px;
+        opacity: 0.4;
+        pointer-events: none;
+    }
 
     .stat-item:hover {
         border-color: var(--color-accent-blue);
-        transform: scale(1.05); /* **Efecto de "pop" más notable** */
-        box-shadow: 0 0 5px var(--color-accent-shadow);
+        transform: scale(1.02);
+        box-shadow: 0 0 15px rgba(var(--color-accent-shadow-rgb), 0.6);
     }
 
 .stat-value {
-    font-size: 1.5rem;
+    font-size: 1.8rem; /* Aún más grande */
     font-weight: 900;
     color: var(--color-accent-blue);
-    /* Texto con glow */
-    text-shadow: 0 0 5px rgba(0, 204, 255, 0.5);
+    /* Glow Cian en valor */
+    text-shadow: 0 0 10px rgba(var(--color-accent-shadow-rgb), 1.0);
+    position: relative;
+    z-index: 2;
 }
 
 .stat-label {
-    font-size: 0.8rem;
-    letter-spacing: 0.5px;
+    font-size: 0.9rem;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
+    color: var(--color-text-secondary);
+    margin-top: 5px;
+    position: relative;
+    z-index: 2;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

@@ -1,20 +1,51 @@
 /*
  * ==========================================================
- * GUIDE CARD STYLES - PLAY-ZONE
- * Estilo para la vista previa de cada gu�a en el listado.
+ * GLOBAL THEME VARIABLES - MODO OSCURO FORZADO
+ * Estas variables definen la paleta Dark Mode Gamer.
  * ==========================================================
  */
+:root {
+    /* Fondos y Superficies (Gamer Dark Mode 2.0) */
+    --color-background-primary: #0F141F; /* Fondo principal oscuro */
+    --color-card: #28374E; /* Fondo de Card */
+    --color-input-bg: #141D2B; /* Fondo de Inputs/Sutiles */
+    --color-border: #3D4A66; /* Borde sutil oscuro */
+    --color-background-app-contrast: #0F141F; /* Fondo para texto contrastante */
+    /* Acentos y Branding (Cian Eléctrico Gamer) */
+    --color-accent-blue: #00C6FF;
+    --color-primary: var(--color-accent-blue);
+    --color-primary-rgb: 0, 198, 255;
+    --color-accent-hover: #0099CC;
+    /* Colores Secundarios/Grises */
+    --color-secondary: #4A5C7F;
+    --button-secondary-hover: #5d7099;
+    /* Texto (Claro) */
+    --color-text-primary: #E0E7FF; /* Texto principal (blanco brillante) */
+    --color-text-secondary: #90A0C9; /* Texto gris azulado para descripciones */
+    --color-text-light: var(--color-text-primary);
+    /* Feedback y Especiales (Gamer Neon) */
+    --color-error: #FF4D6C;
+    --color-danger: var(--color-error);
+    --color-danger-rgb: 255, 77, 108;
+    --color-success: #3DED97;
+    --color-success-rgb: 61, 237, 151;
+    --color-warning: #FFC300; /* Color Dorado/Advertencia */
+}
 
-/* Asumimos variables globales definidas:
-    --color-primary, --color-secondary, --color-success, --color-danger
-    --color-card, --color-input-bg, --color-border, 
-    --color-text-light, --color-text-secondary
-*/
+/* Aplicar transición suave a todos los elementos para un cambio de tema elegante */
+* {
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
+}
+
+/* ======================================================= */
+/* 1. GUIDE CARD ESTRUCTURA */
+/* ======================================================= */
 
 .guide-card {
     background-color: var(--color-card);
-    border-radius: 16px; /* Coherente con el estilo de perfil */
+    border-radius: 16px;
     padding: 30px;
+    /* Sombra base Gamer */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
     border: 1px solid var(--color-border);
     transition: transform 0.3s, box-shadow 0.3s;
@@ -25,10 +56,11 @@
 
     .guide-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 8px rgba(var(--color-primary-rgb), 0.2);
+        /* Sombra profunda y glow cian en hover */
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 15px rgba(var(--color-primary-rgb), 0.5);
     }
 
-/* === Encabezado y T�tulo === */
+/* === Encabezado y Título === */
 .guide-header {
     margin-bottom: 20px;
     padding-bottom: 10px;
@@ -38,14 +70,14 @@
 .guide-title {
     font-size: 1.5rem;
     font-weight: 800;
-    color: var(--color-text-light); /* T�tulo en blanco suave */
+    color: var(--color-text-light);
     margin-bottom: 10px;
     line-height: 1.3;
     transition: color 0.2s;
 }
 
 .guide-card:hover .guide-title {
-    color: var(--color-primary); /* Acento al t�tulo en hover */
+    color: var(--color-primary);
 }
 
 .guide-game-tag {
@@ -56,7 +88,8 @@
     border-radius: 6px;
     font-size: 0.85rem;
     font-weight: 600;
-    border-left: 3px solid #ffc300; /* Color Dorado/Advertencia */
+    /* Borde de advertencia dorado */
+    border-left: 3px solid var(--color-warning);
     text-transform: uppercase;
 }
 
@@ -77,19 +110,37 @@
     gap: 8px;
 }
 
-    .author-info svg, .date-info svg {
-        color: var(--color-primary); /* Iconos de meta-data en acento */
+    /* --- CORRECCIÓN CRÍTICA DE AVATAR --- */
+    .author-info .author-avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid var(--color-primary); /* Borde de acento Gamer */
+        transition: border-color 0.3s;
     }
 
-/* === Descripci�n y Cuerpo === */
+        .author-info .author-avatar:hover {
+            border-color: var(--color-text-light);
+        }
+    /* ------------------------------------- */
+
+    .author-info svg, .date-info svg {
+        color: var(--color-primary);
+    }
+
+/* === Descripción y Cuerpo === */
 .guide-description {
     color: var(--color-text-secondary);
     line-height: 1.6;
     margin-bottom: 25px;
-    flex-grow: 1; /* Permite que la tarjeta se estire uniformemente */
+    flex-grow: 1;
 }
 
-/* === Estad�sticas y Botones de Interacci�n === */
+/* ======================================================= */
+/* 2. ESTADÍSTICAS Y ACCIONES */
+/* ======================================================= */
+
 .guide-stats {
     display: flex;
     justify-content: space-between;
@@ -107,7 +158,7 @@
     font-size: 0.95rem;
 }
 
-/* Bot�n �til (Req. 3.8) */
+/* Botón Útil Toggle */
 .btn-useful-toggle {
     display: flex;
     align-items: center;
@@ -123,27 +174,29 @@
 }
 
     .btn-useful-toggle:hover {
-        background-color: #5d7099;
+        background-color: var(--button-secondary-hover);
         transform: translateY(-2px);
     }
 
-/* Estado Activo (La gu�a fue marcada como �til) */
+/* Estado Activo (La guía fue marcada como útil) */
 .useful-active {
     background-color: var(--color-success) !important;
-    color: var(--color-background-primary) !important; /* Texto oscuro sobre verde */
+    /* Texto contrastante: Usar el color de fondo más oscuro */
+    color: var(--color-background-primary) !important;
     border-color: var(--color-success) !important;
-    box-shadow: 0 0 10px rgba(56, 161, 105, 0.6);
+    /* Glow de éxito Neon */
+    box-shadow: 0 0 10px rgba(var(--color-success-rgb), 0.6);
 }
 
     .useful-active:hover {
         background-color: var(--color-success) !important;
     }
 
-/* Bot�n para Ver Gu�a Completa */
+/* Botón para Ver Guía Completa */
 .btn-details {
     background: none;
     border: none;
-    color: var(--color-primary); /* Acento principal */
+    color: var(--color-primary);
     font-weight: 700;
     cursor: pointer;
     display: flex;
@@ -153,7 +206,7 @@
 }
 
     .btn-details:hover {
-        transform: translateX(5px); /* Efecto sutil de movimiento */
+        transform: translateX(5px);
         text-decoration: underline;
     }
 
@@ -169,8 +222,9 @@
     border-radius: 6px;
 }
 
-.btn-report:hover {
-    color: #ff6b6b;
-    background: rgba(255, 107, 107, 0.1);
-    transform: scale(1.1);
-}
+    .btn-report:hover {
+        /* Color de peligro/error neon en hover */
+        color: var(--color-error);
+        background: rgba(var(--color-danger-rgb), 0.1);
+        transform: scale(1.1);
+    }

@@ -1,76 +1,106 @@
-﻿// src/components/common/forms/LoginForm.jsx
+﻿// src/components/common/forms/ForgotPasswordForm.jsx
 import React, { useState } from 'react';
-import useAuth from '../../../hooks/useAuth';
+import userService from '../../../services/userService';
+import { FaEnvelope } from 'react-icons/fa'; // Importamos el icono para el input
 
-const LoginForm = ({ onSwitchToRegister, onSwitchToForgot }) => {
-    // 1. Lógica y hooks: Todo dentro de la función LoginForm
-    const { login } = useAuth();
-    const [formData, setFormData] = useState({ email: '', password: '' });
+// Prop: onSwitchToLogin se usa para volver a la vista de inicio de sesión
+const ForgotPasswordForm = ({ onSwitchToLogin }) => {
+    // Usamos 'email' directamente ya que solo es un campo
+    const [email, setEmail] = useState('');
     const [error, setError] = useState(null);
+    const [message, setMessage] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
+        setMessage(null);
         setIsLoading(true);
 
         try {
-            await login(formData);
+            // Asume una llamada a la API para enviar el correo de reseteo
+            // Nota: Aquí usarías userService.sendPasswordResetEmail(email);
+            await new Promise(resolve => setTimeout(resolve, 1500)); // Simulación de API
+            console.log('Solicitud de reseteo enviada para:', email);
+
+            setMessage('✅ Correo de reseteo enviado. ¡Revisa tu bandeja de entrada!');
+            setEmail(''); // Limpiar el campo después de un éxito
         } catch (err) {
-            setError(err.message || 'Fallo al iniciar sesión. Verifica tus credenciales.');
+            // Manejo de errores simulado
+            setError('Fallo al enviar el correo. Verifica tu dirección o intenta más tarde.');
         } finally {
             setIsLoading(false);
         }
     };
 
-    // 2. El return DEBE estar aquí, cerrando la función.
     return (
-        <form onSubmit={handleSubmit} className="auth-form">
-            <h2>🎮 Inicia Sesión</h2>
-            {error && <p className="error-message">{error}</p>}
-
-            <div className="form-group">
-                <label htmlFor="email">Correo Electrónico</label>
-                <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                />
+        <div className="auth-card">
+            <div className="auth-header">
+                <h2 className="welcome-text">Recuperar Acceso</h2>
+                <p className="subtitle">Introduce tu correo electrónico para enviarte las instrucciones de reseteo.</p>
             </div>
 
-            <div className="form-group">
-                <label htmlFor="password">Contraseña</label>
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                />
-            </div>
+            <form onSubmit={handleSubmit} className="modern-auth-form">
 
-            <button type="submit" disabled={isLoading} className="btn btn-primary">
-                {isLoading ? 'Cargando...' : 'Entrar a PLAY-ZONE'}
-            </button>
+                {/* Mensajes de feedback */}
+                {error && <div className="error-alert"><span className="error-icon">⚠️</span>{error}</div>}
+                {message && <div className="success-message"><span className="success-icon">📧</span>{message}</div>}
 
-            <div className="form-links">
-                <button type="button" onClick={onSwitchToRegister} className="btn-link">
-                    ¿No tienes cuenta? ¡Regístrate!
+                {/* Campo Correo Electrónico */}
+                <div className="input-group">
+                    <div className="input-wrapper">
+                        <span className="input-icon">
+                            <FaEnvelope /> {/* Usamos el icono de React */}
+                        </span>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                            placeholder="tu@email.com"
+                            className="modern-input"
+                        /> {/* <-- La etiqueta se cierra correctamente con /> */}
+                        <label htmlFor="email" className="floating-label">Correo Electrónico</label>
+                    </div>
+                </div>
+
+                {/* Botón de Submit */}
+                <button
+                    type="submit"
+                    disabled={isLoading}
+                    className={`modern-submit-btn ${isLoading ? 'loading' : ''}`}
+                >
+                    <span className="btn-content">
+                        {isLoading ? (
+                            <>
+                                <span className="spinner"></span>
+                                Enviando...
+                            </>
+                        ) : (
+                            <>
+                                <span className="btn-icon">📬</span>
+                                Enviar Enlace de Reseteo
+                            </>
+                        )}
+                    </span>
                 </button>
-                <button type="button" onClick={onSwitchToForgot} className="btn-link forgot-link">
-                    ¿Olvidaste tu Contraseña?
-                </button>
-            </div>
-        </form>
-    ); 
+
+                {/* Enlace para volver a Iniciar Sesión */}
+                <div className="form-links">
+                    <button
+                        type="button"
+                        onClick={onSwitchToLogin}
+                        className="link-btn secondary-link"
+                    >
+                        <span className="link-icon">⬅️</span>
+                        Volver al Inicio de Sesión
+                    </button>
+                </div>
+            </form>
+        </div>
+    );
 };
 
-export default LoginForm;
+export default ForgotPasswordForm;

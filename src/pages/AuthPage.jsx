@@ -50,7 +50,11 @@ const AuthPage = () => {
 
     return (
         <div className="auth-page-container">
-            <div className="playzone-title">PLAYZONE</div>
+            <img
+                src="Logo.png"
+                alt="Play Zone Logo"
+                className="auth-logo-img"
+            />
             <div className="auth-form-container">
                 {renderForm()}
             </div>

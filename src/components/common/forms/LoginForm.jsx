@@ -2,6 +2,7 @@
 import useAuth from '../../../hooks/useAuth';
 // ⚠️ IMPORTACIÓN NECESARIA PARA LA REDIRECCIÓN ⚠️
 import { useNavigate } from 'react-router-dom';
+import logoImage from '../../../assets/logo.jpg'; //
 
 const LoginForm = ({ onSwitchToRegister, onSwitchToForgot }) => {
     const { login } = useAuth();
@@ -45,7 +46,7 @@ const LoginForm = ({ onSwitchToRegister, onSwitchToForgot }) => {
             <div className="auth-card">
                 <div className="auth-header">
                     <div className="logo-section">
-                        <div className="logo-icon">🎮</div>
+                        <div className="logo-icon"><img src={logoImage} alt="Play Zone Logo" className="auth-logo-img" /></div>
                         <h1 className="brand-title">PLAY-ZONE</h1>
                     </div>
                     <h2 className="welcome-text">Bienvenido de vuelta</h2>

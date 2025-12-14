@@ -1,7 +1,7 @@
 ﻿/*
  * ==========================================================
  * GLOBAL THEME VARIABLES - MODO OSCURO FORZADO
- * Estas variables definen la paleta Dark Mode Gamer.
+ * Estas variables definen la paleta Dark Mode Gamer Cyberpunk.
  * ==========================================================
  */
 :root {
@@ -44,7 +44,6 @@
 /* 🌎 ESTILOS BASE Y TIPOGRAFÍA */
 /* ======================================================= */
 body {
-    /* Fondo principal forzado a Dark Mode */
     background-color: var(--color-background-primary);
     color: var(--color-text-primary);
     font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -53,11 +52,12 @@ body {
 }
 
 /* ======================================================= */
-/* 1. CONTENEDOR DE AUTENTICACIÓN */
+/* 1. CONTENEDOR DE AUTENTICACIÓN (AuthPage) */
 /* ======================================================= */
 .auth-page-container,
 .modern-auth-container {
     display: flex;
+    flex-direction: column; /* Cambiado a column para centrar el logo y la tarjeta */
     justify-content: center;
     align-items: center;
     min-height: 100vh;
@@ -75,7 +75,6 @@ body {
         left: 0;
         right: 0;
         bottom: 0;
-        /* Usamos rgba y color-primary-rgb del tema oscuro */
         background: radial-gradient(circle at 20% 80%, rgba(var(--color-primary-rgb), 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(var(--color-primary-rgb), 0.1) 0%, transparent 50%), radial-gradient(circle at 40% 40%, rgba(var(--color-primary-rgb), 0.05) 0%, transparent 30%);
         pointer-events: none;
         animation: backgroundPulse 8s ease-in-out infinite;
@@ -97,15 +96,31 @@ body {
     }
 
 /* ======================================================= */
+/* LOGO DE AUTENTICACIÓN (auth-logo-img) */
+/* ======================================================= */
+.auth-logo-img {
+    height: 90px;
+    width: auto;
+    margin-bottom: 2rem;
+    /* Aplicar el doble glow Cian/Magenta del logo */
+    filter: drop-shadow(0 0 10px rgba(var(--color-primary-rgb), 0.8)) drop-shadow(0 0 5px rgba(255, 0, 255, 0.5));
+    transition: all 0.5s ease-in-out;
+    animation: logoPulse 2.5s ease-in-out infinite alternate;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    z-index: 10;
+}
+
+/* ======================================================= */
 /* 2. FORMULARIO BASE (CARD) */
 /* ======================================================= */
-.auth-form, .auth-card {
+.auth-form, .auth-card, .auth-form-container { /* Añadido .auth-form-container de React */
     background-color: var(--color-surface);
     padding: 50px 40px;
     border-radius: 20px;
     width: 100%;
     max-width: 480px;
-    /* Sombra Gamer Forzada */
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 25px var(--color-accent-shadow);
     border: 2px solid var(--color-border-subtle);
     transform: perspective(1000px) rotateX(0deg);
@@ -125,36 +140,36 @@ body {
         text-shadow: 0 0 5px rgba(var(--color-primary-rgb), 0.2);
     }
 
-/* ===== HEADER SECTION (modern) ===== */
+/* ===== HEADER SECTION (modern Cyberpunk Neon) - Para el contenido interno si se usa H1/H2 ===== */
 .auth-header {
     text-align: center;
-    margin-bottom: 2.5rem;
-}
-
-.logo-icon {
-    font-size: 2.5rem;
-    color: var(--color-primary);
-    filter: drop-shadow(0 0 15px rgba(var(--color-primary-rgb), 0.6));
-    animation: logoFloat 3s ease-in-out infinite;
+    margin: 0 0 3rem 0;
+    padding: 0;
+    border: none;
 }
 
 .brand-title {
-    font-size: 1.8rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-accent-hover));
+    font-size: 2rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-text-primary));
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     margin: 0;
-    letter-spacing: 0.5px;
-    text-shadow: 0 0 30px rgba(var(--color-primary-rgb), 0.3);
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px rgba(var(--color-primary-rgb), 0.8);
 }
 
 .subtitle {
     color: var(--color-text-secondary);
-    margin: 0;
-    font-size: 1rem;
+    margin: 0.5rem 0 0.5rem 0;
+    font-size: 1.05rem;
+    border-bottom: 1px dashed var(--color-border);
+    display: inline-block;
+    padding-bottom: 5px;
+    letter-spacing: 0.2px;
 }
+
 
 /* ======================================================= */
 /* 3. INPUTS Y GRUPOS DE FORMULARIO */
@@ -181,7 +196,7 @@ body {
     color: var(--color-text-primary);
     font-size: 1.05rem;
     transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
-    box-sizing: border-box; /* Asegurar que padding no aumente el tamaño */
+    box-sizing: border-box;
 }
 
 /* Modern Input Base */
@@ -195,8 +210,8 @@ body {
     .auth-form input:focus, .modern-input:focus {
         border-color: var(--color-accent-blue);
         outline: none;
-        box-shadow: 0 0 10px 2px rgba(var(--color-primary-rgb), 0.5); /* Sombra más fuerte */
-        background-color: #141f30; /* Fondo ligeramente más claro que el input-bg para distinción */
+        box-shadow: 0 0 10px 2px rgba(var(--color-primary-rgb), 0.5);
+        background-color: #141f30;
     }
 
 .auth-form input::placeholder {
@@ -235,7 +250,7 @@ body {
 .modern-input:not(:placeholder-shown) + .floating-label {
     transform: translateY(-2.5rem) scale(0.85);
     color: var(--color-primary);
-    background: var(--color-surface); /* Hacer el fondo del label ligeramente distinto para que resalte */
+    background: var(--color-surface);
 }
 
 /* ======================================================= */
@@ -245,7 +260,7 @@ body {
     width: 100%;
     padding: 16px;
     background-color: var(--color-accent-blue);
-    color: white;
+    color: var(--color-background-primary); /* Texto oscuro sobre botón claro */
     border: none;
     border-radius: 12px;
     font-weight: 800;
@@ -254,7 +269,7 @@ body {
     letter-spacing: 1.5px;
     text-transform: uppercase;
     transition: background-color 0.2s, transform 0.1s, box-shadow 0.3s;
-    box-shadow: 0 0 10px 0 rgba(var(--color-primary-rgb), 0.5); /* Sombra Gamer */
+    box-shadow: 0 0 10px 0 rgba(var(--color-primary-rgb), 0.5);
 }
 /* Estilos específicos de modern-submit-btn */
 .modern-submit-btn {
@@ -262,8 +277,8 @@ body {
     border-radius: 16px;
     font-size: 1.1rem;
     font-weight: 600;
-    position: relative; /* Necesario para el efecto ::before */
-    overflow: hidden; /* Necesario para el efecto ::before */
+    position: relative;
+    overflow: hidden;
 }
 
     .modern-submit-btn:hover:not(:disabled) {
@@ -285,7 +300,7 @@ body {
     .btn-primary:disabled, .modern-submit-btn:disabled {
         background-color: var(--color-border-subtle);
         color: var(--color-text-secondary);
-        opacity: 0.6; /* Menos opaco que 0.8 */
+        opacity: 0.6;
         cursor: not-allowed;
         transform: none;
         box-shadow: none;
@@ -298,7 +313,6 @@ body {
         left: -100%;
         width: 100%;
         height: 100%;
-        /* Efecto de brillo de izquierda a derecha */
         background: linear-gradient(90deg, transparent, rgba(var(--color-text-primary-rgb), 0.2), transparent);
         transition: left 0.6s;
         pointer-events: none;
@@ -321,7 +335,6 @@ body {
 }
 
 .error-message, .error-alert {
-    /* Color de error neon */
     background-color: rgba(var(--color-danger-rgb), 0.15);
     color: var(--color-error);
     border: 1px solid var(--color-error);
@@ -329,7 +342,6 @@ body {
 }
 
 .success-message {
-    /* Color de éxito neon */
     background-color: rgba(61, 237, 151, 0.15);
     color: var(--color-success);
     border: 1px solid var(--color-success);
@@ -356,7 +368,7 @@ body {
 
     .btn-link:hover {
         color: var(--color-accent-blue);
-        text-decoration: underline; /* Añadir subrayado para accesibilidad */
+        text-decoration: underline;
         text-shadow: 0 0 8px rgba(var(--color-primary-rgb), 0.5);
     }
 
@@ -414,7 +426,97 @@ body {
         background: rgba(var(--color-primary-rgb), 0.15);
     }
 
-/* UTILIDADES Y ANIMACIONES */
+/* ======================================================= */
+/* 6. ESTILOS DE LISTA DE GUÍAS Y TARJETAS */
+/* ======================================================= */
+
+.guides-grid-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.guide-card {
+    background-color: var(--color-surface);
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
+    border: 1px solid var(--color-border);
+    border-bottom: 3px solid var(--color-border);
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out, border-bottom-color 0.3s ease-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 280px;
+}
+
+    .guide-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.9), 0 0 15px rgba(var(--color-primary-rgb), 0.7);
+        border-bottom-color: var(--color-primary);
+        cursor: pointer;
+    }
+
+.guide-header {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.guide-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--color-text-primary);
+    margin-bottom: 8px;
+    line-height: 1.2;
+    transition: color 0.2s;
+}
+
+.guide-card:hover .guide-title {
+    color: var(--color-primary);
+}
+
+.guide-game-tag {
+    display: inline-block;
+    background: var(--color-input-bg-base);
+    color: var(--color-text-secondary);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 1px solid var(--color-border);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.guide-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed var(--color-border);
+}
+
+.guide-description {
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-bottom: 25px;
+    flex-grow: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ======================================================= */
+/* 7. UTILIDADES Y ANIMACIONES */
+/* ======================================================= */
 .spinner {
     width: 18px;
     height: 18px;
@@ -480,25 +582,15 @@ body {
     }
 }
 
-@keyframes logoFloat {
-    0%, 100% {
-        transform: translateY(0px);
-    }
-
-    50% {
-        transform: translateY(-5px);
-    }
-}
-
-@keyframes errorSlide {
+@keyframes logoPulse {
     0% {
-        opacity: 0;
-        transform: translateX(-20px);
+        transform: scale(1);
+        filter: drop-shadow(0 0 10px rgba(var(--color-primary-rgb), 0.7)) drop-shadow(0 0 5px rgba(255, 0, 255, 0.3));
     }
 
     100% {
-        opacity: 1;
-        transform: translateX(0);
+        transform: scale(1);
+        filter: drop-shadow(0 0 20px rgba(var(--color-primary-rgb), 1.0)) drop-shadow(0 0 10px rgba(255, 0, 255, 0.5));
     }
 }
 
@@ -509,7 +601,9 @@ body {
 }
 
 
-/* Responsive */
+/* ======================================================= */
+/* 8. RESPONSIVE Y CLASES PEQUEÑAS */
+/* ======================================================= */
 @media (max-width: 768px) {
     .modern-auth-container {
         padding: 1rem;
@@ -539,4 +633,497 @@ body {
     .input-icon {
         left: 1rem;
     }
+}
+
+.author-avatar-small {
+    height: 78px;
+    width: 78px;
+    border-radius: 50px;
+}
+
+.stat-item-btn {
+    background-color: transparent;
+    color: var(--color-text-secondary);
+}
+
+.select#sort-by {
+    background-color: transparent;
+    color: var(--color-text-secondary);
+}
+
+/* ======================================================= */
+/* 1. CONTENEDOR PRINCIPAL Y TARJETA (auth-card) */
+/* ======================================================= */
+
+.auth-card, .auth-form-container {
+    /* FIX: Ampliamos el ancho para que no se sienta estrecho */
+    max-width: 520px;
+    width: 100%;
+    /* FIX: Espacio interior generoso */
+    padding: 55px 50px;
+    border-radius: 20px;
+    background-color: var(--color-surface);
+    /* Sombra Neon (Cian) y Oscura (Profundidad) */
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.7), 0 0 30px var(--color-accent-shadow);
+    border: 2px solid var(--color-border-subtle);
+    backdrop-filter: blur(10px); /* Efecto de cristal esmerilado */
+    animation: fadeIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 10;
+}
+
+/* ======================================================= */
+/* 2. ENCABEZADO Y LOGO */
+/* ======================================================= */
+.auth-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.logo-icon {
+    font-size: 2.5rem;
+    color: var(--color-primary);
+    filter: drop-shadow(0 0 10px rgba(var(--color-primary-rgb), 0.7));
+}
+
+.brand-title {
+    font-size: 2rem;
+    font-weight: 900;
+    /* Degradado de texto Neon */
+    background: linear-gradient(135deg, var(--color-primary), var(--color-text-primary));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 8px rgba(var(--color-primary-rgb), 0.5);
+    margin: 0;
+}
+
+.welcome-text {
+    /* Título principal del formulario (ej. "Bienvenido de vuelta") */
+    font-size: 2.1rem;
+    font-weight: 800;
+    margin-top: 10px;
+    margin-bottom: 1rem;
+    color: var(--color-text-primary);
+    text-shadow: 0 0 5px rgba(var(--color-primary-rgb), 0.2);
+}
+
+.subtitle {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+}
+
+/* ======================================================= */
+/* 3. ESTRUCTURA DE FORMULARIO E INPUTS */
+/* ======================================================= */
+.modern-auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px; /* Espacio vertical aumentado */
+    margin-top: 30px;
+}
+
+.input-group {
+    position: relative;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* Posicionamiento y estilo del icono dentro del input */
+.input-icon {
+    position: absolute;
+    left: 1.25rem;
+    font-size: 1.1rem;
+    color: var(--color-text-secondary);
+    transition: color 0.3s;
+    z-index: 2;
+}
+
+.modern-input:focus ~ .input-icon {
+    color: var(--color-primary); /* Icono se ilumina en focus */
+    transform: scale(1.1);
+}
+
+/* Estilo del input base */
+.modern-input {
+    width: 100%;
+    padding: 1.25rem 1.25rem 1.25rem 3.25rem; /* Padding para dejar espacio al icono/label */
+    background-color: var(--color-input-bg-base);
+    border: 2px solid var(--color-border-subtle);
+    border-radius: 16px;
+    color: var(--color-text-primary);
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
+}
+
+    /* Focus: Glow Neon */
+    .modern-input:focus {
+        border-color: var(--color-accent-blue);
+        outline: none;
+        box-shadow: 0 0 10px 2px rgba(var(--color-primary-rgb), 0.5);
+        background-color: #141f30;
+    }
+
+/* Estilo del Label Flotante */
+.floating-label {
+    position: absolute;
+    left: 3.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-text-secondary);
+    font-size: 1rem;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: var(--color-input-bg-base);
+    padding: 0 0.5rem;
+    z-index: 1;
+}
+
+/* Label Flotante animado (cuando está en foco o lleno) */
+.modern-input:focus + .floating-label,
+.modern-input:not(:placeholder-shown) + .floating-label {
+    transform: translateY(-2.5rem) scale(0.85); /* Se mueve arriba */
+    color: var(--color-primary); /* Se ilumina */
+    background: var(--color-surface);
+}
+
+/* ======================================================= */
+/* 4. BOTÓN PRINCIPAL (SUBMIT) */
+/* ======================================================= */
+.modern-submit-btn {
+    width: 100%;
+    padding: 18px 2rem; /* Más alto */
+    font-size: 1.2rem; /* Texto más grande */
+
+    background-color: var(--color-accent-blue);
+    color: var(--color-background-primary);
+    border: none;
+    border-radius: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 30px; /* Espacio extra */
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    /* Sombra y Transiciones Neon */
+    transition: background-color 0.2s, transform 0.1s, box-shadow 0.3s;
+    box-shadow: 0 0 10px 0 rgba(var(--color-primary-rgb), 0.5);
+    position: relative;
+    overflow: hidden;
+    height: 60px; /* Altura fija para el estado de carga */
+}
+
+    .modern-submit-btn:hover:not(:disabled) {
+        background-color: var(--color-accent-hover);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(var(--color-primary-rgb), 0.7), 0 0 30px rgba(var(--color-primary-rgb), 0.5);
+    }
+
+.btn-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* El spinner ya está definido en la sección de Utilidades */
+
+/* ======================================================= */
+/* 5. DIVISOR 'O' Y ENLACES SECUNDARIOS */
+/* ======================================================= */
+
+/* Divisor "o" */
+.auth-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 30px 0;
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+}
+
+    .auth-divider::before,
+    .auth-divider::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid var(--color-border);
+        box-shadow: 0 1px 5px rgba(var(--color-primary-rgb), 0.1);
+    }
+
+    .auth-divider:not(:empty)::before {
+        margin-right: 20px;
+    }
+
+    .auth-divider:not(:empty)::after {
+        margin-left: 20px;
+    }
+
+
+/* Contenedor de Enlaces */
+.auth-links {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+/* Enlaces (Link Buttons) */
+.link-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 1.5rem; /* Más relleno */
+    background: transparent;
+    border: 2px solid var(--color-border);
+    border-radius: 14px;
+    color: var(--color-text-secondary);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+    .link-btn:hover {
+        transform: translateY(-2px);
+    }
+
+.link-icon {
+    font-size: 1.1rem;
+    transition: transform 0.2s;
+}
+
+.link-btn:hover .link-icon {
+    transform: rotate(-5deg);
+}
+
+/* Enlace Primario (Registro) */
+.primary-link {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background: rgba(var(--color-primary-rgb), 0.1);
+}
+
+/* Enlace Secundario (Olvidaste) */
+.secondary-link {
+    border-color: var(--color-secondary);
+    color: var(--color-secondary);
+}
+
+    .secondary-link:hover {
+        border-color: var(--color-primary);
+        color: var(--color-primary);
+        box-shadow: 0 0 10px rgba(var(--color-primary-rgb), 0.4);
+    }
+
+/* ======================================================= */
+/* 1. CONTENEDOR PRINCIPAL Y TARJETA (auth-card) */
+/* ======================================================= */
+
+/* Mantenemos el mismo ancho y padding que el login para coherencia */
+.auth-card,
+.auth-form-container {
+    max-width: 720px;      /* límite de ancho */
+    width: 100%;           /* ocupa todo el ancho disponible */
+    margin: 0 auto;        /* centra horizontalmente */
+    padding: 30px 35px;    /* un poco más uniforme: vertical > horizontal */
+    border-radius: 20px;
+    background-color: var(--color-surface);
+    box-shadow: 
+        0 18px 45px rgba(0, 0, 0, 0.7),
+        0 0 30px var(--color-accent-shadow);
+    border: 2px solid var(--color-border-subtle);
+    backdrop-filter: blur(10px);
+    animation: fadeIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 10;
+    box-sizing: border-box; /* asegura que padding + border no rompan el ancho */
+}
+
+
+/* ======================================================= */
+/* 2. ENCABEZADO Y TEXTO */
+/* ======================================================= */
+.auth-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.welcome-text {
+    /* Título principal del formulario (ej. "Crea tu Perfil Gamer") */
+    font-size: 2.1rem;
+    font-weight: 800;
+    margin-top: 30px;
+    margin-bottom: 1rem;
+    color: var(--color-text-primary);
+    text-shadow: 0 0 5px rgba(var(--color-primary-rgb), 0.2);
+}
+
+.subtitle {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+}
+
+/* ======================================================= */
+/* 3. ESTRUCTURA DE FORMULARIO E INPUTS */
+/* ======================================================= */
+.modern-auth-form {
+    display: flex;
+    flex-direction: column;
+    /* FIX: Espaciado ajustado para los 5+ campos */
+    gap: 25px;
+    margin-top: 30px;
+}
+
+/* --- Input Groups (Compartido con Login) --- */
+
+.input-group {
+    position: relative;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 1.25rem;
+    font-size: 1.1rem;
+    color: var(--color-text-secondary);
+    transition: color 0.3s;
+    z-index: 2;
+}
+
+.modern-input:focus ~ .input-icon {
+    color: var(--color-primary);
+    transform: scale(1.1);
+}
+
+.modern-input { /* [Mismos estilos base de padding, border y glow en focus] */
+}
+
+.floating-label { /* [Mismos estilos base de animación] */
+}
+
+
+/* ======================================================= */
+/* 4. VALIDACIÓN EN TIEMPO REAL (Estilos Únicos de Register) */
+/* ======================================================= */
+
+/* Indicador visual en el input cuando hay error (Email en uso) */
+.modern-input.input-error {
+    border-color: var(--color-error) !important;
+    box-shadow: 0 0 8px rgba(var(--color-danger-rgb), 0.7);
+}
+
+/* --- Status de Email (Debajo del Input) --- */
+.email-status {
+    font-size: 0.8rem;
+    padding-top: 5px;
+    height: 1.5rem;
+}
+
+.status-checking {
+    color: var(--color-warning);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.status-available {
+    color: var(--color-success);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 600;
+}
+
+.status-unavailable {
+    color: var(--color-error);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 600;
+}
+
+.spinner-small {
+    /* Asume que tienes @keyframes spin */
+    animation: spin 1s linear infinite;
+}
+
+/* --- Requisitos de Contraseña (Password Requirements) --- */
+.password-requirements {
+    background: var(--color-input-bg-base);
+    border: 1px solid var(--color-border);
+    /* Borde de acento Cian Neon para resaltarlo */
+    border-left: 4px solid var(--color-primary);
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 5px;
+    margin-bottom: 20px; /* Espacio antes del botón */
+    box-shadow: 0 0 10px rgba(var(--color-primary-rgb), 0.1);
+}
+
+.req-title {
+    color: var(--color-text-primary);
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.req-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.req-item {
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 5px;
+    transition: color 0.3s;
+}
+
+.req-unfulfilled {
+    color: var(--color-text-secondary);
+}
+
+.req-fulfilled {
+    color: var(--color-success); /* Verde Neon para requisitos cumplidos */
+    font-weight: 500;
+}
+
+.req-icon svg {
+    font-size: 0.9rem;
+}
+
+
+/* ======================================================= */
+/* 5. BOTONES Y ENLACES (Compartido con Login) */
+/* ======================================================= */
+
+.modern-submit-btn {
+    /* [Mismos estilos de tamaño, glow, y hover que el Login] */
+    margin-top: 10px; /* Menos margen arriba para acoplarlo después de requisitos */
+}
+
+/* Contenedor de Enlaces */
+.form-links {
+    margin-top: 25px; /* Espacio después del botón de submit */
 }

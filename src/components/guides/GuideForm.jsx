@@ -102,8 +102,12 @@ const GuideForm = ({ guideToEdit, onClose, onSuccess }) => {
                 // Llama a POST /api/v1/guides (Req. 3.1)
                 result = await guideService.createGuide(guideData);
             }
-            onSuccess(result);
-            onClose();
+                        if (result) {
+                onSuccess(result);
+                onClose();
+            } else {
+                setError(`No se pudo ${isEditMode ? 'actualizar' : 'crear'} la guía. El servidor no devolvió datos válidos.`);
+            }
         } catch (err) {
             setError(err.message || `Error al ${isEditMode ? 'actualizar' : 'crear'} la guía.`);
         } finally {

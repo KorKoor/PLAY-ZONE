@@ -1,3 +1,7 @@
+/* Forzar color de texto claro en los pasos de la guía (detalle) */
+.guide-step p, .guide-step h3 {
+    color: var(--color-text-primary) !important;
+}
 /*
  * ==========================================================
  * GLOBAL THEME VARIABLES - MODO OSCURO FORZADO
@@ -163,6 +167,7 @@
         border: 1px solid var(--color-border);
         /* Usar input-bg para que coincida con el contenedor del input/step */
         background-color: var(--color-input-bg);
+        color: var(--color-text-primary); /* Soluciona el texto invisible */
     }
 
 .btn-remove-step {

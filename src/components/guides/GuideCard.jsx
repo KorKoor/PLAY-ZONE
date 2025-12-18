@@ -12,7 +12,14 @@ const GuideCard = ({ guide, currentUser, onToggleUseful, onEdit, onDelete, isUse
     const [showComments, setShowComments] = useState(false); // Estado para mostrar/ocultar comentarios
     const [showReportModal, setShowReportModal] = useState(false); // Estado para modal de reporte
 
-    const isAuthor = currentUser && currentUser.id === guide.authorId._id;
+
+    // Si guide es null o no tiene _id, no renderizar
+    if (!guide || !guide._id) {
+        return null; // o un fallback UI si se prefiere
+    }
+
+    // Si authorId es null, evitar error
+    const isAuthor = currentUser && guide.authorId && currentUser.id === guide.authorId._id;
     const isAdmin = currentUser && currentUser.role === 'admin';
     const isUseful = guide.isUseful || false;
 
@@ -35,6 +42,7 @@ const GuideCard = ({ guide, currentUser, onToggleUseful, onEdit, onDelete, isUse
     };
 
     return (
+
         <article className="guide-card">
             <header className="guide-header">
                 <h3 className="guide-title">{guide.title}</h3>
@@ -44,11 +52,18 @@ const GuideCard = ({ guide, currentUser, onToggleUseful, onEdit, onDelete, isUse
             <div className="guide-meta">
                 <div className="author-info">
                     <img
-                        src={guide.authorId?.avatarUrl || '/default-avatar.png'}
-                        alt={guide.authorId?.alias}
+                        src={
+                            guide.authorId && guide.authorId.avatarUrl
+                                ? guide.authorId.avatarUrl.startsWith('http')
+                                    ? guide.authorId.avatarUrl
+                                    : `${guide.authorId.avatarUrl}`
+                                : '/default-avatar.png'
+                        }
+                        alt={guide.authorId?.alias || 'Desconocido'}
                         className="author-avatar-small"
+                        onError={e => { e.target.onerror = null; e.target.src = '/default-avatar.png'; }}
                     />
-                    <span>{guide.authorId?.alias}</span>
+                    <span>{guide.authorId?.alias || 'Desconocido'}</span>
                 </div>
                 <div className="date-info">
                     <FaClock />

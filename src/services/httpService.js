@@ -142,10 +142,21 @@ const httpService = async (endpoint, options = {}) => {
             }
         }
 
-        const contentType = response.headers.get('content-type');
+                const contentType = response.headers.get('content-type');
         if (contentType && contentType.includes('application/json')) {
             return await response.json();
         }
+
+        // Try to parse the response as JSON even if the content-type is not set
+        try {
+            const text = await response.text();
+            if (text) {
+                return JSON.parse(text);
+            }
+        } catch (e) {
+            // Ignore the error if the response is not a valid JSON
+        }
+
         return null;
     } catch (error) {
         console.error('API Call Error:', error);

@@ -11,8 +11,9 @@ import '../styles/guideStyles.css';
 import { FaBookOpen, FaFilter, FaPlusCircle, FaSpinner } from 'react-icons/fa';
 
 const GuidesPage = () => {
-    const { user } = useAuth(); // Obtener el usuario actual
-    const {
+
+
+    const { 
         guides,
         isLoading,
         error,
@@ -24,6 +25,16 @@ const GuidesPage = () => {
         removeGuide,
         updateGuideInList
     } = useGuides();
+
+    const { user } = useAuth(); // Obtener el usuario actual
+
+    // Mostrar todas las guías en la consola para depuración (después de la declaración de guides)
+    React.useEffect(() => {
+        if (guides && guides.length > 0) {
+            // eslint-disable-next-line no-console
+            console.log('📚 Guías recibidas:', JSON.stringify(guides, null, 2));
+        }
+    }, [guides]);
 
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [editingGuide, setEditingGuide] = useState(null); // Estado para la guía en edición

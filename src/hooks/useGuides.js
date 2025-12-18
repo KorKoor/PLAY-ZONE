@@ -90,18 +90,22 @@ const useGuides = () => {
         }
     };
 
-    const addNewGuide = (newGuide) => {
-        setGuides(prev => [newGuide, ...prev]);
+        const addNewGuide = (newGuide) => {
+        if (newGuide) {
+            setGuides(prev => [newGuide, ...prev]);
+        }
     };
 
     const removeGuide = (guideId) => {
         setGuides(prev => prev.filter(guide => guide._id !== guideId));
     };
 
-    const updateGuideInList = (updatedGuide) => {
-        setGuides(prev => prev.map(guide => 
-            guide._id === updatedGuide._id ? updatedGuide : guide
-        ));
+        const updateGuideInList = (updatedGuide) => {
+        if (updatedGuide) {
+            setGuides(prev => prev.map(guide => 
+                guide._id === updatedGuide._id ? updatedGuide : guide
+            ));
+        }
     };
 
     return {

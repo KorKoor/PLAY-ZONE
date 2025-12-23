@@ -105,6 +105,7 @@ const GameDetailPage = () => {
         try {
             setIsLoadingReviews(true);
             const response = await reviewService.getGameReviews(gameId);
+            console.log('Reviews from API:', response.reviews);
             setReviews({ data: response.reviews || [], total: response.pagination?.total || 0 });
         } catch (error) {
             console.error('Error loading reviews:', error);
